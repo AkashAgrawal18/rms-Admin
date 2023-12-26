@@ -61,7 +61,7 @@
                 <button type="submit" class="btn btn-primary me-3" data-mdb-ripple-init>
                     <i class="fas fa-search"></i>
                 </button>
-                <a type="submit" href="<?php echo base_url('Main/group_list').$type;  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                <a type="submit" href="<?php echo base_url('Main/group_list/').$type;  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                     <i class="fa-solid fa-rotate"></i>
                 </a>
             </form>
@@ -81,7 +81,7 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12">
-                                    <h5 class="card-title"><?= $value->m_group_name; ?></h5>
+                                    <h5 class="card-title">Title : <?= $value->m_group_name; ?></h5>
                                     <?php if ($value->m_group_status == 1) {
                                         echo '<span class="badge btn btn-success" style="position: absolute;top: 0.3rem;right: 0.3rem;">Active</span>';
                                     } else {

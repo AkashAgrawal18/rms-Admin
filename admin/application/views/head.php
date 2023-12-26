@@ -52,7 +52,20 @@
     <link rel="stylesheet" href="<?php echo base_url();?>assets/css/style.css" />
     
 
+<style>
+   .fade-scale {
+        transform: scale(0);
+        opacity: 0;
+        -webkit-transition: all .25s linear;
+        -o-transition: all .25s linear;
+        transition: all .25s linear;
+    }
 
+    .fade-scale.show {
+        opacity: 1;
+        transform: scale(1);
+    }
+</style>
     
 </head>
 

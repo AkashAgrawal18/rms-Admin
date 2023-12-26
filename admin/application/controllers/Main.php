@@ -167,35 +167,6 @@ class Main extends CI_Controller
         $i++;
         if ($i != 1) {
 
-          // $checkState = $this->db->where('m_state_name', $row[5])->get('master_state_tbl')->result();
-          // if (empty($checkState)) {
-          //   $s_data = array(
-          //     "m_state_name" => $row[5],
-          //     "m_state_country" => 1,
-          //     "m_state_status" => 1,
-          //     "m_state_added_on" => date('Y-m-d H:i'),
-          //   );
-          //   $this->db->insert('master_state_tbl', $s_data);
-          //   $state_id = $this->db->insert_id();
-          // } else {
-          //   $state_id = $checkState[0]->m_state_id;
-          // }
-          // $checkcity = $this->db->where('m_city_name', $row[4])->get('master_city_tbl')->result();
-          // if (empty($checkcity)) {
-          //   $data = array(
-          //     "m_city_name" => $row[4],
-          //     "m_city_state" => $state_id,
-          //     "m_city_country" => 1,
-          //     "m_city_status" => 1,
-          //     "m_city_added_on" => date('Y-m-d H:i'),
-
-          //   );
-          //   $this->db->insert('master_city_tbl', $data);
-          //   $city_id = $this->db->insert_id();
-          // } else {
-          //   $city_id = $checkcity[0]->m_city_id;
-          // }
-
           $s_data = array(
             "m_category_name" => $row[1],
             "m_category_slug" => $row[2],
@@ -220,15 +191,6 @@ class Main extends CI_Controller
 
 
   //-----------------------------------categories----------------------------------//
-  //-------------------------------------variations--------------------------------//
-
-  public function variations()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Variations';
-    $this->load->view('variations', $data);
-  }
-  //-------------------------------------/variations--------------------------------//
   //-------------------------------------products--------------------------------//
 
   public function products()
@@ -239,15 +201,15 @@ class Main extends CI_Controller
     $data['cat'] = '';
     $data['search'] =  $this->input->get('search');
     $data['cat'] =  $this->input->get('category');
-    $data['categories'] = $this->Main_model->get_category_parent();
-    $data['fabric_list'] = $this->Main_model->get_active_fabric();
-    $data['color_list'] = $this->Main_model->get_active_color();
-    $data['size_list'] = $this->Main_model->get_active_size();
-    $data['unit'] = $this->Main_model->get_active_unit();
-    $data['taxgst'] = $this->Main_model->get_active_taxgst();
+    $data['categories'] = $this->Main_model->get_active_category();
+    $data['fabric_list'] = $this->Main_model->get_active_group(5);
+    $data['color_list'] = $this->Main_model->get_active_group(2);
+    $data['size_list'] = $this->Main_model->get_active_group(3);
+    $data['unit'] = $this->Main_model->get_active_group(1);
+    $data['taxgst'] = $this->Main_model->get_active_group(4);
     $data['all_value'] = $this->Main_model->get_product($data['search'], $data['cat']);
     // echo "<pre>";print_r($data['product']);die();
-    $this->load->view('products', $data);
+    $this->load->view('product_list', $data);
   }
 
   public function insert_product()

@@ -145,13 +145,6 @@ class Main_model extends CI_model
   //===================/coupons ==============================//
 
   //===================product ==============================//
-  public function get_category_parent()
-  {
-    $this->db->select('*');
-    $this->db->where('m_category_status', 1);
-    $res = $this->db->get('master_categories')->result();
-    return $res;
-  }
 
   public function get_product($search, $cat)
   {

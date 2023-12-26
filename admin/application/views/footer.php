@@ -1,27 +1,27 @@
 <footer class="fixed-bottom">
-    <div class="text-end w-100 px-3 pb-2">
+    <!-- <div class="text-end w-100 px-3 pb-2">
 
         <?php
 
-                      $img_title = get_settings('m_app_black_logo');
+                    //   $img_title = get_settings('m_app_black_logo');
 
-                      if (!empty($img_title)) {
+                    //   if (!empty($img_title)) {
 
-                        if (file_exists('uploads/logo/' . $img_title)) {
+                    //     if (file_exists('uploads/logo/' . $img_title)) {
 
-                          $fav_img = base_url('uploads/logo/') . $img_title;
-                        } else {
+                    //       $fav_img = base_url('uploads/logo/') . $img_title;
+                    //     } else {
 
-                          $fav_img  = base_url('assets/imgs/Logo22.png');
-                        }
-                      } else {
+                    //       $fav_img  = base_url('assets/imgs/Logo22.png');
+                    //     }
+                    //   } else {
 
-                        $fav_img  = base_url('assets/imgs/Logo22.png');
-                      }
+                    //     $fav_img  = base_url('assets/imgs/Logo22.png');
+                    //   }
 
                       ?>
         <img src="<?php echo $fav_img;?>" alt="" style="height: 30px;">
-    </div>
+    </div> -->
     <div class="container-fluid py-1 bg-dark text-light w-100 border-top border-primary border-4">
         <div class="row justify-content-between g-2">
             <div class="col-xl-4 col-lg-4">
