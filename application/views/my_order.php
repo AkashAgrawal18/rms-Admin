@@ -61,7 +61,8 @@
                                         Status
                                     </div>
                                     <div class="col-5">
-                                        : <?php if($m_sale_status = 1){ echo 'New Order';}else{ echo "Runing";
+                                        : <?php if($m_sale_status = 1){ echo 'New Order';}else if($m_sale_status = 2){ echo "Runing";}else{ echo "Delivered";
+
                                         }?>
                                     </div>
                                 </div>
@@ -74,13 +75,13 @@
                                         Total
                                     </div>
                                     <div class="col-5">
-                                        : ₹<?php echo $value->m_sale_gtotal;?>
+                                        : ₹<?php echo $value->m_sale_payamt;?>
                                     </div>
                                 </div>
                             </div>
                         </h6>
                         <div class="offer-text">
-                            <a href="<?php echo base_url('Orders/order_details/'.$value->m_sale_spo) ?>" class="btn btn-primary">Order Details</a>
+                            <a href="<?php echo base_url('Orders/order_details?orderid='.$value->m_sale_spo) ?>" class="btn btn-primary">Order Details</a>
                         </div>
 
                     </div>

@@ -21,22 +21,22 @@
         },'json');
       })
 
-     // $('#email').change(function(){
-     //    let cust_email = this.value;
-     //      // console.log(contact_number);die();
-     //    $.post("<?= base_url('Register/get_email') ?>",{cust_email},function(data){
+     $('#email').change(function(){
+        let cust_email = this.value;
+          // console.log(contact_number);die();
+        $.post("<?= base_url('Register/get_email') ?>",{cust_email},function(data){
 
-     //      if (data.status)
-     //       {
+          if (data.status)
+           {
            
-     //        // alert('District already exist');
-     //        swal("Email already exist!!", { icon: "error", timer: 3000, });
-     //         $('#email').val('');
-     //       }
+            // alert('District already exist');
+            swal("Email already exist!!", { icon: "error", timer: 3000, });
+             $('#email').val('');
+           }
           
-     //        // $('#contact_number').html(text);
-     //    },'json');
-     //  })
+            // $('#contact_number').html(text);
+        },'json');
+      })
 
 
 
@@ -106,6 +106,48 @@ $("form#rst_form").submit(function(e) {
             });
             setTimeout(function() {
               window.location = "<?php echo site_url('Profile'); ?>";
+            }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+
+    $("form#update_profile").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_update");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Checkout/update_profile'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            setTimeout(function() {
+              location.reload();
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -343,6 +385,50 @@ $("form#rst_form").submit(function(e) {
     });
 
     ///====================== forgot pass ============================================////
+
+    ///======================order ============================================////
+    $("form#form_order_add").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_order_add");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Checkout/order_insert'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            setTimeout(function() {
+              window.location = "<?php echo site_url('Success'); ?>";
+            }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+    ///======================order ============================================////
+   
    
  });
 </script>
@@ -363,10 +449,10 @@ $("form#rst_form").submit(function(e) {
                 },
                 success: function (data){
                   if (data.status == 'success') {
-                          // swal(data.message, {
-                          //   icon: "success",
-                          //   timer: 1000,
-                          // });
+                          swal(data.message, {
+                            icon: "success",
+                            timer: 1000,
+                          });
 
                         if (wish_id == 0) {
                             $('#wish_col' + prod_id).css('background-color', '#eb0029');
@@ -380,10 +466,10 @@ $("form#rst_form").submit(function(e) {
                           }, 1000);
                         } else {
                           clkbtn.prop('disabled', false);
-                          // swal(data.message, {
-                          //   icon: "error",
-                          //   timer: 5000,
-                          // });
+                          swal(data.message, {
+                            icon: "error",
+                            timer: 5000,
+                          });
                         }
                       },
                       error: function(jqXHR, status, err) {

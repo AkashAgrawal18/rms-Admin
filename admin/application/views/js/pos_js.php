@@ -1,10 +1,83 @@
 <script type="text/javascript">
     $(document).ready(function(e) {
 
+
+        $('#m_sales_ispartial').click(function() {
+            if ($(this).prop('checked') == false) {
+                $('.paypartial').css('display', 'none');
+                $('#m_sales_paytype').append(`<option value="partial" id="partial_op">Partial Payment</option>`);
+                $('#m_sales_ispartial').prop('checked', false);
+                $('#m_sales_paytype').val(1);
+            }
+        });
+
+        $('#m_sales_paytype').change(function() {
+
+            if ($(this).val() == 'partial') {
+                $('.paypartial').css('display', 'block');
+                $('#partial_op').remove();
+                $('#m_sales_ispartial').prop('checked', true);
+                $('#m_sales_paytype').val(1);
+            }
+
+        });
+
+        $('#m_sales_paidAmt').change(function() {
+            if ($('#m_sales_ispartial').prop('checked') == true) {
+                var netamout = parseFloat($('#m_sale_nettotal').val());
+                var paidt1 = parseFloat($(this).val());
+                var paidt2 = (netamout - paidt1);
+                $('#m_sales_paidAmt2').val(paidt2);
+            }
+
+        });
+
+        $(document).on('click', '.qtybtn', function() {
+            var item_id = $(this).data('item_id');
+            var trans_id = $(this).data('trans_id');
+            var type = $(this).val();
+            item_qtychanger(type, item_id, trans_id);
+            calculate_total();
+        });
+
+        $(document).on('keyup', '.amtcal', function() {
+            calculate_total();
+        });
+
+        $(document).on('click', '.salepdtclk', function() {
+
+            $('#productModal').modal('hide');
+
+            var productid = $(this).data('itemid');
+            var itemcolor = $(this).data('itemcolor');
+            var itemsize = $(this).data('itemsize');
+            var sizename = $(this).data('sizename');
+            var colorname = $(this).data('colorname');
+            var itemname = $(this).data('itemname');
+            var itemrate = $(this).data('itemrate');
+            var taxgst = $(this).data('taxgst');
+            var maxqty = $(this).data('maxqty');
+
+            var itemid = productid + '_' + itemsize + '_' + itemcolor;
+
+            if ($('#itmtr' + itemid).length) {
+                item_qtychanger(1, itemid);
+            } else {
+                add_ordered_item(itemid, productid, itemname, itemrate, itemsize, itemcolor, sizename, colorname, taxgst, maxqty)
+            }
+            item_total_cal(itemid);
+            calculate_total();
+        });
+
+
         $(document).on('click', '.groupproductclick', function() {
             // alert('workig');
             $('#productModal').modal('show');
             var item = $(this).data('itemid');
+            var itemname = $(this).data('itemname');
+            var itemfabric = $(this).data('itemfabric');
+
+            $('#productModalLabel').html(itemname + ' (' + itemfabric + ')')
             $.ajax({
 
                 url: "<?php echo site_url('User/get_avil_products') ?>",
@@ -25,12 +98,12 @@
                             if (value.m_product_image != '') {
                                 var imagepath = "<?= base_url('uploads/product/') ?>" + value.m_product_image;
                             } else {
-                                var imagepath = '<?= base_url('assets/imgs/user.png') ?>';
+                                var imagepath = '<?= base_url('assets/imgs/no-data.png') ?>';
                             }
 
                             $("#modalproduct_div").append(` 
                             <div class="col-2">
-                        <div class="card p-2 " data-itemid="` + value.m_product_id + `">
+                        <div class="card p-2 salepdtclk" data-itemid="` + value.m_product_id + `" data-itemcolor="` + value.m_color_id + `" data-itemsize="` + value.m_size_id + `" data-sizename="` + value.m_size_name + `" data-colorname="` + value.m_color_name + `" data-itemname="` + value.m_product_name + `" data-itemrate="` + value.m_product_seles_price + `" data-maxqty="` + value.closing_qty + `" data-taxgst="` + value.m_tax_value + `">
                             <img src="` + imagepath + `" alt="kurtis" class="w-100 h-80" style="aspect-ratio: 1/1; object-fit: cover;">
                             
                             <div class="row para g-0">
@@ -39,10 +112,10 @@
                             <p class="m-0">Size : ` + value.m_size_name + `</p>
                             </div>
                             <div class="col-md-6 mt-2">
-                            <div style="height: 15px; width: 15px; background-color: ` + value.m_color_name + `;"></div>
+                            <div style="height: 15px; width: 15px; background-color: ` + value.m_color_name + `; border:2px solid #000"></div>
                             </div>
                             <div class="col-md-12">
-                                <p class="m-0">Remaining Stock : ` + value.closing_qty + `</p>
+                                <p class="m-0">Available Stock : ` + value.closing_qty + `</p>
                             </div>
                             </div>
                             <p class="fw-bold m-0">₹ ` + value.m_product_seles_price + ` <small> <del>₹ ` + value.m_product_mrp + `</del></small></p>
@@ -56,13 +129,6 @@
 
             });
         });
-
-        // $('#savecustbtn').on('click', function() {
-        //     var customer_name = $('#customer_name').val() == '' ? 'Walking Customer' : $('#customer_name').val();
-        //     var customer_contact = $('#customer_contact').val() == '' ? 'XXXXXXXXXX' : $('#customer_contact').val();
-        //     var customer_city = $('#customer_city').val();
-        //     $('#headcust').html(customer_name + ',' + customer_contact);
-        // });
 
         var defalutcat = $(".catclick.active").data('cat_id');
         get_cate_items(defalutcat)
@@ -80,6 +146,77 @@
             get_cate_items(null, item_name)
 
         });
+
+        $("#paymodeModalbtn").on('click', function(e) {
+            var amount = $("#m_total_tax").val();
+            var cust = $("#m_sale_customer").val();
+
+            if (cust == null || cust == '') {
+                swal("Please Select Customer First", {
+                    icon: "error",
+                    timer: 3000,
+                });
+                return false
+            }
+            if (amount <= 0) {
+                swal("Please Select Any Item From List", {
+                    icon: "error",
+                    timer: 3000,
+                });
+                return false
+            }
+            var custname = $('#m_sale_customer').find(":selected").data('custname');
+            $('#paymodeModalLabel').html(custname);
+            $('#paymodeModal').modal('show');
+        });
+
+        $("#btn_add_sale").click(function(e) {
+
+            var clkbtn = $("#btn_add_sale");
+            clkbtn.prop('disabled', true);
+            var formData = $("#frm_add_sale").serialize();
+
+
+            $.ajax({
+                url: "<?php echo site_url('User/insert_sales') ?>",
+                type: "POST",
+                data: formData,
+                // processData: false,
+                // contentType: false,
+                dataType: "JSON",
+                success: function(data) {
+                    if (data.status == 'success') {
+                        swal("Order Added Successfully", {
+                            icon: "success",
+                            timer: 1000,
+                        });
+                        setTimeout(function() {
+                            location.reload();
+                        }, 1000);
+                    } else {
+                        clkbtn.prop('disabled', false);
+                        swal(data.message, {
+                            icon: "error",
+                            timer: 5000,
+                        });
+                    }
+
+
+                },
+                error: function(jqXHR, status, err) {
+                    clkbtn.prop('disabled', false);
+
+                    swal("Somthing Went Wrong", {
+                        icon: "error",
+                        timer: 3000,
+                    });
+                }
+            });
+
+        });
+
+
+
         // $("#punch_itemin").enterKey(function() {
         //     var code = $(this).val();
         //     $.ajax({
@@ -113,8 +250,6 @@
         //     $('#punch_itemin').focus();
         // });
 
-
-
     });
 
 
@@ -142,14 +277,14 @@
                         if (value.m_product_image != '') {
                             var imagepath = "<?= base_url('uploads/product/') ?>" + value.m_product_image;
                         } else {
-                            var imagepath = '<?= base_url('assets/imgs/user.png') ?>';
+                            var imagepath = '<?= base_url('assets/imgs/no-data.png') ?>';
                         }
 
                         $("#product_div").append(` 
-                        <div class="col-3">
-                                    <div class="card p-2 groupproductclick" data-itemid="` + value.m_product_id + `">
+                        <div class="col-xl-3 col-lg-4">
+                                    <div class="card h-100 p-2 groupproductclick" data-itemid="` + value.m_product_id + `" data-itemname="` + value.m_product_name + `" data-itemfabric="` + value.m_fabric_name + `">
                                         <img src="` + imagepath + `" alt="kurtis" class="w-100 h-80" style="aspect-ratio: 1/1; object-fit: cover;">
-                                        <h6 class="mt-2 fw-normal">` + value.m_product_name + `</h6>
+                                        <p class="mt-2 fw-normal fn">` + value.m_product_name + ` (` + value.m_fabric_name + `)</p>
                                         <h6 class="mt-2">₹ ` + value.m_product_seles_price + ` <small> <del>₹  ` + value.m_product_mrp + `</del></small></h6>
                                     </div>
                                 </div>
@@ -167,43 +302,141 @@
 
     }
 
-    // function remove_itmtr(item_id, order_item_id = '') {
-    //     if (order_item_id != '') {
-    //         // alert(item_id +'--'+ order_item_id)
-    //         swal({
-    //             title: "Are You Sure ?",
-    //             text: "You want to Remove Item From List?",
-    //             icon: "warning",
-    //             buttons: true,
-    //             dangerMode: true,
-    //         }).then((willok2) => {
-    //             if (willok2) {
+    function remove_itmtr(item_id, order_item_id = '') {
+        if (order_item_id != '') {
+            // alert(item_id +'--'+ order_item_id)
+            swal({
+                title: "Are You Sure ?",
+                text: "You want to Remove Item From List?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willok2) => {
+                if (willok2) {
 
-    //                 $.ajax({
-    //                     type: "POST",
-    //                     url: "<?php echo site_url('Welcome/delete_order_item'); ?>",
-    //                     dataType: "JSON",
-    //                     data: {
-    //                         order_item_id
-    //                     },
-    //                     success: function(data) {
-    //                         $('#itmtr' + item_id).remove();
-    //                         calculate_total();
-    //                     }
-    //                 });
+                    $.ajax({
+                        type: "POST",
+                        url: "<?php echo site_url('Welcome/delete_order_item'); ?>",
+                        dataType: "JSON",
+                        data: {
+                            order_item_id
+                        },
+                        success: function(data) {
+                            $('#itmtr' + item_id).remove();
+                            calculate_total();
+                        }
+                    });
 
-    //             } else {
-    //                 swal("Data is Safe", {
-    //                     icon: "info",
-    //                     timer: 1000,
-    //                 });
-    //             }
+                } else {
+                    swal("Data is Safe", {
+                        icon: "info",
+                        timer: 1000,
+                    });
+                }
 
-    //         });
+            });
 
-    //     } else {
-    //         $('#itmtr' + item_id).remove();
-    //         calculate_total();
-    //     }
-    // }
+        } else {
+            $('#itmtr' + item_id).remove();
+            calculate_total();
+        }
+    }
+
+    function item_qtychanger(type, item_id, trans_id = '') {
+        var curqty = parseInt($('#t_item_qty' + item_id).val());
+
+        if (type == 1) {
+            curqty += 1;
+        } else {
+            if (curqty > 1) {
+                curqty -= 1;
+            } else {
+                remove_itmtr(item_id, trans_id)
+            }
+
+        }
+        $('#t_item_qty' + item_id).val(curqty);
+        item_total_cal(item_id);
+
+    }
+
+    function add_ordered_item(itemid, productid, itemname, itemrate, itemsize, itemcolor, sizename, colorname, taxgst, maxqty) {
+
+        $('#trnodata').remove();
+        $('#ordered_itemlist').append(`<tr id="itmtr` + itemid + `">
+                                                   
+                                                        <td class="left">` + itemname + ` <br> 
+                                                        <div class="row">
+                                                        <div class="col-md-4">
+                                                        <p class="pos-s m-0">Size - ` + sizename + `</p>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                        <div class="pos-clr" style="background-color: ` + colorname + `"></div>
+                                                        </div>
+                                                        </div> 
+                                                        </td>
+                                                        <td><span class="input-wrapper">
+                                                <button type="button" class="qtybtn" data-item_id="` + itemid + `" data-trans_id="" value="2">-</button>
+                                                <input type="tel" name="m_sale_qty[]" id="t_item_qty` + itemid + `" value="1">
+                                                                <input type="hidden" name="m_sale_product[]" id="t_item_id` + itemid + `" value="` + productid + `">
+                                                                <input type="hidden" name="m_sale_price[]" id="t_item_price` + itemid + `" value="` + itemrate + `">
+                                                                <input type="hidden" name="m_sale_taxgst[]" id="m_sale_taxgst` + itemid + `" value="` + taxgst + `">
+                                                                <input type="hidden" class="item_grossamt" name="m_sale_total[]" id="t_item_gross_amt` + itemid + `" value="` + itemrate + `">
+                                                                <input type="hidden" class="item_gsttax" name="m_sale_gst[]" id="m_sale_gst` + itemid + `" value="` + itemrate + `">
+                                                                <input type="hidden" name="m_sale_id[]" id="t_trans_id` + itemid + `" >
+                                                                <input type="hidden" name="m_sale_color[]" id="m_sale_color` + itemid + `" value="` + itemcolor + `">
+                                                                <input type="hidden" name="m_sale_size[]" id="m_sale_size` + itemid + `" value="` + itemsize + `">
+                                                <button type="button" class="qtybtn" data-item_id="` + itemid + `" value="1">+</button>
+                                            </span></td>
+                                                       
+                                                        <td style="width: 60px;" id="item_total` + itemid + `">₹` + itemrate + `</td>
+                                                        <td style="width: 30px;">
+                                                            <a class="delbtn" onclick="remove_itmtr('` + itemid + `')" ><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                                                        </td>
+                                                    </tr>`);
+
+    }
+
+    function item_total_cal(item_id) {
+        var qty = parseInt($('#t_item_qty' + item_id).val());
+        var price = parseInt($('#t_item_price' + item_id).val());
+        var taxgst = parseInt($('#m_sale_taxgst' + item_id).val());
+        var itemtotal = qty * price;
+        var taxamt = (itemtotal * taxgst / 100);
+        $('#item_total' + item_id).text('₹' + itemtotal);
+        $('#t_item_gross_amt' + item_id).val(itemtotal);
+        $('#m_sale_gst' + item_id).val(taxamt);
+
+    }
+
+    function calculate_total() {
+
+        var subtotal = 0;
+        var sumtaxgst = 0;
+
+        var discount = parseInt($("#m_sale_discount").val());
+        var shipping = parseInt($("#m_sale_shipping").val());
+
+        $(".item_grossamt").each(function() {
+            subtotal = subtotal + parseFloat($(this).val());
+        });
+
+        $(".item_gsttax").each(function() {
+            sumtaxgst = sumtaxgst + parseFloat($(this).val());
+        });
+
+        var natamout = (subtotal + sumtaxgst + shipping - discount);
+
+        $("#m_subtotal").val(subtotal.toFixed(2));
+        $("#m_total_tax").val(sumtaxgst.toFixed(2));
+        $("#m_sale_nettotal").val(natamout.toFixed(2));
+
+        $(".grandtotal").html('₹' + natamout.toFixed(2));
+        $("#subtotal").html('₹' + subtotal.toFixed(2));
+        $("#taxtotal").html('₹' + sumtaxgst.toFixed(2));
+        $("#distotal").html('₹' + discount.toFixed(2));
+        $("#shipptotal").html('₹' + shipping.toFixed(2));
+
+
+    }
 </script>

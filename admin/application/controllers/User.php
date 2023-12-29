@@ -358,16 +358,13 @@ class User extends CI_Controller
   public function sales()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'Sales';
-    $data['user'] = '';
-    $data['search'] = '';
-    $data['from_date'] = '';
-    $data['to_date'] = '';
+    $data['pagename'] = 'Sales ';
+   
     $data['from_date'] = $this->input->get('from_date');
     $data['to_date'] = $this->input->get('to_date');
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
-    $data['all_value'] = $this->User_model->get_all_sales($data['search'], $data['user'], $data['from_date'], $data['to_date']);
+    $data['all_value'] = $this->User_model->get_all_sales(null, $data['user'],$data['search'], $data['from_date'], $data['to_date']);
     $data['all_user'] = $this->User_model->get_active_customer();
 
     // echo "<pre>"; print_r($data['all_value']);die();
@@ -394,22 +391,23 @@ class User extends CI_Controller
     }
   }
 
-  public function edit_sales()
-  {
-    $data = $this->login_details();
-    $data['id'] = $this->input->get('id');
-    if (!empty($data['id'])) {
-      $data['pagename'] = 'Edit Sales';
-      $data['product_list1'] = $this->User_model->get_sales_products($data['id']);
-      $data['edit_value'] = $this->User_model->get_edit_sales($data['id']);
-    } else {
-      $data['pagename'] = 'Add Sales';
-    }
-    $data['texgst'] = $this->Main_model->get_active_taxgst();
-    $data['all_user'] = $this->User_model->get_active_customer();
-    // echo "<pre>";print_r($data['texgst']); die();
-    $this->load->view('sales-edit', $data);
-  }
+  // public function edit_sales()
+  // {
+  //   $data = $this->login_details();
+  //   $data['id'] = $this->input->get('id');
+  //   if (!empty($data['id'])) {
+  //     $data['pagename'] = 'Edit Sales';
+  //     $data['product_list1'] = $this->User_model->get_sale_items($data['id']);
+  //     $data['edit_value'] = $this->User_model->get_edit_sales($data['id']);
+  //   } else {
+  //     $data['pagename'] = 'Add Sales';
+  //   }
+  //   $data['product_list'] = $this->User_model->get_active_products();
+  //   $data['texgst'] = $this->Main_model->get_active_taxgst();
+  //   $data['all_user'] = $this->User_model->get_active_customer();
+  //   // echo "<pre>";print_r($data['texgst']); die();
+  //   $this->load->view('sales-edit', $data);
+  // }
 
 
 
@@ -433,7 +431,8 @@ class User extends CI_Controller
 
   public function insert_sales()
   {
-
+//     echo 'customer=' . $this->input->post('m_sale_customer');
+// die ;
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($data = $this->User_model->insert_sales()) {
 
@@ -444,8 +443,8 @@ class User extends CI_Controller
           );
         } else if ($data == 2) {
           $info = array(
-            'status' => 'success',
-            'message' => 'Data Updated Successfully'
+            'status' => 'error',
+            'message' => 'Paid Amount Should be equal to Net Amount'
           );
         } else {
           $info = array(
@@ -463,47 +462,47 @@ class User extends CI_Controller
     }
   }
 
-  public function update_sales()
-  {
+  // public function update_sales()
+  // {
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->update_sales()) {
+  //   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  //     if ($data = $this->User_model->insert_sales()) {
 
-        if ($data == 1) {
-          $info = array(
-            'status' => 'success',
-            'message' => 'Data has been Added successfully!'
-          );
-        } else if ($data == 2) {
-          $info = array(
-            'status' => 'success',
-            'message' => 'Data Updated Successfully'
-          );
-        } else {
-          $info = array(
-            'status' => 'error',
-            'message' => $data,
-          );
-        }
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
+  //       if ($data == 1) {
+  //         $info = array(
+  //           'status' => 'success',
+  //           'message' => 'Data has been Added successfully!'
+  //         );
+  //       } else if ($data == 2) {
+  //         $info = array(
+  //           'status' => 'success',
+  //           'message' => 'Data Updated Successfully'
+  //         );
+  //       } else {
+  //         $info = array(
+  //           'status' => 'error',
+  //           'message' => $data,
+  //         );
+  //       }
+  //     } else {
+  //       $info = array(
+  //         'status' => 'error',
+  //         'message' => 'Some problem Occurred!! please try again'
+  //       );
+  //     }
+  //     echo json_encode($info);
+  //   }
+  // }
 
 
-  public function sales_return()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Sales Return';
-    $this->load->view('sales-return', $data);
-  }
+
+
+  // public function sales_return()
+  // {
+  //   $data = $this->login_details();
+  //   $data['pagename'] = 'Sales Return';
+  //   $this->load->view('sales-return', $data);
+  // }
 
   //--------------------------------sales-----------------------//
 
@@ -603,16 +602,13 @@ class User extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Purchase';
-    $data['user'] = '';
-    $data['search'] = '';
-    $data['from_date'] = '';
-    $data['to_date'] = '';
+
     $data['purtype'] = 1;
     $data['from_date'] = $this->input->get('from_date');
     $data['to_date'] = $this->input->get('to_date');
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
-    $data['all_value'] = $this->User_model->get_all_purchase($data['search'], $data['user'], $data['from_date'], $data['to_date'], $data['purtype']);
+    $data['all_value'] = $this->User_model->get_all_purchase(null, $data['user'],$data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
     $data['all_user'] = $this->User_model->get_active_supplier();
     // echo "<pre>";print_r($data['all_value']); die();
     $this->load->view('purchase', $data);
@@ -622,55 +618,20 @@ class User extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Purchase Return';
-    $data['user'] = '';
-    $data['search'] = '';
-    $data['from_date'] = '';
-    $data['to_date'] = '';
     $data['purtype'] = 2;
     $data['from_date'] = $this->input->get('from_date');
     $data['to_date'] = $this->input->get('to_date');
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
-    $data['all_value'] = $this->User_model->get_all_purchase($data['search'], $data['user'], $data['from_date'], $data['to_date'], $data['purtype']);
+    $data['all_value'] = $this->User_model->get_all_purchase(null, $data['user'],$data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
     $data['all_user'] = $this->User_model->get_active_supplier();
-    $this->load->view('purchase-return', $data);
-  }
-
-  public function insert_preturn()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->insert_preturn()) {
-
-        if ($data == 1) {
-          $info = array(
-            'status' => 'success',
-            'message' => 'Data has been Added successfully!'
-          );
-        } else if ($data == 2) {
-          $info = array(
-            'status' => 'success',
-            'message' => 'Data Updated Successfully'
-          );
-        } else {
-          $info = array(
-            'status' => 'error',
-            'message' => $data,
-          );
-        }
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
+    $this->load->view('purchase', $data);
   }
 
   public function get_product_dtl()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $data = $this->Main_model->get_active_products(null,null,null,null, $this->input->post('itemid'));
+      $data = $this->User_model->get_active_products(null, $this->input->post('itemid'));
 
       echo json_encode($data);
     }
@@ -689,32 +650,23 @@ class User extends CI_Controller
     }
   }
 
-  public function edit_purchase()
+  public function edit_purchase($type = 1)
   {
     $data = $this->login_details();
     $data['id'] = $this->input->get('id');
-    if (!empty($this->input->get('rdid'))) {
-      $data['rdid'] = $this->input->get('rdid');
-    } else {
-      $data['rdid'] = '';
-    }
-    if (!empty($this->input->get('purtype'))) {
-      $data['purtype'] = $this->input->get('purtype');
-    } else {
-      $data['purtype'] = 1;
-    }
+     $data['purtype'] = $type;
+   
     if (!empty($data['id'])) {
-      $data['pagename'] = 'Edit Purchase';
-      $data['product_list1'] = $this->User_model->get_purchase_products($data['id']);
-      $data['edit_value'] = $this->User_model->get_edit_purchase($data['id']);
+      $data['pagename'] = $type == 1 ?'Edit Purchase' : 'Edit Return';
+      $data['edit_value'] = $this->User_model->get_all_purchase($data['id']);
     } else {
-      $data['pagename'] = 'Add Purchase';
+      $data['pagename'] = $type == 1 ?'Add Purchase' : 'Add Return';
     }
-    $data['product_list'] = $this->Main_model->all_product();
+    $data['product_list'] = $this->User_model->get_active_products();
     $data['texgst'] = $this->Main_model->get_active_taxgst();
     $data['all_user'] = $this->User_model->get_active_supplier();
 
-    // echo "<pre>"; print_r($data['product_list']); die();
+    // echo "<pre>"; print_r($data['edit_value']); die();
     $this->load->view('purchase-edit', $data);
   }
 
@@ -724,38 +676,6 @@ class User extends CI_Controller
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($data = $this->User_model->insert_purchase()) {
-
-        if ($data == 1) {
-          $info = array(
-            'status' => 'success',
-            'message' => 'Data has been Added successfully!'
-          );
-        } else if ($data == 2) {
-          $info = array(
-            'status' => 'success',
-            'message' => 'Data Updated Successfully'
-          );
-        } else {
-          $info = array(
-            'status' => 'error',
-            'message' => $data,
-          );
-        }
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_purchase()
-  {
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->update_purchase()) {
 
         if ($data == 1) {
           $info = array(

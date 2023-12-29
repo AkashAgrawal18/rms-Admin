@@ -4,9 +4,27 @@ class Report_model extends CI_model
 
     //==========================Stock List===========================//
 
+    public function get_active_products($item = '', $cat = '')
+    {
+        $this->db->select('*');
+
+        $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
+
+        if (!empty($item)) {
+            $this->db->where('m_product_id', $item);
+        }
+        if (!empty($cat)) {
+            $this->db->where('m_product_cat_id', $cat);
+        }
+
+        $this->db->where('m_product_status', 1);
+
+        return $this->db->get('master_product')->result();
+    }
+
     public function get_purchase_item($from = '', $to = '',  $type = '', $item = '', $cat = '',$search='', $size = '', $color = '')
     {
-        $this->db->select('sum(m_purchase_qty) as itemqty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,sum(m_purchase_total)  as subtotal,m_purchase_invoiceno,m_purchase_type,m_color_name,m_size_name,m_fabric_name,m_product_id,m_product_name,m_product_purche_price,m_product_mrp,m_product_seles_price,m_product_cat_id,m_category_name,m_product_slug,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_product_des,m_product_barscode,m_purchase_color,m_purchase_size,m_unit_title')
+        $this->db->select('sum(m_purchase_qty) as itemqty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,sum(m_purchase_total)  as subtotal,m_purchase_invoiceno,m_purchase_type,m_color_name,m_size_name,m_fabric_name,m_product_id,m_product_name,m_product_purche_price,m_product_mrp,m_product_seles_price,m_product_cat_id,m_category_name,m_product_slug,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_product_des,m_product_barscode,m_purchase_color,m_purchase_size,m_unit_title,m_tax_value')
             ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
             ->join('master_taxgst', 'master_taxgst.m_taxgst_id = master_product.m_product_taxgst', 'left')
             ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
@@ -142,6 +160,7 @@ class Report_model extends CI_model
                     "m_product_mrp" => $key->m_product_mrp,
                     "m_product_cat_id" => $key->m_product_cat_id,
                     "m_category_name" => $key->m_category_name,
+                    "m_tax_value" => $key->m_tax_value,
                     "m_product_slug" => $key->m_product_slug,
                     "m_product_unit" => $key->m_product_unit,
                     "m_unit_title" => $key->m_unit_title,

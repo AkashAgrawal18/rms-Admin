@@ -403,22 +403,12 @@ class User_model extends CI_model
   }
 
   //--------------------------------sales-----------------------//
-  public function get_all_sales($user, $search, $from_date, $to_date)
+
+  public function get_all_sales($order_id = '', $user = '', $search = '', $from_date = '', $to_date = '')
   {
-
-    // $this->db->select('*');
-
-    $this->db->select('master_sales_tbl.m_sale_customer,master_sales_tbl.m_sale_spo,master_sales_tbl.m_sale_paydated,master_sales_tbl.m_sale_status,master_sales_tbl.m_sale_pstatus,master_sales_tbl.m_sale_invoiceno,master_sales_tbl.m_sale_added_on as sale_date,master_sales_tbl.m_sale_paid_amount as paid_amount,added_by.m_user_name as added_by_name');
-    $this->db->select("SUM(master_sales_tbl.m_sale_qty * master_sales_tbl.m_sale_price) AS total_base_total");
-    $this->db->select("SUM(master_sales_tbl.m_sale_qty * master_sales_tbl.m_sale_price * master_sales_tbl.m_sale_discount / 100) AS total_discount_amount");
-    $this->db->select("SUM(master_sales_tbl.m_sale_qty * master_sales_tbl.m_sale_price - (master_sales_tbl.m_sale_qty * master_sales_tbl.m_sale_price * master_sales_tbl.m_sale_discount / 100)) AS total_net_amount");
-    $this->db->select("SUM(master_sales_tbl.m_sale_qty * master_sales_tbl.m_sale_price * master_sales_tbl.m_sale_gst / 100) AS total_gst");
-    $this->db->select('customer.m_user_name AS customer_name,customer.m_user_id as customer_id');
-    $this->db->from('master_sales_tbl');
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_sales_tbl.m_sale_added_by', 'left');
-    $this->db->group_by('master_sales_tbl.m_sale_spo');
-    $this->db->group_by('master_sales_tbl.m_sale_invoiceno');
+    if (!empty($order_id)) {
+      $this->db->where('m_sale_spo', $order_id);
+    }
     if (!empty($user)) {
       $this->db->where('m_sale_customer', $user);
     }
@@ -426,81 +416,78 @@ class User_model extends CI_model
 
       // $this->db->like('m_user_name',$search,'both');
       $this->db->or_like('m_sale_spo', $search, 'both');
-      $this->db->or_like('m_sale_invoiceno', $search, 'both');
+      // $this->db->or_like('m_sale_invoiceno', $search, 'both');
     }
-    if (!empty($from_date) && !empty($to_date)) {
+    if (!empty($from_date)) {
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")>=', $from_date);
+    }
+    if (!empty($to_date)) {
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")<=', $to_date);
     }
 
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_saddress,m_user_email,pmode1.m_pmode_name as pmodename1,pmode2.m_pmode_name as pmodename2');
+    $this->db->join(' master_users_tbl mct', 'mct.m_user_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->join('master_paymode_tbl pmode1', 'pmode1.m_pmode_id = master_sales_tbl.m_sale_pmode', 'left');
+    $this->db->join('master_paymode_tbl pmode2', 'pmode2.m_pmode_id = master_sales_tbl.m_sale_pmode2', 'left');
+    $this->db->group_by('m_sale_spo');
+    $sale_list = $this->db->get('master_sales_tbl')->result();
 
-    $query = $this->db->get();
+    if (!empty($sale_list)) {
+      foreach ($sale_list as $skey) {
 
-    return $query->result();
-  }
+        $res = (object)array(
+          "m_sale_spo" => $skey->m_sale_spo,
+          "total_qty" => $skey->total_qty,
+          "sub_total" => $skey->sub_total,
+          "m_sale_date" => $skey->m_sale_date,
+          "total_tax" => $skey->total_tax,
+          "m_sale_discount" => $skey->m_sale_discount,
+          "m_sale_shipping" => $skey->m_sale_shipping,
+          "m_sale_nettotal" => ($skey->sub_total + $skey->total_tax + $skey->m_sale_shipping -  $skey->m_sale_discount),
+          "m_sale_coupon" => $skey->m_sale_coupon,
+          "m_sale_ispartial" => $skey->m_sale_ispartial,
+          "m_sale_pstatus" => $skey->m_sale_pstatus,
+          "m_sale_pmode" => $skey->m_sale_pmode,
+          "m_sale_payamt" => $skey->m_sale_payamt,
+          "m_sale_pmode2" => $skey->m_sale_pmode2,
+          "m_sale_payamt2" => $skey->m_sale_payamt2,
+          "m_sale_status" => $skey->m_sale_status,
+          "m_sale_added_on" => $skey->m_sale_added_on,
+          "m_sale_user" => $skey->m_sale_user,
+          "m_sale_customer" => $skey->m_sale_customer,
+          "m_user_name" => $skey->m_user_name,
+          "m_user_mobile" => $skey->m_user_mobile,
+          "m_user_address" => $skey->m_user_address,
+          "m_user_saddress" => $skey->m_user_saddress,
+          "m_user_email" => $skey->m_user_email,
+          "pmodename1" => $skey->pmodename1,
+          "pmodename2" => $skey->pmodename2,
+          "m_sale_items" => $this->get_sale_items($skey->m_sale_spo, $skey->m_sale_customer),
 
-  public function get_sale_details($order_id, $uid)
-  {
-    $result = array();
+        );
 
-    $this->db->select(
-      'm_sale_spo, m_sale_paydated, m_sale_status, m_sale_date, m_sale_customer, 
-        m_sale_pstatus, m_sale_invoiceno, m_sale_added_on as sale_date,
-        m_sale_paid_amount as paid_amount, added_by.m_user_name as added_by_name,
-        sum(m_sale_qty) as total_qty, sum(m_sale_total) as sub_total,
-        sum(m_sale_qty * m_sale_price * m_sale_gst / 100) AS total_gst,
-        sum(m_sale_qty * m_sale_price - (m_sale_qty * m_sale_price * m_sale_discount / 100)) AS total_net_amount,
-        sum(m_sale_qty * m_sale_price * m_sale_discount / 100) AS total_discount_amount'
-    );
-
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_sales_tbl.m_sale_added_by', 'left');
-
-    $this->db->where('m_sale_customer', $uid);
-    $this->db->where('m_sale_spo', $order_id);
-    $this->db->group_by('m_sale_spo'); // Add a GROUP BY clause
-
-    $sale_detail = $this->db->get('master_sales_tbl')->result();
-
-    if (!empty($sale_detail)) {
-      $res = array(
-        "m_sale_date" => $sale_detail[0]->m_sale_date,
-        "m_sale_customer" => $sale_detail[0]->m_sale_customer,
-        "total_qty" => $sale_detail[0]->total_qty,
-        "sub_total" => $sale_detail[0]->sub_total,
-        "net_amount" => $sale_detail[0]->total_net_amount,
-        "m_sale_items" => $this->get_sale_items($order_id, $uid),
-        "product_payment" => $this->get_payment_product($order_id, $uid),
-      );
-
-      $result[] = $res;
+        $result[] = $res;
+      }
     }
-
     return $result;
   }
 
-  public function get_sale_items($order_id, $uid)
+  public function get_sale_items($order_id, $uid = '')
   {
-    $this->db->select('*');
-    $this->db->join('master_product', 'master_product.m_product_id = master_sales_tbl.m_sale_product', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_sales_tbl.m_sale_added_by', 'left');
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->select('m_sale_spo,m_sale_qty,m_sale_price,m_sale_total,m_sale_date,m_sale_product,m_sale_size,m_sale_price,m_sale_gst,m_sale_color,m_product_name,m_color_name,m_size_name,m_unit_title,m_category_name,m_fabric_name');
+    $this->db->join('master_product mit', 'mit.m_product_id = master_sales_tbl.m_sale_product', 'left')
+      ->join('master_color_tbl as color', 'color.m_color_id  = master_sales_tbl.m_sale_color', 'left')
+      ->join('master_size_tbl as size', 'size.m_size_id  = master_sales_tbl.m_sale_size', 'left')
+      ->join('master_unit as unit', 'unit.m_unit_id = mit.m_product_unit', 'left')
+      ->join('master_categories as cate', 'cate.m_category_id  = mit.m_product_cat_id', 'left')
+      ->join('master_fabric_tbl as fabric', 'fabric.m_fabric_id  = mit.m_product_fabric', 'left');
 
-    $this->db->where('m_sale_customer', $uid);
+    if (!empty($uid)) {
+      $this->db->where('m_sale_customer', $uid);
+    }
+
     $this->db->where('m_sale_spo', $order_id);
 
-    return $this->db->get('master_sales_tbl')->result();
-  }
-
-  public function get_payment_product($order_id, $uid)
-  {
-    $this->db->select('m_sale_paid_amount as paid_amount,m_sale_paydated as pay_date,m_sale_pmode as paymode');
-
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
-
-    $this->db->where('m_sale_customer', $uid);
-    $this->db->where('m_sale_spo', $order_id);
-    $this->db->group_by('m_sale_spo');
     return $this->db->get('master_sales_tbl')->result();
   }
 
@@ -526,20 +513,6 @@ class User_model extends CI_model
     return $this->db->get('master_sales_tbl')->row();
   }
 
-  public function get_sales_products($salesid)
-  {
-    $this->db->select('*');
-    $this->db->join('master_product', 'master_product.m_product_id = master_sales_tbl.m_sale_product', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_sales_tbl.m_sale_added_by', 'left');
-    $this->db->join('master_users_tbl updated_by', 'updated_by.m_user_id = master_sales_tbl.m_sale_updaded_by', 'left');
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
-
-    // $this->db->where('m_purchase_supplier', $uid);
-    $this->db->where('m_sale_spo', $salesid);
-
-    return $this->db->get('master_sales_tbl')->result();
-  }
-
   public function delete_sale_item()
   {
     $this->db->where('m_sale_id', $this->input->post('delete_id'));
@@ -557,260 +530,221 @@ class User_model extends CI_model
 
     if (!empty($res)) {
       $part = explode('/', $res->m_sale_spo);
-      $spo = 'UT/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
+      $spo = 'ORD/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
     } else {
-      $spo = 'UT/' . date('dmy') . '/0001';
+      $spo = 'ORD/' . date('dmy') . '/0001';
     }
 
 
     // $spo  = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
-    $pur_item_id = $this->input->post('pur_item_id');
-    $pur_item_itemid = $this->input->post('pur_item_itemid');
-    $pur_item_rate = $this->input->post('pur_item_rate');
-    $pur_item_qty = $this->input->post('pur_item_qty');
+    $m_sale_id = $this->input->post('m_sale_id');
 
-    $pur_item_total = $this->input->post('pur_item_total');
-    $pur_item_gst = $this->input->post('pur_item_gst');
-    $pur_item_disc = $this->input->post('pur_item_disc');
-    $pur_item_nettotal = $this->input->post('pur_item_nettotal');
+    $m_sale_product = $this->input->post('m_sale_product');
+    $m_sale_price = $this->input->post('m_sale_price');
+    $m_sale_qty = $this->input->post('m_sale_qty');
 
-    for ($i = 0; $i < count($pur_item_itemid); $i++) {
-      if (!empty($pur_item_itemid[$i])) {
+    $m_sale_total = $this->input->post('m_sale_total');
+    $m_sale_gst = $this->input->post('m_sale_gst');
+
+    $m_sale_color = $this->input->post('m_sale_color');
+    $m_sale_size = $this->input->post('m_sale_size');
+
+    $m_sale_nettotal = $this->input->post('m_sale_nettotal');
+    $m_sale_payamt = $this->input->post('m_sale_payamt');
+    $m_sale_payamt2 = $this->input->post('m_sale_payamt2');
+
+    $baldif = ($m_sale_nettotal - $m_sale_payamt - $m_sale_payamt2);
+    //  echo $m_sale_nettotal .'-' ;
+    //  echo $m_sale_payamt .'-' ;
+    //  echo $m_sale_payamt .'-' ;
+    //  echo $baldif ; die ;
+    if ($baldif >= 1) {
+      return 2;
+    }
+
+    foreach ($m_sale_product as $cua => $key) {
+      if (!empty($key)) {
         $insert_data = array(
-          "m_sale_date"    => $this->input->post('m_sale_date'),
-          "m_sale_invoiceno" => $this->input->post('m_sale_invoice'),
+          "m_sale_date"    => date('Y-m-d'),
+          // "m_sale_invoiceno" => $this->input->post('m_sale_invoice'),
           "m_sale_customer" => $this->input->post('m_sale_customer'),
           "m_sale_spo" => $spo,
-          "m_sale_product" => $pur_item_itemid[$i],
-          "m_sale_price" => $pur_item_rate[$i],
-          "m_sale_qty" => $pur_item_qty[$i],
-          "m_sale_total" => $pur_item_total[$i],
-          "m_sale_gst" => $pur_item_gst[$i],
-          "m_sale_discount" => $pur_item_disc[$i],
-          // "pur_item_nettotal" => $pur_item_nettotal[$i],
-          // "pur_item_purtype" => $this->input->post('m_purchase_type'),
-          // "pur_item_added_on" => date('Y-m-d H:i:s'),
+          "m_sale_product" => $key,
+          "m_sale_price" => $m_sale_price[$cua],
+          "m_sale_qty" => $m_sale_qty[$cua],
+          "m_sale_total" => $m_sale_total[$cua],
+          "m_sale_gst" => $m_sale_gst[$cua],
+          "m_sale_color" => $m_sale_color[$cua],
+          "m_sale_size" => $m_sale_size[$cua],
+          "m_sale_discount" => $this->input->post('m_sale_discount'),
+          "m_sale_shipping" => $this->input->post('m_sale_shipping'),
+          "m_sale_ispartial" => $this->input->post('m_sale_ispartial') ?: 0,
+          "m_sale_pmode" => $this->input->post('m_sale_pmode'),
+          "m_sale_payamt" => $m_sale_payamt,
+          "m_sale_pmode2" => $this->input->post('m_sale_pmode2') ?: 0,
+          "m_sale_payamt2" => $m_sale_payamt2 ?: 0,
+          "m_sale_pstatus" => 1,
 
         );
+
+        $insert_data['m_sale_status'] = 1;
         $insert_data['m_sale_user'] = $this->session->userdata('user_id');
         $insert_data['m_sale_added_by'] = $this->session->userdata('user_id');
-        $insert_data['m_sale_added_on'] = date('Y-m-d H:i:s');
-        $this->db->insert('master_sales_tbl', $insert_data);
+        $insert_data['m_sale_added_on'] = date('Y-m-d H:i');
+
+        // echo '<pre>'; print_r($insert_data); 
+
+        $res = $this->db->insert('master_sales_tbl', $insert_data);
+        // echo $res;
       }
     }
-
+    // die ;
     return 1;
   }
-
-
-
-  public function update_sales()
-  {
-
-
-    $spo = $this->input->post('m_sop_id');
-
-    // $pur_id = $this->input->post('m_sales_id');
-
-    $pur_item_id = $this->input->post('pur_item_id');
-    $pur_item_itemid = $this->input->post('pur_item_itemid');
-    $pur_item_rate = $this->input->post('pur_item_rate');
-    $pur_item_qty = $this->input->post('pur_item_qty');
-
-    $pur_item_total = $this->input->post('pur_item_total');
-    $pur_item_gst = $this->input->post('pur_item_gst');
-    $pur_item_disc = $this->input->post('pur_item_disc');
-    $pur_item_nettotal = $this->input->post('pur_item_nettotal');
-
-
-    for ($i = 0; $i < count($pur_item_itemid); $i++) {
-
-      // print_r($pur_item_id);
-
-      if (!empty($pur_item_itemid[$i])) {
-
-        $insert_data = array(
-
-
-          "m_sale_date"    => $this->input->post('m_sale_date'),
-          "m_sale_invoiceno" => $this->input->post('m_sale_invoice'),
-          "m_sale_customer" => $this->input->post('m_sale_customer'),
-          "m_sale_spo" => $spo,
-          "m_sale_product" => $pur_item_itemid[$i],
-          "m_sale_price" => $pur_item_rate[$i],
-          "m_sale_qty" => $pur_item_qty[$i],
-          "m_sale_total" => $pur_item_total[$i],
-          "m_sale_gst" => $pur_item_gst[$i],
-          "m_sale_discount" => $pur_item_disc[$i],
-          // "pur_item_nettotal" => $pur_item_nettotal[$i],
-          // "pur_item_purtype" => $this->input->post('m_purchase_type'),
-          // "pur_item_added_on" => date('Y-m-d H:i:s'),
-
-        );
-
-        if (!empty($pur_item_id[$i])) {
-
-
-          $insert_data['m_sale_updaded_by'] = $this->session->userdata('user_id');
-          $insert_data['m_sale_updaded_on'] = date('Y-m-d H:i:s');
-
-          $this->db->where('m_sale_id', $pur_item_id[$i])->update('master_sales_tbl', $insert_data);
-        } else {
-
-          $insert_data['m_sale_user'] = $this->session->userdata('user_id');
-          $insert_data['m_sale_added_by'] = $this->session->userdata('user_id');
-          $insert_data['m_sale_added_on'] = date('Y-m-d H:i:s');
-          $this->db->insert('master_sales_tbl', $insert_data);
-        }
-      }
-    }
-
-    return 2;
-  }
-
-
-
 
   //--------------------------------/sales-----------------------//
 
 
   //-----------------------------purchese----------------------------//
 
- 
-  public function get_all_purchase($user, $search, $from_date, $to_date, $purtype)
-  {
-
-    // $this->db->select('*');
-
-    $this->db->select('master_purchase_tbl.m_purchase_supplier,master_purchase_tbl.m_purchase_spo,master_purchase_tbl.m_purchase_paydated,master_purchase_tbl.m_purchase_status,master_purchase_tbl.m_purchase_pstatus,master_purchase_tbl.m_purchase_invoiceno,master_purchase_tbl.m_purchase_added_on as purchase_date,master_purchase_tbl.m_purchase_paid_amount as paid_amount,added_by.m_user_name as added_by_name,,master_purchase_tbl.m_purchase_type');
-    $this->db->select("SUM(master_purchase_tbl.m_purchase_qty * master_purchase_tbl.m_purchase_price) AS total_base_total");
-    $this->db->select("SUM(master_purchase_tbl.m_purchase_qty * master_purchase_tbl.m_purchase_price * master_purchase_tbl.m_purchase_discount / 100) AS total_discount_amount");
-    $this->db->select("SUM(master_purchase_tbl.m_purchase_qty * master_purchase_tbl.m_purchase_price - (master_purchase_tbl.m_purchase_qty * master_purchase_tbl.m_purchase_price * master_purchase_tbl.m_purchase_discount / 100)) AS total_net_amount");
-    $this->db->select("SUM(master_purchase_tbl.m_purchase_qty * master_purchase_tbl.m_purchase_price * master_purchase_tbl.m_purchase_gst / 100) AS total_gst");
-    $this->db->select('supplier.m_user_name AS supplier_name,supplier.m_user_id as supplier_id');
-    $this->db->from('master_purchase_tbl');
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_purchase_tbl.m_purchase_added_by', 'left');
-    $this->db->group_by('master_purchase_tbl.m_purchase_spo');
-    $this->db->group_by('master_purchase_tbl.m_purchase_invoiceno');
-    if (!empty($user)) {
-      $this->db->where('m_purchase_supplier', $user);
-    }
-    if ($search != NULL) {
-
-      // $this->db->like('m_user_name',$search,'both');
-      $this->db->or_like('m_purchase_spo', $search, 'both');
-      $this->db->or_like('m_purchase_invoiceno', $search, 'both');
-    }
-
-    if (!empty($from_date) && !empty($to_date)) {
-      $this->db->where('DATE_FORMAT(m_purchase_added_on,"%Y-%m-%d")>=', $from_date);
-      $this->db->where('DATE_FORMAT(m_purchase_added_on,"%Y-%m-%d")<=', $to_date);
-    }
-
-    $this->db->where('m_purchase_type', $purtype);
-    $query = $this->db->get();
-
-    return $query->result();
-  }
-
-  public function get_edit_purchase($purchaseid)
-  {
-    $this->db->select('m_purchase_spo,m_purchase_invoiceno,m_purchase_date,m_purchase_supplier,m_purchase_type');
-
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_purchase_tbl.m_purchase_added_by', 'left');
-    $this->db->join('master_users_tbl updated_by', 'updated_by.m_user_id = master_purchase_tbl.m_purchase_updaded_by', 'left');
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
-
-    // $this->db->where('m_purchase_supplier', $uid);
-    $this->db->where('m_purchase_spo', $purchaseid);
-    $this->db->group_by('m_purchase_spo');
-    return $this->db->get('master_purchase_tbl')->row();
-  }
-
-
-  public function get_purchase_products($purchaseid)
-  {
-    $this->db->select('*');
-    $this->db->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_purchase_tbl.m_purchase_added_by', 'left');
-    $this->db->join('master_users_tbl updated_by', 'updated_by.m_user_id = master_purchase_tbl.m_purchase_updaded_by', 'left');
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
-
-    // $this->db->where('m_purchase_supplier', $uid);
-    $this->db->where('m_purchase_spo', $purchaseid);
-
-    return $this->db->get('master_purchase_tbl')->result();
-  }
-
-
-  public function get_purchase_details($order_id, $uid)
+  public function get_active_products($cat = '', $item = '')
   {
     $result = array();
 
-    $this->db->select(
-      'm_purchase_spo, m_purchase_paydated, m_purchase_status, m_purchase_date, m_purchase_supplier, 
-        m_purchase_pstatus, m_purchase_invoiceno, m_purchase_added_on as purchase_date,
-        m_purchase_paid_amount as paid_amount, added_by.m_user_name as added_by_name,
-        sum(m_purchase_qty) as total_qty, sum(m_purchase_total) as sub_total,
-        sum(m_purchase_qty * m_purchase_price * m_purchase_gst / 100) AS total_gst,
-        sum(m_purchase_qty * m_purchase_price - (m_purchase_qty * m_purchase_price * m_purchase_discount / 100)) AS total_net_amount,
-        sum(m_purchase_qty * m_purchase_price * m_purchase_discount / 100) AS total_discount_amount'
-    );
+    if (!empty($cat)) {
+      $this->db->where('m_product_cat_id', $cat);
+    }
+    if (!empty($item)) {
+      $this->db->where('m_product_id', $item);
+    }
+    $sql = $this->db->join('master_taxgst', 'master_taxgst.m_taxgst_id = master_product.m_product_taxgst', 'left')->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')->join('master_unit', 'master_unit.m_unit_id = master_product.m_product_unit', 'left')->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id = master_product.m_product_fabric', 'left')->where('m_product_status', 1)->get('master_product')->result();
 
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_purchase_tbl.m_purchase_added_by', 'left');
+    if (!empty($sql)) {
+      foreach ($sql as $key => $value) {
+        $product_colors = $this->db->select('m_color_id,m_color_name')->where_in('m_color_id', explode(',', $value->m_product_color))->get('master_color_tbl')->result();
 
-    $this->db->where('m_purchase_supplier', $uid);
-    $this->db->where('m_purchase_spo', $order_id);
-    $this->db->group_by('m_purchase_spo'); // Add a GROUP BY clause
+        $product_size = $this->db->select('m_size_id,m_size_name')->where_in('m_size_id', explode(',', $value->m_product_size))->get('master_size_tbl')->result();
 
-    $purchase_detail = $this->db->get('master_purchase_tbl')->result();
+        $product_images = $this->db->select('m_image_id,m_image_product_img')->where('m_image_product_id', $value->m_product_id)->get('master_image_tbl')->result();
 
-    if (!empty($purchase_detail)) {
-      $res = array(
-        "m_purchase_date" => $purchase_detail[0]->m_purchase_date,
-        "m_purchase_supplier" => $purchase_detail[0]->m_purchase_supplier,
-        "total_qty" => $purchase_detail[0]->total_qty,
-        "sub_total" => $purchase_detail[0]->sub_total,
-        "net_amount" => $purchase_detail[0]->total_net_amount,
-        "m_purchase_items" => $this->get_purchase_items($order_id, $uid),
-        "product_payment" => $this->get_paymentpurchase_product($order_id, $uid),
-      );
+        $res = (object) array(
+          "m_product_id" => $value->m_product_id,
+          "m_product_name" => $value->m_product_name,
+          "m_product_slug" => $value->m_product_slug,
+          "m_product_cat_id" => $value->m_product_cat_id,
+          "m_category_name" => $value->m_category_name,
+          "m_product_taxgst" => $value->m_product_taxgst,
+          "m_tax_value" => $value->m_tax_value,
+          "m_product_unit" => $value->m_product_unit,
+          "m_unit_title" => $value->m_unit_title,
+          "m_product_barscode" => $value->m_product_barscode,
+          "m_product_purche_price" => $value->m_product_purche_price,
+          "m_product_seles_price" => $value->m_product_seles_price,
+          "m_product_mrp" => $value->m_product_mrp,
+          "m_product_details" => $value->m_product_details,
+          "m_product_information" => $value->m_product_information,
+          "m_product_des" => $value->m_product_des,
+          "m_product_status" => $value->m_product_status,
+          'm_product_fabric' => $value->m_product_fabric,
+          'm_fabric_name' => $value->m_fabric_name,
+          'm_product_color' => $product_colors,
+          'm_product_size' => $product_size,
+          'm_product_image' => $product_images,
+        );
 
-      $result[] = $res;
+        $result[] = $res;
+      }
     }
 
     return $result;
   }
 
-
-  public function get_purchase_items($order_id, $uid)
+  public function get_all_purchase($pur_id = '', $user = '', $search = '', $from_date = '', $to_date = '', $pur_type='')
   {
-    $this->db->select('*');
-    $this->db->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left');
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_purchase_tbl.m_purchase_added_by', 'left');
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
+    if (!empty($pur_id)) {
+      $this->db->where('m_purchase_spo', $pur_id);
+    }
+    if (!empty($user)) {
+      $this->db->where('m_purchase_supplier', $user);
+    }
+    if ($search != NULL) {
+      // $this->db->like('m_user_name',$search,'both');
+      $this->db->like('m_purchase_spo', $search, 'both');
+      $this->db->or_like('m_purchase_invoiceno', $search, 'both');
+    }
 
-    $this->db->where('m_purchase_supplier', $uid);
-    $this->db->where('m_purchase_spo', $order_id);
+    if (!empty($from_date)) {
+      $this->db->where('DATE_FORMAT(m_purchase_added_on,"%Y-%m-%d")>=', $from_date);
+    }
+    if (!empty($to_date)) {
+      $this->db->where('DATE_FORMAT(m_purchase_added_on,"%Y-%m-%d")<=', $to_date);
+    }
+    if (!empty($pur_type)) {
+      $this->db->where('m_purchase_type', $pur_type);
+    }
 
-    return $this->db->get('master_purchase_tbl')->result();
-  }
+    $this->db->select('m_purchase_spo,sum(m_purchase_qty) as total_qty,sum(m_purchase_total) as item_sub_total,sum(m_purchase_netamt) as item_net_total,m_purchase_type,m_purchase_invoiceno,m_purchase_date,sum(m_purchase_gstamt) as total_tax,sum(m_purchase_disamt) as total_disc,m_purchase_shipping,m_purchase_status,m_purchase_added_on,m_purchase_user,m_purchase_supplier,m_purchase_note,m_purchase_terms,m_user_name,m_user_mobile,m_user_email,m_user_address,m_user_saddress');
+    $this->db->join('master_users_tbl mct', 'mct.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
 
-  public function get_paymentpurchase_product($order_id, $uid)
-  {
-    $this->db->select('m_purchase_paid_amount as paid_amount,m_purchase_paydated as pay_date,m_purchase_pmode as paymode');
-
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
-
-    $this->db->where('m_purchase_supplier', $uid);
-    $this->db->where('m_purchase_spo', $order_id);
     $this->db->group_by('m_purchase_spo');
-    return $this->db->get('master_purchase_tbl')->result();
+    $purchase_list = $this->db->get('master_purchase_tbl')->result();
+
+    if (!empty($purchase_list)) {
+      foreach ($purchase_list as $skey) {
+
+        $res = (object) array(
+          "m_purchase_spo" => $skey->m_purchase_spo,
+          "total_qty" => $skey->total_qty,
+          "item_sub_total" => $skey->item_sub_total,
+          "item_net_total" => $skey->item_net_total,
+          "m_purchase_type" => $skey->m_purchase_type,
+          "m_purchase_invoiceno" => $skey->m_purchase_invoiceno,
+          "m_purchase_date" => $skey->m_purchase_date,
+          "total_tax" => $skey->total_tax,
+          "total_disc" => $skey->total_disc,
+          "m_purchase_shipping" => $skey->m_purchase_shipping,
+          "m_purchase_nettotal" => ($skey->item_sub_total + $skey->total_tax + $skey->m_purchase_shipping - $skey->total_disc),
+          "m_purchase_status" => $skey->m_purchase_status,
+          "m_purchase_added_on" => $skey->m_purchase_added_on,
+          "m_purchase_user" => $skey->m_purchase_user,
+          "m_purchase_supplier" => $skey->m_purchase_supplier,
+          "m_purchase_terms" => $skey->m_purchase_terms,
+          "m_purchase_note" => $skey->m_purchase_note,
+          "m_user_name" => $skey->m_user_name,
+          "m_user_mobile" => $skey->m_user_mobile,
+          "m_user_email" => $skey->m_user_email,
+          "m_user_address" => $skey->m_user_address,
+          "m_user_saddress" => $skey->m_user_saddress,
+        
+          "m_purchase_items" => $this->get_purchase_item($skey->m_purchase_spo, $skey->m_purchase_supplier),
+
+        );
+
+        $result[] = $res;
+      }
+    }
+    return $result;
   }
 
+  public function get_purchase_item($pur_id,$supplier)
+    {
+        $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,m_color_name,m_size_name,m_fabric_name,m_product_name,m_category_name,m_unit_title,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt,m_product_color,m_product_size,m_purchase_size,m_purchase_color')
+            ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
+           ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
+            ->join('master_unit', 'master_unit.m_unit_id = master_product.m_product_unit', 'left')
+            ->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id = master_product.m_product_fabric', 'left')
+            ->join('master_size_tbl', 'master_size_tbl.m_size_id = master_purchase_tbl.m_purchase_size', 'left')
+            ->join('master_color_tbl', 'master_color_tbl.m_color_id = master_purchase_tbl.m_purchase_color', 'left');
 
+        if (!empty($pur_id)) {
+            $this->db->where('m_purchase_spo', $pur_id);
+        }
+        if (!empty($supplier)) {
+            $this->db->where('m_purchase_supplier', $supplier);
+        }
+     
+        return $this->db->get('master_purchase_tbl')->result();
+    }
 
 
 
@@ -837,7 +771,9 @@ class User_model extends CI_model
 
     $pur_item_total = $this->input->post('pur_item_total');
     $pur_item_gst = $this->input->post('pur_item_gst');
+    $pur_item_gstamt = $this->input->post('pur_item_gstamt');
     $pur_item_disc = $this->input->post('pur_item_disc');
+    $pur_item_discamt = $this->input->post('pur_item_discamt');
     $pur_item_nettotal = $this->input->post('pur_item_nettotal');
 
     for ($i = 0; $i < count($pur_item_itemid); $i++) {
@@ -846,8 +782,10 @@ class User_model extends CI_model
           "m_purchase_date"    => $this->input->post('m_purchase_date'),
           "m_purchase_invoiceno" => $this->input->post('m_purchase_invoice'),
           "m_purchase_supplier" => $this->input->post('m_purchase_supplier'),
-          "m_purchase_spo" => $spo,
-          "m_purchase_type" => 1,
+          "m_purchase_shipping" => $this->input->post('m_purchase_shipping'),
+          "m_purchase_terms" => $this->input->post('m_purchase_terms'),
+          "m_purchase_note" => $this->input->post('m_purchase_note'),
+          "m_purchase_type" => $this->input->post('m_purchase_type'),
           "m_purchase_product" => $pur_item_itemid[$i],
           "m_purchase_price" => $pur_item_rate[$i],
           "m_purchase_qty" => $pur_item_qty[$i],
@@ -855,92 +793,38 @@ class User_model extends CI_model
           "m_purchase_color" => $m_purchase_color[$i],
           "m_purchase_total" => $pur_item_total[$i],
           "m_purchase_gst" => $pur_item_gst[$i],
-          "m_purchase_discount" => $pur_item_disc[$i],
-          // "pur_item_nettotal" => $pur_item_nettotal[$i],
-          // "pur_item_purtype" => $this->input->post('m_purchase_type'),
-          // "pur_item_added_on" => date('Y-m-d H:i:s'),
-
-        );
-        $insert_data['m_purchase_user'] = $this->session->userdata('user_id');
-        $insert_data['m_purchase_added_by'] = $this->session->userdata('user_id');
-        $insert_data['m_purchase_added_on'] = date('Y-m-d H:i:s');
-        $this->db->insert('master_purchase_tbl', $insert_data);
-      }
-    }
-
-    return 1;
-  }
-
-
-  public function update_purchase()
-  {
-
-
-    $spo = $this->input->post('m_sop_id');
-
-    $pur_id = $this->input->post('m_purchase_id');
-
-    $pur_item_id = $this->input->post('pur_item_id');
-    $pur_item_itemid = $this->input->post('pur_item_itemid');
-    $pur_item_rate = $this->input->post('pur_item_rate');
-    $pur_item_qty = $this->input->post('pur_item_qty');
-    $m_purchase_size = $this->input->post('m_purchase_size');
-    $m_purchase_color = $this->input->post('m_purchase_color');
-    $pur_item_total = $this->input->post('pur_item_total');
-    $pur_item_gst = $this->input->post('pur_item_gst');
-    $pur_item_disc = $this->input->post('pur_item_disc');
-    $pur_item_nettotal = $this->input->post('pur_item_nettotal');
-
-
-    for ($i = 0; $i < count($pur_item_itemid); $i++) {
-
-      // print_r($pur_item_id);
-
-      if (!empty($pur_item_itemid[$i])) {
-
-        $insert_data = array(
-
-
-          "m_purchase_date"    => $this->input->post('m_purchase_date'),
-          "m_purchase_invoiceno" => $this->input->post('m_purchase_invoice'),
-          "m_purchase_supplier" => $this->input->post('m_purchase_supplier'),
-          "m_purchase_spo" => $spo,
-          "m_purchase_type" => 1,
-          "m_purchase_product" => $pur_item_itemid[$i],
-          "m_purchase_price" => $pur_item_rate[$i],
-          "m_purchase_qty" => $pur_item_qty[$i],
-          "m_purchase_size" => $m_purchase_size[$i],
-          "m_purchase_color" => $m_purchase_color[$i],
-          "m_purchase_total" => $pur_item_total[$i],
-          "m_purchase_gst" => $pur_item_gst[$i],
-          "m_purchase_discount" => $pur_item_disc[$i],
-          // "pur_item_nettotal" => $pur_item_nettotal[$i],
-          // "pur_item_purtype" => $this->input->post('m_purchase_type'),
-          // "pur_item_added_on" => date('Y-m-d H:i:s'),
-
+          "m_purchase_dis" => $pur_item_disc[$i],
+          "m_purchase_gstamt" => $pur_item_gstamt[$i],
+          "m_purchase_disamt" => $pur_item_discamt[$i],
+          "m_purchase_netamt" => $pur_item_nettotal[$i],
+        
         );
 
-        if (!empty($pur_item_id[$i])) {
-
-
+        if(!empty($pur_item_id[$i])){
           $insert_data['m_purchase_updaded_by'] = $this->session->userdata('user_id');
-          $insert_data['m_purchase_updaded_on'] = date('Y-m-d H:i:s');
+          $insert_data['m_purchase_updaded_on'] = date('Y-m-d H:i');
 
           $this->db->where('m_purchase_id', $pur_item_id[$i])->update('master_purchase_tbl', $insert_data);
-        } else {
-
+          $res = 2;
+        }else {
+          $insert_data['m_purchase_spo'] = $spo;
+          $insert_data['m_purchase_status'] = 1;
           $insert_data['m_purchase_user'] = $this->session->userdata('user_id');
           $insert_data['m_purchase_added_by'] = $this->session->userdata('user_id');
-          $insert_data['m_purchase_added_on'] = date('Y-m-d H:i:s');
-          $this->db->insert('master_purchase_tbl', $insert_data);
+          $insert_data['m_purchase_added_on'] = date('Y-m-d H:i');
+          $res = $this->db->insert('master_purchase_tbl', $insert_data);
         }
+     
+
+        // echo '<pre>'; print_r($insert_data); 
+
+    
+      //  echo '<pre>'; print_r($res); 
       }
     }
-
-    return 2;
+    // die;
+    return $res;
   }
-
-
 
 
   public function delete_purchase_item()
@@ -955,113 +839,6 @@ class User_model extends CI_model
     $this->db->where('m_purchase_spo', $this->input->post('delete_id'));
     $this->db->delete('master_purchase_tbl');
     return true;
-  }
-
-
-
-  public function insert_preturn()
-  {
-
-    $rdid = $this->input->post('rdid');
-
-    if (!empty($rdid)) {
-
-      $spo  = $this->input->post('m_sop_id');
-      $pur_item_id = $this->input->post('pur_item_id');
-      $pur_item_itemid = $this->input->post('pur_item_itemid');
-      $pur_item_rate = $this->input->post('pur_item_rate');
-      $pur_item_qty = $this->input->post('pur_item_qty');
-
-      $pur_item_total = $this->input->post('pur_item_total');
-      $pur_item_gst = $this->input->post('pur_item_gst');
-      $pur_item_disc = $this->input->post('pur_item_disc');
-      $pur_item_nettotal = $this->input->post('pur_item_nettotal');
-
-      for ($i = 0; $i < count($pur_item_itemid); $i++) {
-        if (!empty($pur_item_itemid[$i])) {
-          $insert_data = array(
-            "m_purchase_date"    => $this->input->post('m_purchase_date'),
-            "m_purchase_invoiceno" => $this->input->post('m_purchase_invoice'),
-            "m_purchase_supplier" => $this->input->post('m_purchase_supplier'),
-            "m_purchase_spo" => $spo,
-            "m_purchase_type" => 2,
-            "m_purchase_product" => $pur_item_itemid[$i],
-            "m_purchase_price" => $pur_item_rate[$i],
-            "m_purchase_qty" => $pur_item_qty[$i],
-            "m_purchase_total" => $pur_item_total[$i],
-            "m_purchase_gst" => $pur_item_gst[$i],
-            "m_purchase_discount" => $pur_item_disc[$i],
-            // "pur_item_nettotal" => $pur_item_nettotal[$i],
-            // "pur_item_purtype" => $this->input->post('m_purchase_type'),
-            // "pur_item_added_on" => date('Y-m-d H:i:s'),
-
-          );
-
-          $insert_data['m_purchase_updaded_by'] = $this->session->userdata('user_id');
-          $insert_data['m_purchase_updaded_on'] = date('Y-m-d H:i:s');
-          $this->db->where('m_purchase_id', $pur_item_id[$i])->update('master_purchase_tbl', $insert_data);
-        }
-      }
-
-
-      return 2;
-    } else {
-
-
-
-
-      $res = $this->db->select('m_purchase_spo')->order_by('m_purchase_id', 'desc')->where('m_purchase_type', 2)->get('master_purchase_tbl')->row();
-      // $res ='UTP/201223/0001';
-
-      if (!empty($res)) {
-        $part = explode('/', $res->m_purchase_spo);
-        $spo = 'UTR/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
-      } else {
-        $spo = 'UTR/' . date('dmy') . '/0001';
-      }
-
-
-      // print_r($spo1); die();
-
-      // $spo  = $this->input->post('pur_item_id')
-      $pur_item_id = $this->input->post('pur_item_id');
-      $pur_item_itemid = $this->input->post('pur_item_itemid');
-      $pur_item_rate = $this->input->post('pur_item_rate');
-      $pur_item_qty = $this->input->post('pur_item_qty');
-
-      $pur_item_total = $this->input->post('pur_item_total');
-      $pur_item_gst = $this->input->post('pur_item_gst');
-      $pur_item_disc = $this->input->post('pur_item_disc');
-      $pur_item_nettotal = $this->input->post('pur_item_nettotal');
-
-      for ($i = 0; $i < count($pur_item_itemid); $i++) {
-        if (!empty($pur_item_itemid[$i])) {
-          $insert_data = array(
-            "m_purchase_date"    => $this->input->post('m_purchase_date'),
-            "m_purchase_invoiceno" => $this->input->post('m_purchase_invoice'),
-            "m_purchase_supplier" => $this->input->post('m_purchase_supplier'),
-            "m_purchase_spo" => $spo,
-            "m_purchase_type" => 2,
-            "m_purchase_product" => $pur_item_itemid[$i],
-            "m_purchase_price" => $pur_item_rate[$i],
-            "m_purchase_qty" => $pur_item_qty[$i],
-            "m_purchase_total" => $pur_item_total[$i],
-            "m_purchase_gst" => $pur_item_gst[$i],
-            "m_purchase_discount" => $pur_item_disc[$i],
-            // "pur_item_nettotal" => $pur_item_nettotal[$i],
-            // "pur_item_purtype" => $this->input->post('m_purchase_type'),
-            // "pur_item_added_on" => date('Y-m-d H:i:s'),
-
-          );
-          $insert_data['m_purchase_user'] = $this->session->userdata('user_id');
-          $insert_data['m_purchase_added_by'] = $this->session->userdata('user_id');
-          $insert_data['m_purchase_added_on'] = date('Y-m-d H:i:s');
-          $this->db->insert('master_purchase_tbl', $insert_data);
-        }
-      }
-
-      return 1;
-    }
   }
 
 

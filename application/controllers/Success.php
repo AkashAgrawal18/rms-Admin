@@ -5,7 +5,7 @@ class Success extends CI_Controller
 {
 
     public function index()
-    {
-        $this->load->view('success_message');
+    {   $data['pagename'] = 'Order Success';
+        $this->load->view('success_message',$data);
     }
 }

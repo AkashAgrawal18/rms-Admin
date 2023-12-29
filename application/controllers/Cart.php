@@ -11,7 +11,9 @@ class Cart extends CI_Controller
 
         // Load a view with the cart items data
         $data['cart_items'] = $cart_items;
-        // print_r($data['cart_items']);die();
+           // echo '<pre>'; print_r($cart_items);die();
+        
+        // $data['all_size'] = $this->Main_model->getsize();
         $this->load->view('cart',$data);
     }
   
@@ -70,7 +72,57 @@ class Cart extends CI_Controller
     );
 
     echo json_encode($response);
+} 
+
+public function update_cart() {
+    $rowid = $this->input->post('rowId');
+    $newQuantity = $this->input->post('newQuantity');
+    // Remove the item from the cart
+    $data = array(
+        'rowid' => $rowid,
+        'qty'   => $newQuantity, // Set quantity to 0 to remove the item
+    );
+
+    $this->cart->update($data);
+
+    // You can send a response back to the view if needed
+    $response = array(
+        'status'  => 'success',
+        'message' => 'Item Qty update from cart',
+        // You can include more data in the response if needed
+    );
+
+    echo json_encode($response);
 }
+
+ public function update_colorsize() {
+         $rowId = $this->input->post('rowId');
+        $cartItemId = $this->input->post('cartItemId');
+        $selectedSize = $this->input->post('selectedSize');
+        $selectedColor = $this->input->post('selectedColor');
+
+         $data = array(
+            'rowid' => $rowId,
+            'id'      => $cartItemId,
+            'options' => array(
+                'color' => $selectedColor,
+                'size'  => $selectedSize,
+                // Add more options as needed
+            ),
+        );
+
+         // print_r($data); die();
+
+        $this->cart->update($data);
+   
+
+        // Add your logic to update the cart based on the provided data
+        // For example, you might update the cart in the session or database
+
+        // Send a response back to the client (optional)
+        $response = array('status' => 'success', 'message' => 'Cart updated successfully');
+        echo json_encode($response);
+    }
 
 
     

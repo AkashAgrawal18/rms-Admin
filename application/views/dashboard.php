@@ -29,7 +29,7 @@
                     <a href="<?php echo base_url('Orders') ?>">
                         <div class="card ocard p-3">
                             <img src="<?php echo base_url() ?>assets/img/order.png" alt="order" class="w-25 m-auto d-block">
-                            <h5 class="text-center">Your Orders</h5>
+                            <h5 class="text-center">My Orders</h5>
                         </div>
                     </a>
                 </div>
@@ -37,12 +37,12 @@
                     <a href="<?php echo base_url('Orders') ?>">
                         <div class="card ocard p-3">
                             <img src="<?php echo base_url() ?>assets/img/address.png" alt="order" class="w-25 m-auto d-block">
-                            <h5 class="text-center">Your Addresses</h5>
+                            <h5 class="text-center">My Addresses</h5>
                         </div>
                     </a>
                 </div>
                 <div class="col-md-4 col-12 mb-4">
-                    <a href="<?php echo base_url('Orders') ?>">
+                    <a href="<?php echo base_url('Profile') ?>">
                         <div class="card ocard p-3">
                             <img src="<?php echo base_url() ?>assets/img/account.png" alt="order" class="w-25 m-auto d-block">
                             <h5 class="text-center">Account Details</h5>

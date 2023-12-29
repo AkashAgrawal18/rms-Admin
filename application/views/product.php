@@ -6,6 +6,7 @@
         border-radius: 10px;
         margin-right: 10px;
     }
+
     .pagination a {
         background-color: #a0107463;
         padding: 12px;
@@ -110,29 +111,30 @@
             <!-- Color Start -->
             <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Filter by color</span></h5>
             <div class="bg-light p-5 mb-30">
-                <form id="filterForm" action="<?php echo base_url('product'); ?>" method="post">
+                <form id="filterForm" action="<?php echo base_url('Product?cat=').$cat; ?>" method="post">
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input color-checkbox" id="color-0" <?php if ($color == '') echo 'checked'; ?> name="color" value="">
                         <label class="custom-control-label" for="color-0">All Color</label>
-                        <span class="badge border font-weight-normal"><?php $ctproduct1 = $this->db->where('m_product_color >', 0)->get('master_product')->num_rows();
-                              echo $ctproduct1
-                             ?></span>
+                        <span class="badge border font-weight-normal">
+                            <?php $ctproduct1 = $this->db->where('m_product_cat_id',$cat)->where('m_product_color !=', '')->get('master_product')->num_rows();
+                                                                        echo $ctproduct1
+                                                                        ?></span>
                     </div>
 
                     <?php foreach ($all_color as $value) :
-                        
-                       $tproduct = $this->db->where("FIND_IN_SET($value->m_color_id, m_product_color) >", 0)->get('master_product')->num_rows();
 
-                           
-                        ?>
+                        $tproduct = $this->db->where('m_product_cat_id',$cat)->where("FIND_IN_SET($value->m_color_id, m_product_color)")->get('master_product')->num_rows();
 
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input color-checkbox" id="color-<?php echo $value->m_color_id; ?>" <?php if($color == $value->m_color_id){?> checked <?php }else{ ?> <?php } ?> value="<?php echo $value->m_color_id; ?>" name="color">
-                        <label class="custom-control-label" for="color-<?php echo $value->m_color_id; ?>"><?php echo $value->m_color_name; ?></label>
-                        <span class="badge border font-weight-normal"><?=$tproduct?></span>
-                    </div>
-                        <?php endforeach; ?>
-                  
+
+                    ?>
+
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input color-checkbox" id="color-<?php echo $value->m_color_id; ?>" <?php if ($color == $value->m_color_id) { echo 'checked'; }  ?> value="<?php echo $value->m_color_id; ?>" name="color">
+                            <label class="custom-control-label" for="color-<?php echo $value->m_color_id; ?>"><?php echo $value->m_color_name; ?></label>
+                            <span class="badge border font-weight-normal"><?= $tproduct ?></span>
+                        </div>
+                    <?php endforeach; ?>
+
                 </form>
             </div>
             <!-- Color End -->
@@ -145,25 +147,24 @@
                         <input type="checkbox" class="custom-control-input size-checkbox" id="size-0" <?php if ($size == '') echo 'checked'; ?> name="size" value="">
                         <label class="custom-control-label" for="size-0">All Size</label>
                         <span class="badge border font-weight-normal">
-                            <?php $stproduct1 = $this->db->where('m_product_size >', 0)->get('master_product')->num_rows();
-                              echo $stproduct1
-                             ?>
+                            <?php $stproduct1 = $this->db->where('m_product_cat_id',$cat)->where('m_product_size !=', '')->get('master_product')->num_rows();
+                            echo $stproduct1
+                            ?>
                         </span>
                     </div>
-                      <?php foreach ($all_size as $value) :
+                    <?php foreach ($all_size as $value) :
 
-                       $tproduct = $this->db->where("FIND_IN_SET($value->m_size_id, m_product_size) >", 0)->get('master_product')->num_rows();
+                        $tproduct = $this->db->where('m_product_cat_id',$cat)->where("FIND_IN_SET($value->m_size_id, m_product_size)",)->get('master_product')->num_rows();
 
-                           
-                        ?>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input size-checkbox" id="size-<?php echo $value->m_size_id; ?>" <?php if($size == $value->m_size_id){?> checked <?php }else{ ?> <?php } ?> name="size"
-                          value="<?php echo $value->m_size_id; ?>">
-                        <label class="custom-control-label" for="size-<?php echo $value->m_size_id; ?>"><?php echo $value->m_size_name; ?></label>
-                        <span class="badge border font-weight-normal"><?=$tproduct?></span>
-                    </div>
+
+                    ?>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input size-checkbox" id="size-<?php echo $value->m_size_id; ?>" <?php if ($size == $value->m_size_id) { ?> checked <?php } else { ?> <?php } ?> name="size" value="<?php echo $value->m_size_id; ?>">
+                            <label class="custom-control-label" for="size-<?php echo $value->m_size_id; ?>"><?php echo $value->m_size_name; ?></label>
+                            <span class="badge border font-weight-normal"><?= $tproduct ?></span>
+                        </div>
                     <?php endforeach; ?>
-                   
+
                 </form>
             </div>
             <!-- Size End -->
@@ -174,24 +175,24 @@
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input fabric-checkbox" id="fabric-0" <?php if ($fabric == '') echo 'checked'; ?> name="fabric" value="">
                         <label class="custom-control-label" for="fabric-0">All fabric</label>
-                        <span class="badge border font-weight-normal"><?php $ftproduct1 = $this->db->where('m_product_fabric >', 0)->get('master_product')->num_rows();
-                              echo $ftproduct1
-                             ?></span>
+                        <span class="badge border font-weight-normal"><?php $ftproduct1 = $this->db->where('m_product_cat_id',$cat)->where('m_product_fabric !=', '')->get('master_product')->num_rows();
+                                                                        echo $ftproduct1
+                                                                        ?></span>
                     </div>
-                    
-                     <?php foreach ($all_fabric as $value) :
 
-                       $tproduct = $this->db->where("FIND_IN_SET($value->m_fabric_id, m_product_fabric) >", 0)->get('master_product')->num_rows();
+                    <?php foreach ($all_fabric as $value) :
 
-                           
-                        ?>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input fabric-checkbox" id="fabric-<?php echo $value->m_fabric_id; ?>" value="<?php echo $value->m_fabric_id; ?>" <?php if($fabric == $value->m_fabric_id){?> checked <?php }else{ ?> <?php } ?> name="fabric">
-                        <label class="custom-control-label" for="fabric-<?php echo $value->m_fabric_id; ?>"><?php echo $value->m_fabric_name; ?></label>
-                        <span class="badge border font-weight-normal"><?=$tproduct?></span>
-                    </div>
-                        <?php endforeach; ?>
-                  
+                        $tproduct = $this->db->where('m_product_cat_id',$cat)->where("FIND_IN_SET($value->m_fabric_id, m_product_fabric)")->get('master_product')->num_rows();
+
+
+                    ?>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input fabric-checkbox" id="fabric-<?php echo $value->m_fabric_id; ?>" value="<?php echo $value->m_fabric_id; ?>" <?php if ($fabric == $value->m_fabric_id) { ?> checked <?php } else { ?> <?php } ?> name="fabric">
+                            <label class="custom-control-label" for="fabric-<?php echo $value->m_fabric_id; ?>"><?php echo $value->m_fabric_name; ?></label>
+                            <span class="badge border font-weight-normal"><?= $tproduct ?></span>
+                        </div>
+                    <?php endforeach; ?>
+
                 </form>
             </div>
             <!-- fabric End -->
@@ -234,23 +235,23 @@
                     </div>
                 </div>
 
-        <?php foreach ($all_product as $value) :
-                $totalreview = $this->db->where('m_review_produ_id',$value->m_product_id)->get('master_review_tbl')->num_rows();
-                $average_rating1 = $this->Main_model->getAverageRating($value->m_product_id);
+                <?php foreach ($all_product as $value) :
+                    $totalreview = $this->db->where('m_review_produ_id', $value->m_product_id)->get('master_review_tbl')->num_rows();
+                    $average_rating1 = $this->Main_model->getAverageRating($value->m_product_id);
 
-         $image =  $this->db->where('m_image_product_id',$value->m_product_id)->where('m_image_status',1)->get('master_image_tbl')->result();
+                    $image =  $this->db->where('m_image_product_id', $value->m_product_id)->where('m_image_status', 1)->get('master_image_tbl')->result();
 
-        if (!empty($image[0]->m_image_product_img)) {
-            $product_img = base_url('admin/uploads/product/'.$image[0]->m_image_product_img);
-          } else {
-            $product_img = base_url('admin/uploads/default.jpg');
-          }
+                    if (!empty($image[0]->m_image_product_img)) {
+                        $product_img = base_url('admin/uploads/product/' . $image[0]->m_image_product_img);
+                    } else {
+                        $product_img = base_url('admin/uploads/default.jpg');
+                    }
 
-                    
+
                 ?>
-                 <input type='hidden' id='qty<?php echo $value->m_product_id ;?>' value='1'>
-                 <input type="hidden" id="color<?php echo $value->m_product_id; ?>" value='0'>
-                  <input type="hidden" id="size<?php echo $value->m_product_id; ?>" value='0' >
+                    <input type='hidden' id='qty<?php echo $value->m_product_id; ?>' value='1'>
+                    <input type="hidden" id="color<?php echo $value->m_product_id; ?>" value='<?php echo $value->m_color_id;?>'>
+                <input type="hidden" id="size<?php echo $value->m_product_id; ?>" value="<?php echo $value->m_size_id;?>">
                     <div class="col-lg-4 col-md-6 col-sm-6 col-6 pb-1">
                         <div class="product-item bg-light mb-4">
 
@@ -258,61 +259,74 @@
                                 <img class="img-fluid w-100 msize" src="<?php echo $product_img ?>" alt="">
                                 <div class="product-action">
 
-                    <a class="btn btn-outline-dark btn-square add_to_cart" href="javascript:void(0)"  data-tippy="Add to cart" data-productid='<?php echo $value->m_product_id ;?>' data-productname='<?=$value->m_product_name ;?>' data-price='<?php echo $value->m_product_mrp  ?>'  ><i class="fa fa-shopping-cart"></i></a>
+                                    <a class="btn btn-outline-dark btn-square add_to_cart" href="javascript:void(0)" data-tippy="Add to cart" data-productid='<?php echo $value->m_product_id; ?>' data-productname='<?= $value->m_product_name; ?>' data-price='<?php echo $value->m_product_seles_price  ?>'><i class="fa fa-shopping-cart"></i></a>
 
-                            <?php if(!empty($this->session->userdata('is_customer_in'))) {
-                                  $check_cust_id = $this->session->userdata('m_customer_id');
-                                 } else {
-                                    $check_cust_id = 0;
-                                } 
-                            
-                             $this->db->where('m_wishlist_product_id', $value->m_product_id);
-                             $this->db->where('m_wishlist_user_id', $check_cust_id);
-                             $check_wish = $this->db->get('master_wishlist')->result();
+                                    <?php if (!empty($this->session->userdata('is_customer_in'))) {
+                                        $check_cust_id = $this->session->userdata('m_customer_id');
+                                    } else {
+                                        $check_cust_id = 0;
+                                    }
 
-
-                                ?>
-                                 <?php if (!empty($check_wish)){?>
-
-                                    <a class="btn btn-outline-dark btn-square" href='javascript:void(0)' id='wish_col<?php echo $value->m_product_id; ?>' onclick='setWish(<?php echo $check_cust_id . ',' . $value->m_product_id; ?>)' style="background: red;" ><i class="far fa-heart"></i></a>
-                                    <input type='hidden' id='wish_id<?php echo $value->m_product_id; ?>' value='1'>
-
-                                  <?php }else{ ?>
+                                    $this->db->where('m_wishlist_product_id', $value->m_product_id);
+                                    $this->db->where('m_wishlist_user_id', $check_cust_id);
+                                    $check_wish = $this->db->get('master_wishlist')->result();
 
 
-                                    <a class="btn btn-outline-dark btn-square" href='javascript:void(0)' id='wish_col<?php echo $value->m_product_id; ?>' onclick='setWish(<?php echo $check_cust_id . ',' . $value->m_product_id; ?>)'  ><i class="far fa-heart"></i></a>
+                                    ?>
+                                    <?php if (!empty($check_wish)) { ?>
+
+                                        <a class="btn btn-outline-dark btn-square" href='javascript:void(0)' id='wish_col<?php echo $value->m_product_id; ?>' onclick='setWish(<?php echo $check_cust_id . ',' . $value->m_product_id; ?>)' style="background: red;"><i class="far fa-heart"></i></a>
+                                        <input type='hidden' id='wish_id<?php echo $value->m_product_id; ?>' value='1'>
+
+                                    <?php } else { ?>
+
+
+                                        <a class="btn btn-outline-dark btn-square" href='javascript:void(0)' id='wish_col<?php echo $value->m_product_id; ?>' onclick='setWish(<?php echo $check_cust_id . ',' . $value->m_product_id; ?>)'><i class="far fa-heart"></i></a>
                                         <input type='hidden' id='wish_id<?php echo $value->m_product_id; ?>' value='0'>
-                                    <?php }?>
-                                
+                                    <?php } ?>
+
                                     <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a> -->
                                     <!-- <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a> -->
-                                <a class="btn btn-outline-dark btn-square" href="<?php echo base_url('Product/product_details/' . $value->m_product_id . '/' . $value->m_category_slug);  ?>"><i class="fas fa-eye"></i></a>
+                                    <a class="btn btn-outline-dark btn-square" href="<?php echo base_url('Product/product_details/' . $value->m_product_id . '/' . $value->m_category_slug);  ?>"><i class="fas fa-eye"></i></a>
                                 </div>
                             </div>
-                            <div class="text-center py-4">
-                                <a class="h6 text-decoration-none text-truncate" href="<?php echo base_url('Product/product_details/' . $value->m_product_id . '/' . $value->m_category_slug);  ?>"><?php echo $value->m_product_name;  ?></a>
-                                <div class="d-flex align-items-center justify-content-center mt-2">
-                                    <h5>₹<?php echo round($value->m_product_mrp, 3); ?></h5>
-                                    <!-- <h6 class="text-muted ml-2"><del>₹500.00</del> <span class="badge bp badge-secondary p-2"> Free Delivery</span></h6> -->
+                            <div class="clr button p-1" style="background-color: #000000a1;">
+                                <div class="row d-flex justify-content-end align-items-center">
+                                    <div class="col-md-6">
+                                        <h6 class="text-white m-0 text-center">  Size -<?php echo $value->m_size_name ?> &nbsp; &nbsp;</h6>
+                                    </div>
+                                    <div class="col-md-6 d-flex justify-content-center">
+                                    <p class="m-0 text-center" style="width: 15px; height:15px; border:2px solid #000; background-color:<?php echo $value->m_color_name ?>"></p>
+                                    </div>
                                 </div>
+                            </div>
+                            <div class="text-center py-4" style="height: 140px;">
+                                <a class="h6 text-decoration-none text-truncate" href="<?php echo base_url('Product/product_details/' . $value->m_product_id . '/' . $value->m_category_slug);  ?>"><?php echo $value->m_product_name;  ?></a>
+
+                                <div class="d-flex align-items-center justify-content-center mt-2">
+                                    <h5>₹<?php echo round($value->m_product_seles_price, 3); ?></h5>
+                                    <h6 class="text-muted ml-2"><del>₹<?php echo round($value->m_product_mrp, 3); ?></del>
+                                    </h6>
+                                </div>
+
                                 <div class="d-flex align-items-center justify-content-center mb-1 text-info">
                                     <?php
-                                $averageRating = $average_rating1; // Assuming $average_rating is set in your controller
+                                    $averageRating = $average_rating1; // Assuming $average_rating is set in your controller
 
-                                // Generate stars based on the average rating
-                                for ($i = 1; $i <= 5; $i++) {
-                                    $starClass = $i <= $averageRating ? 'fa fa-star mr-1' : 'fa fa-star-o mr-1';
-                                    echo '<small class="' . $starClass . '"></small>';
-                                }
-                                ?>
-                                    <small>(<?=$totalreview;?>)</small>
+                                    // Generate stars based on the average rating
+                                    for ($i = 1; $i <= 5; $i++) {
+                                        $starClass = $i <= $averageRating ? 'fa fa-star mr-1' : 'fa fa-star-o mr-1';
+                                        echo '<small class="' . $starClass . '"></small>';
+                                    }
+                                    ?>
+                                    <small>(<?= $totalreview; ?>)</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
 
-              
+
                 <div class="col-12">
 
                     <nav>
@@ -336,13 +350,13 @@
                 <h5 class="more mb-4">Online Shopping</h5>
             </a>
 
-           <?php foreach ($all_category as $category): ?>
-                 <?php if ($category->m_pcategory_id == 0): ?>
+           <?php foreach ($all_category as $category) : ?>
+                 <?php if ($category->m_pcategory_id == 0) : ?>
 
             <h6><?php echo $category->m_category_name ?> | Shop Now</h6>
 
-              <?php foreach ($all_category as $sub_category): ?>
-                <?php if ($sub_category->m_pcategory_id == $category->m_category_id): ?>
+              <?php foreach ($all_category as $sub_category) : ?>
+                <?php if ($sub_category->m_pcategory_id == $category->m_category_id) : ?>
             <a href="#"><?= $sub_category->m_category_name ?></a>
                <?php endif; ?>
              <?php endforeach; ?>
@@ -416,29 +430,29 @@
                 </button>
             </div>
             <div class="modal-body p-5">
-               <form id="filterForm" action="<?php echo base_url('product'); ?>" method="post">
+                <form id="filterForm" action="<?php echo base_url('product'); ?>" method="post">
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input color-checkbox" id="color-0" <?php if ($color == '') echo 'checked'; ?> name="color" value="">
                         <label class="custom-control-label" for="color-0">All Color</label>
                         <span class="badge border font-weight-normal"><?php $ctproduct1 = $this->db->where('m_product_color >', 0)->get('master_product')->num_rows();
-                              echo $ctproduct1
-                             ?></span>
+                                                                        echo $ctproduct1
+                                                                        ?></span>
                     </div>
 
                     <?php foreach ($all_color as $value) :
-                        
-                       $tproduct = $this->db->where("FIND_IN_SET($value->m_color_id, m_product_color) >", 0)->get('master_product')->num_rows();
 
-                           
-                        ?>
+                        $tproduct = $this->db->where("FIND_IN_SET($value->m_color_id, m_product_color) >", 0)->get('master_product')->num_rows();
 
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input color-checkbox" id="color-<?php echo $value->m_color_id; ?>" <?php if($color == $value->m_color_id){?> checked <?php }else{ ?> <?php } ?> value="<?php echo $value->m_color_id; ?>" name="color">
-                        <label class="custom-control-label" for="color-<?php echo $value->m_color_id; ?>"><?php echo $value->m_color_name; ?></label>
-                        <span class="badge border font-weight-normal"><?=$tproduct?></span>
-                    </div>
-                        <?php endforeach; ?>
-                  
+
+                    ?>
+
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input color-checkbox" id="color-<?php echo $value->m_color_id; ?>" <?php if ($color == $value->m_color_id) { ?> checked <?php } else { ?> <?php } ?> value="<?php echo $value->m_color_id; ?>" name="color">
+                            <label class="custom-control-label" for="color-<?php echo $value->m_color_id; ?>"><?php echo $value->m_color_name; ?></label>
+                            <span class="badge border font-weight-normal"><?= $tproduct ?></span>
+                        </div>
+                    <?php endforeach; ?>
+
                 </form>
             </div>
             <!-- <div class="modal-footer">
@@ -460,31 +474,30 @@
                 </button>
             </div>
             <div class="modal-body p-5">
-                
-                 <form id="filterForm1" action="<?php echo base_url('product'); ?>" method="post">
+
+                <form id="filterForm1" action="<?php echo base_url('product'); ?>" method="post">
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input size-checkbox" id="size-0" <?php if ($size == '') echo 'checked'; ?> name="size" value="">
                         <label class="custom-control-label" for="size-0">All Size</label>
                         <span class="badge border font-weight-normal">
                             <?php $stproduct1 = $this->db->where('m_product_size >', 0)->get('master_product')->num_rows();
-                              echo $stproduct1
-                             ?>
+                            echo $stproduct1
+                            ?>
                         </span>
                     </div>
-                      <?php foreach ($all_size as $value) :
+                    <?php foreach ($all_size as $value) :
 
-                       $tproduct = $this->db->where("FIND_IN_SET($value->m_size_id, m_product_size) >", 0)->get('master_product')->num_rows();
+                        $tproduct = $this->db->where("FIND_IN_SET($value->m_size_id, m_product_size) >", 0)->get('master_product')->num_rows();
 
-                           
-                        ?>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input size-checkbox" id="size-<?php echo $value->m_size_id; ?>" <?php if($size == $value->m_size_id){?> checked <?php }else{ ?> <?php } ?> name="size"
-                          value="<?php echo $value->m_size_id; ?>">
-                        <label class="custom-control-label" for="size-<?php echo $value->m_size_id; ?>"><?php echo $value->m_size_name; ?></label>
-                        <span class="badge border font-weight-normal"><?=$tproduct?></span>
-                    </div>
+
+                    ?>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input size-checkbox" id="size-<?php echo $value->m_size_id; ?>" <?php if ($size == $value->m_size_id) { ?> checked <?php } else { ?> <?php } ?> name="size" value="<?php echo $value->m_size_id; ?>">
+                            <label class="custom-control-label" for="size-<?php echo $value->m_size_id; ?>"><?php echo $value->m_size_name; ?></label>
+                            <span class="badge border font-weight-normal"><?= $tproduct ?></span>
+                        </div>
                     <?php endforeach; ?>
-                   
+
                 </form>
 
             </div>
@@ -539,28 +552,28 @@
                         <span class="badge border font-weight-normal">168</span>
                     </div>
                 </form> -->
-                 <form id="filterForm2" action="<?php echo base_url('product'); ?>" method="post">
+                <form id="filterForm2" action="<?php echo base_url('product'); ?>" method="post">
                     <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
                         <input type="checkbox" class="custom-control-input fabric-checkbox" id="fabric-0" <?php if ($fabric == '') echo 'checked'; ?> name="fabric" value="">
                         <label class="custom-control-label" for="fabric-0">All fabric</label>
                         <span class="badge border font-weight-normal"><?php $ftproduct1 = $this->db->where('m_product_fabric >', 0)->get('master_product')->num_rows();
-                              echo $ftproduct1
-                             ?></span>
+                                                                        echo $ftproduct1
+                                                                        ?></span>
                     </div>
-                    
-                     <?php foreach ($all_fabric as $value) :
 
-                       $tproduct = $this->db->where("FIND_IN_SET($value->m_fabric_id, m_product_fabric) >", 0)->get('master_product')->num_rows();
+                    <?php foreach ($all_fabric as $value) :
 
-                           
-                        ?>
-                    <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
-                        <input type="checkbox" class="custom-control-input fabric-checkbox" id="fabric-<?php echo $value->m_fabric_id; ?>" value="<?php echo $value->m_fabric_id; ?>" <?php if($fabric == $value->m_fabric_id){?> checked <?php }else{ ?> <?php } ?> name="fabric">
-                        <label class="custom-control-label" for="fabric-<?php echo $value->m_fabric_id; ?>"><?php echo $value->m_fabric_name; ?></label>
-                        <span class="badge border font-weight-normal"><?=$tproduct?></span>
-                    </div>
-                        <?php endforeach; ?>
-                  
+                        $tproduct = $this->db->where("FIND_IN_SET($value->m_fabric_id, m_product_fabric) >", 0)->get('master_product')->num_rows();
+
+
+                    ?>
+                        <div class="custom-control custom-checkbox d-flex align-items-center justify-content-between mb-3">
+                            <input type="checkbox" class="custom-control-input fabric-checkbox" id="fabric-<?php echo $value->m_fabric_id; ?>" value="<?php echo $value->m_fabric_id; ?>" <?php if ($fabric == $value->m_fabric_id) { ?> checked <?php } else { ?> <?php } ?> name="fabric">
+                            <label class="custom-control-label" for="fabric-<?php echo $value->m_fabric_id; ?>"><?php echo $value->m_fabric_name; ?></label>
+                            <span class="badge border font-weight-normal"><?= $tproduct ?></span>
+                        </div>
+                    <?php endforeach; ?>
+
                 </form>
             </div>
             <!-- <div class="modal-footer">
@@ -573,8 +586,8 @@
 
 <?php include("footer.php"); ?>
 <?php include("script.php"); ?>
-<?php $this->view('js/master_js');?>
-<?php $this->view('js/cart_js');?>
+<?php $this->view('js/master_js'); ?>
+<?php $this->view('js/cart_js'); ?>
 <script>
     $(document).ready(function() {
         // When a checkbox with class 'color-checkbox' is checked, submit the form

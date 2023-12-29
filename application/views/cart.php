@@ -12,6 +12,16 @@
         width: 40px;
         background-color: red;
     }*/
+    .form-control {
+        padding: 0.375rem 0.5rem !important;
+        font-size: 0.8rem !important;
+        background-color: #f1f1f1 !important;
+        border-radius: 5px !important;
+        color: #000 !important;
+    }
+    .btn-sm{
+        padding: 0.15rem 0.5rem !important;
+    }
 </style>
 
 <!-- Breadcrumb Start -->
@@ -48,12 +58,15 @@
                 <tbody class="align-middle">
                     <?php foreach ($cart_items as $item) :
 
-                        $productgst =  $this->db->select('*')->where('m_product_id', $item['id'])->join('master_taxgst', 'master_taxgst.m_taxgst_id =master_product.m_product_taxgst', 'left')->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id =master_product.m_product_fabric', 'left')->get('master_product')->result();
+                        $product_detail = $this->Main_model->getproduct_details($item['id']);
+                        
+                        $color_id = $item['options']['color'];
+                        $size_id = $item['options']['size'];
+                        
+                        $color_name = $this->Main_model->get_color_name($color_id)->m_color_name;
 
-                        $image =  $this->db->where('m_image_product_id', $item['id'])->where('m_image_status', 1)->get('master_image_tbl')->result();
-
-                        if (!empty($image[0]->m_image_product_img)) {
-                            $product_img = base_url('admin/uploads/product/' . $image[0]->m_image_product_img);
+                        if (!empty($product_detail[0]->m_product_image[0]->m_image_product_img)) {
+                            $product_img = base_url('admin/uploads/product/' . $product_detail[0]->m_product_image[0]->m_image_product_img);
                         } else {
                             $product_img = base_url('admin/uploads/default.jpg');
                         }
@@ -61,30 +74,43 @@
 
                         // Use data attributes to store necessary information for each item
                         $data_attributes = 'data-rowid="' . $item['rowid'] . '" data-product-price="' . $item['price'] . '"';
+
+                        // echo'<pre>'; print_r($allproduct);die();
                     ?>
                         <tr>
                             <td class="align-middle">
-                                <input type="hidden" id='pgst' value="<?php echo $productgst[0]->m_tax_value; ?>">
+                                <input type="hidden" id='pgst' value="<?php echo $product_detail[0]->m_tax_value; ?>">
                                 <img src="<?php echo $product_img; ?>" alt="" style="width: 50px;">
                             </td>
                             <td class="align-middle">
-                                <?php echo $item['name']; ?> <br>
+                            <?php echo $item['name']; ?> <br>
+                            <div class="container">
                                 <div class="row">
-                                    <div class="col-3">
-                                    <!-- <p class="sm">Qty : 1</p> -->
+                                    <div class="col-4">
+                                        <p class="sm"><?php echo $product_detail[0]->m_fabric_name; ?> </p>
                                     </div>
-                                    <div class="col-3">
-                                        <p class="sm"><?php echo $productgst[0]->m_fabric_name ?> </p> 
+                                    <div class="col-4 w-100">
+                                        <!-- Select for Size -->
+                                        <select class="form-select form-control" aria-label="Size" id="selectSize<?php echo $item['rowid']; ?><?php echo $item['id']; ?>" onchange="updateCart('<?php echo $item['rowid']; ?>', '<?php echo $item['id']; ?>')">
+                                            <option selected>Select Size</option>
+                                            <?php foreach ($product_detail[0]->m_product_size as $size): ?>
+                                                <option value="<?php echo $size->m_size_id; ?>" <?php if($size->m_size_id == $size_id) echo 'selected'; ?>><?php echo $size->m_size_name; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
-                                    <div class="col-3">
-                                        <p class="sm"> Size - S </p> 
-                                    </div>
-                                    <div class="col-3">
-                                        <p style="height: 20px;width: 20px;background-color: red;"></p>
+                                    <div class="col-4">
+                                        <!-- Select for Color -->
+                                        <select class="form-select form-control" aria-label="Color" id="selectColor<?php echo $item['rowid']; ?><?php echo $item['id']; ?>" style="background-color: <?php echo $color_name; ?>!important;color:#838383 !important;" onchange="updateCart('<?php echo $item['rowid']; ?>', '<?php echo $item['id']; ?>')">
+                                            <option selected>Select Color</option>
+                                            <?php foreach ($product_detail[0]->m_product_color as $color): ?>
+                                                <option value="<?php echo $color->m_color_id; ?>" <?php if($color->m_color_id ==$color_id) echo 'selected'; ?> style="background-color: <?php echo $color->m_color_name; ?>; color: <?php echo $color->m_color_name; ?>;"><?php echo $color->m_color_name; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
-                               
-                            </td>
+                            </div>
+                        </td>
+
                             <td class="align-middle">₹<?php echo $item['price']; ?></td>
                             <td class="align-middle">
                                 <div class="input-group quantity mx-auto" style="width: 100px;">
@@ -116,46 +142,7 @@
                 </tbody>
             </table>
         </div>
-        <!-- <div class="col-lg-4">
-
-            <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Cart Summary</span></h5>
-            <div class="bg-light p-30 mb-5">
-                <div class="border-bottom pb-2">
-                    <div class="d-flex justify-content-between">
-                        <h6>Subtotal</h6>
-                        <h6>₹1000</h6>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Shipping</h6>
-                        <h6 class="font-weight-medium">₹10</h6>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">GST</h6>
-                        <h6 class="font-weight-medium">₹10</h6>
-                    </div>
-
-                    <form class="py-2" action="">
-                        <div class="input-group">
-                            <input type="text" class="form-control border-1" placeholder="Coupon Code">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary">Apply Coupon</button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Coupon</h6>
-                        <h6 class="font-weight-medium">₹10</h6>
-                    </div>
-                </div>
-                <div class="pt-2">
-                    <div class="d-flex justify-content-between ">
-                        <h5>Total</h5>
-                        <h5>₹1030</h5>
-                    </div>
-                    <a href="<?php echo base_url('Checkout') ?>"><button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button></a>
-                </div>
-            </div>
-        </div> -->
+       
         <div class="col-lg-4">
             <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Cart Summary</span></h5>
             <div class="bg-light p-30 mb-5">
@@ -173,18 +160,7 @@
                         <h6 id="gst">₹0.00</h6>
                     </div>
 
-                    <form class="py-2" action="">
-                        <div class="input-group">
-                            <input type="text" class="form-control border-1" placeholder="Coupon Code">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary">Apply Coupon</button>
-                            </div>
-                        </div>
-                    </form>
-                    <div class="d-flex justify-content-between">
-                        <h6 class="font-weight-medium">Coupon</h6>
-                        <h6 id="coupon">₹0.00</h6>
-                    </div>
+              
                 </div>
                 <div class="pt-2">
                     <div class="d-flex justify-content-between ">
@@ -208,7 +184,7 @@
 <script>
     $(document).ready(function() {
         // Handle click events for plus and minus buttons
-        $('.btn-plus, .btn-minus').on('click', function() {
+        $('.btn-plus').on('click','.btn-minus', function() {
             // Get necessary data attributes
             var rowId = $(this).data('rowid');
             var productPrice = parseFloat($(this).data('product-price')); // Parse as float for accurate calculations
@@ -235,6 +211,8 @@
 
             // Update the total
             updateCartSummary();
+
+            updateCartOnServer(rowId, currentQuantity);
         });
 
 
@@ -258,11 +236,11 @@
 
             // Assuming the Coupon value is stored in a hidden input with id 'coupon'
             // var couponValue = parseFloat($('#coupon').val());
-            var couponValue = 0;
-            $('#coupon').text('₹' + couponValue.toFixed(2));
-
+            // var couponValue = 0;
+            // $('#coupon').text('₹' + couponValue.toFixed(2));
+            // var total = subtotal + shipping + gst - couponValue;
             // Calculate the total
-            var total = subtotal + shipping + gst - couponValue;
+            var total = subtotal + shipping + gst;
             $('#total').text('₹' + total.toFixed(2));
         }
 
@@ -295,5 +273,56 @@
         //     $('#gst').text('₹' + gst.toFixed(2));
         //     $('#total').text('₹' + total.toFixed(2));
         // }
+
+        function updateCartOnServer(rowId, newQuantity) {
+        // Make an AJAX request to update the cart on the server
+        $.ajax({
+            url: '<?php echo base_Url('Cart/update_cart')?>', // Replace with the actual URL for updating the cart
+            method: 'POST',
+            data: {
+                rowId: rowId,
+                newQuantity: newQuantity
+            },
+            success: function (response) {
+                // Handle the server response if needed
+                console.log(response);
+            },
+            error: function (error) {
+                // Handle errors if the request fails
+                console.error('Error updating cart:', error);
+            }
+        });
+    }
     });
+
+
+    function updateCart(rowId,cartItemId) {
+          // alert(rowId);
+        // Get selected size and color values
+        var selectedSize = document.getElementById("selectSize<?php echo $item['rowid']; ?><?php echo $item['id']; ?>").value;
+        var selectedColor = document.getElementById("selectColor<?php echo $item['rowid']; ?><?php echo $item['id']; ?>").value;
+         
+
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('Cart/update_colorsize'); ?>",
+            data: {
+                rowId: rowId,
+                cartItemId: cartItemId,
+                selectedSize: selectedSize,
+                selectedColor: selectedColor
+            },
+            success: function(response) {
+
+                console.log("Success:", response);
+                location.reload();
+            },
+            error: function(error) {
+                console.log("Error:", error);
+            }
+        });
+        
+    }
+
 </script>
+

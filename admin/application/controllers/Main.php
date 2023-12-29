@@ -88,8 +88,9 @@ class Main extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Categories';
+    $data['search'] = '';
     $data['search'] =  $this->input->get('search');
-    // $data['category'] = $this->Main_model->get_category();
+    $data['category'] = $this->Main_model->get_category();
     $data['all_value'] = $this->Main_model->get_categories($data['search']);
     // echo "<pre>";print_r($data['all_value']);die();
     $this->load->view('categories', $data);
@@ -167,6 +168,35 @@ class Main extends CI_Controller
         $i++;
         if ($i != 1) {
 
+          // $checkState = $this->db->where('m_state_name', $row[5])->get('master_state_tbl')->result();
+          // if (empty($checkState)) {
+          //   $s_data = array(
+          //     "m_state_name" => $row[5],
+          //     "m_state_country" => 1,
+          //     "m_state_status" => 1,
+          //     "m_state_added_on" => date('Y-m-d H:i'),
+          //   );
+          //   $this->db->insert('master_state_tbl', $s_data);
+          //   $state_id = $this->db->insert_id();
+          // } else {
+          //   $state_id = $checkState[0]->m_state_id;
+          // }
+          // $checkcity = $this->db->where('m_city_name', $row[4])->get('master_city_tbl')->result();
+          // if (empty($checkcity)) {
+          //   $data = array(
+          //     "m_city_name" => $row[4],
+          //     "m_city_state" => $state_id,
+          //     "m_city_country" => 1,
+          //     "m_city_status" => 1,
+          //     "m_city_added_on" => date('Y-m-d H:i'),
+
+          //   );
+          //   $this->db->insert('master_city_tbl', $data);
+          //   $city_id = $this->db->insert_id();
+          // } else {
+          //   $city_id = $checkcity[0]->m_city_id;
+          // }
+
           $s_data = array(
             "m_category_name" => $row[1],
             "m_category_slug" => $row[2],
@@ -191,13 +221,21 @@ class Main extends CI_Controller
 
 
   //-----------------------------------categories----------------------------------//
+  //-------------------------------------variations--------------------------------//
+
+  public function variations()
+  {
+    $data = $this->login_details();
+    $data['pagename'] = 'Variations';
+    $this->load->view('variations', $data);
+  }
+  //-------------------------------------/variations--------------------------------//
   //-------------------------------------products--------------------------------//
 
   public function products()
   {
     $data = $this->login_details();
     $data['pagename'] = 'Products';
-   
     $data['search'] =  $this->input->get('search');
     $data['cat'] =  $this->input->get('category');
     $data['fabric'] =  $this->input->get('fabric');
@@ -230,27 +268,7 @@ class Main extends CI_Controller
       echo json_encode($info);
     }
   }
-
-  public function update_product()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_product()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Product has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
+ 
   public function delete_product()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -281,9 +299,10 @@ class Main extends CI_Controller
     $data['search'] = '';
     $data['slug'] = $this->uri->segment(3);
     $data['search'] =  $this->input->get('search');
+    $data['paymode_list'] = $this->Main_model->get_active_paymode();
     $data['category'] = $this->Main_model->get_active_category();
     $data['customer'] = $this->User_model->get_active_customer();
-    //echo "<pre>"; print_r($data['products']);die();
+   
     $this->load->view('pos', $data);
   }
 
@@ -472,7 +491,7 @@ class Main extends CI_Controller
   public function group_list($type = 1)
   {
     $data = $this->login_details();
-
+    
     switch ($type) {
       case 1: {
           $data['pagetitle'] = 'Unit';
@@ -526,7 +545,7 @@ class Main extends CI_Controller
   }
 
 
-  public function delete_group()
+public function delete_group()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($data = $this->Main_model->delete_group()) {
@@ -545,363 +564,7 @@ class Main extends CI_Controller
     }
   }
   //-------------------------------------/master Group--------------------------------//
-  //-------------------------------------paymode--------------------------------//
-
-  public function paymode()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Paymode';
-    $data['search'] = '';
-    $data['search'] =  $this->input->get('search');
-    $data['all_value'] = $this->Main_model->get_paymode($data['search']);
-    $this->load->view('paymode', $data);
-  }
-
-
-  public function insert_paymode()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_paymode()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'paymode has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_paymode()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_paymode()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'paymode has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_paymode()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_paymode()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'paymode has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-  //-------------------------------------/paymode--------------------------------//
-  //-------------------------------------color--------------------------------//
-
-  public function color()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Color';
-    $data['search'] = '';
-    $data['search'] =  $this->input->get('search');
-    $data['all_value'] = $this->Main_model->get_color($data['search']);
-    $this->load->view('color', $data);
-  }
-
-  public function insert_color()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_color()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Color has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_color()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_color()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Color has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_color()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_color()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Color has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-  //-------------------------------------/color--------------------------------//
-  //-------------------------------------Size--------------------------------//
-
-  public function Size()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Size';
-    $data['search'] = '';
-    $data['search'] =  $this->input->get('search');
-    $data['all_value'] = $this->Main_model->get_size($data['search']);
-    $this->load->view('size', $data);
-  }
-
-  public function insert_size()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_size()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Size has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_size()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_size()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Size has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_size()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_size()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Size has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-  //-------------------------------------/size--------------------------------//
-
-  //-------------------------------------color--------------------------------//
-
-  public function fabric()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Fabric';
-    $data['search'] = '';
-    $data['search'] =  $this->input->get('search');
-    $data['all_value'] = $this->Main_model->get_fabric($data['search']);
-    $this->load->view('fabric', $data);
-  }
-
-  public function insert_fabric()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_fabric()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Fabric has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_fabric()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_fabric()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Fabric has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_fabric()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_fabric()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Fabric has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-  //-------------------------------------/fabric--------------------------------//
-
-  //-------------------------------------taxgst--------------------------------//
-
-  public function taxgst()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Taxgst';
-    $data['search'] = '';
-    $data['search'] =  $this->input->get('search');
-    $data['all_value'] = $this->Main_model->get_taxgst($data['search']);
-    $this->load->view('taxgst', $data);
-  }
-
-  public function insert_taxgst()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_taxgst()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Taxgst has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_taxgst()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_taxgst()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Taxgst has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_taxgst()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_taxgst()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Taxgst has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-  //-------------------------------------/taxgst--------------------------------//
-
-
-  //-------------------------------------unit--------------------------------//
-
+  
   public function products_image()
   {
     $data = $this->login_details();

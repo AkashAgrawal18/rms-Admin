@@ -25,7 +25,7 @@
 <section class="py-1" style="background: #797979;">
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-xl-10 col-lg-10">
+            <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
                     <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Main/offer'); ?>" class="text-decoration-none fw-bold"><span class="text-warning">
                             Offers</span></a>
@@ -71,6 +71,7 @@
         <thead>
         <tr>
             <th>S.No</th>
+            <th>Type</th>
             <th>Main Title</th>
             <th>Title</th>
             <th>Priority</th>
@@ -94,6 +95,7 @@
                 ?>
         <tr>
             <td><?php echo  $i;?></td>
+            <td><?php if($value->m_offer_type== 1){echo 'Offer';}else{echo 'NO Offer';}?></td>
             <td><?php echo  $value->m_offer_maintitle;?></td>
             <td><?php echo  $value->m_offer_title;?></td>
             <td><?php echo  $value->m_offer_priority;?></td>
@@ -108,8 +110,17 @@
                             <h5 class="modal-title" id="exampleModalLabel">Edit Offer</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+
                         <div class="modal-body">
                             <form method="post" id="frm-edit-offer">
+                           <div class="form-group mb-3">
+                    <label for="exampleInputEmail1">Type</label>
+                    <select class="form-control" name="m_offer_type" id="exampleFormControlSelect1">
+                            <option value="1" <?php if($value->m_offer_type == 1)echo "selected";  ?>>Offer </option>
+                            <option value="2" <?php if($value->m_offer_type == 2)echo "selected";  ?>>No Offer </option>
+                        </select>
+                </div>
+
                     <div class="form-group mb-3">
                     <label for="exampleInputEmail1">Main Title</label>
                     <input type="text" class="form-control" name="m_offer_maintitle" aria-describedby="emailHelp" value="<?php echo $value->m_offer_maintitle;  ?>" placeholder="Enter Main Title">
@@ -138,6 +149,7 @@
 
                     <div class="modal-footer">
                 <button type="submit" id="btn-edit-offer" class="btn btn-primary">Update</button>
+
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Close</button>
             </div>
                 </form>
@@ -147,9 +159,11 @@
                     </div>
                 </div>
             </div>
-
+                <?php if($value->m_offer_type== 1){?>
 
                 <button type="button" data-value="<?php echo $value->m_offer_id;?>" class="btn btn-primary btn-sm delete-offer"><i class="fa-solid fa-trash"></i></button>
+            <?php }else{ ?>
+            <?php } ?>
             </td>
         </tr>
     <?php $i++;}} ?>
@@ -168,6 +182,13 @@
             </div>
             <div class="modal-body">
                 <form method="post" id="frm-add-offer">
+
+                    <div class="form-group mb-3">
+                    <label for="exampleInputEmail1">Type</label>
+                    <select class="form-control" name="m_offer_type" id="exampleFormControlSelect1">
+                            <option value="1" >Offer </option>
+                            <option value="2" >No Offer</option>
+                        </select>
                     <div class="form-group mb-3">
                     <label for="exampleInputEmail1">Main Title</label>
                     <input type="text" class="form-control" name="m_offer_maintitle" aria-describedby="emailHelp" placeholder="Enter Main Title">

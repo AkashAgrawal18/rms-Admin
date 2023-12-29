@@ -10914,8 +10914,11 @@ h6 {
   }
 }
 
-.msize {
+.msize
+{
   aspect-ratio: 2/2 !important;
+  object-fit: contain;
+  background: #ccc;
 }
 
 .bann {

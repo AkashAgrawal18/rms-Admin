@@ -15,11 +15,12 @@ class Orders extends CI_Controller {
 	{  
 		$data = $this->login_details();
 		$data['pagename'] = "Order Details";
-		$data['orderid'] = $this->uri->segment(3);
-		$data['order_details'] = $this->Main_model->order_datails($data['orderid']);
+		$data['orderid'] = $this->input->get('orderid');
+
+		$data['order_datails'] = $this->Main_model->order_datails($data['orderid']);
 		$data['total_product'] = $this->Main_model->sale_prodct($data['orderid']);
 
-		 // echo "<pre>"; print_r($data['order_details']);die();
+		     // echo "<pre>"; print_r($data['order_datails']);die();
 		$this->load->view('order_details',$data);
 	}
 	public function Track_order()

@@ -1,33 +1,29 @@
 <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 <script type="text/javascript">
-  $(document).ready(function(e) {
+ $(document).ready(function(e) {
 
 
-    //===========================customer ===========================//
-    $('#cmobile').change(function() {
-      let cust_mobile = this.value;
-      // console.log(contact_number);die();
-      $.post("<?= base_url('User/get_cust_mobile') ?>", {
-        cust_mobile
-      }, function(data) {
+  //===========================customer ===========================//
+    $('#cmobile').change(function(){
+        let cust_mobile = this.value;
+          // console.log(contact_number);die();
+        $.post("<?= base_url('User/get_cust_mobile') ?>",{cust_mobile},function(data){
 
-        if (data.status) {
+          if (data.status)
+           {
+           
+            // alert('District already exist');
+            swal("Mobile already exist!!", { icon: "error", timer: 3000, });
+             $('#cmobile').val('');
+           }
+          
+            // $('#contact_number').html(text);
+        },'json');
+      })
 
-          // alert('District already exist');
-          swal("Mobile already exist!!", {
-            icon: "error",
-            timer: 3000,
-          });
-          $('#cmobile').val('');
-        }
-
-        // $('#contact_number').html(text);
-      }, 'json');
-    })
-
-    // pos customer add
-    $("form#form-newcustomer-add").submit(function(e) {
+   // pos customer add
+   $("form#form-newcustomer-add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn-newcustomer-add");
       clkbtn.prop('disabled', true);
@@ -46,10 +42,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -69,7 +65,7 @@
 
     });
 
-    $("form#form-customer-add").submit(function(e) {
+  $("form#form-customer-add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn-customer-add");
       clkbtn.prop('disabled', true);
@@ -88,10 +84,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -111,7 +107,7 @@
 
     });
 
-    $("form#form-customer-edit").submit(function(e) {
+  $("form#form-customer-edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn-customer-edit");
       clkbtn.prop('disabled', true);
@@ -130,10 +126,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -153,7 +149,7 @@
 
     });
 
-    $("#customer_tbl").on("click", ".delete_customer", function() {
+   $("#customer_tbl").on("click", ".delete_customer", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
@@ -211,35 +207,31 @@
     });
 
 
+  
+  //===========================/customer ===========================//
 
-    //===========================/customer ===========================//
+  //===========================supplier ===========================//
 
-    //===========================supplier ===========================//
+  $('#smobile').change(function(){
+        let supl_mobile = this.value;
+          // console.log(contact_number);die();
+        $.post("<?= base_url('User/get_suppl_mobile') ?>",{supl_mobile},function(data){
 
-    $('#smobile').change(function() {
-      let supl_mobile = this.value;
-      // console.log(contact_number);die();
-      $.post("<?= base_url('User/get_suppl_mobile') ?>", {
-        supl_mobile
-      }, function(data) {
-
-        if (data.status) {
-
-          // alert('District already exist');
-          swal("Mobile already exist!!", {
-            icon: "error",
-            timer: 3000,
-          });
-          $('#smobile').val('');
-        }
-
-        // $('#contact_number').html(text);
-      }, 'json');
-    })
+          if (data.status)
+           {
+           
+            // alert('District already exist');
+            swal("Mobile already exist!!", { icon: "error", timer: 3000, });
+             $('#smobile').val('');
+           }
+          
+            // $('#contact_number').html(text);
+        },'json');
+      })
 
 
 
-    $("form#form-supplier-add").submit(function(e) {
+  $("form#form-supplier-add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn-supplier-add");
       clkbtn.prop('disabled', true);
@@ -258,10 +250,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -281,7 +273,7 @@
 
     });
 
-    $("form#form-supplier-edit").submit(function(e) {
+  $("form#form-supplier-edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn-supplier-edit");
       clkbtn.prop('disabled', true);
@@ -300,10 +292,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -323,7 +315,7 @@
 
     });
 
-    $("#supplier_tbl").on("click", ".delete_supplier", function() {
+   $("#supplier_tbl").on("click", ".delete_supplier", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
@@ -381,11 +373,11 @@
     });
 
 
+  
+  //===========================/supplier ===========================//
 
-    //===========================/supplier ===========================//
-
-    //===========================category ===========================//
-    $("form#cat_add_form").submit(function(e) {
+//===========================category ===========================//
+  $("form#cat_add_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#cat_add_btn");
       clkbtn.prop('disabled', true);
@@ -404,10 +396,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -428,7 +420,7 @@
     });
 
 
-    $("form#cat_edit_form").submit(function(e) {
+   $("form#cat_edit_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#cat_edit_btn");
       clkbtn.prop('disabled', true);
@@ -436,7 +428,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_categories'); ?>",
+        url: "<?php echo site_url('Main/update_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -447,10 +439,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -470,11 +462,11 @@
 
     });
 
-    $(".delete_cotegory").on("click", function() {
+    $("#category_tbl").on("click", ".delete_cotegory", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -529,18 +521,17 @@
     });
 
 
-    //===========================category ===========================//
-    //=========================== Group Master ===========================//
-
-    $("form#form_group_add").submit(function(e) {
+//===========================category ===========================//
+  //===========================unit ===========================//
+  $("form#form_unit_add").submit(function(e) {
       e.preventDefault();
-      var clkbtn = $("#btn_group_add");
+      var clkbtn = $("#btn_unit_add");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_group'); ?>",
+        url: "<?php echo site_url('Main/insert_unit'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -551,10 +542,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -575,15 +566,15 @@
     });
 
 
-    $("form#form_group_edit").submit(function(e) {
+   $("form#form_unit_edit").submit(function(e) {
       e.preventDefault();
-      var clkbtn = $("#btn_group_edit");
+      var clkbtn = $("#btn_unit_edit");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_group'); ?>",
+        url: "<?php echo site_url('Main/update_unit'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -594,10 +585,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -617,11 +608,11 @@
 
     });
 
-    $(".group-delete").on("click", ".group-delete", function() {
+    $("#unit_tbl").on("click", ".unit-delete", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -634,7 +625,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_group'); ?>",
+            url: "<?php echo site_url('Main/delete_unit'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -676,19 +667,18 @@
     });
 
 
-    //=========================== Group Master ===========================//
+//===========================unit ===========================//
 
-
-    //===========================paymentin ===========================//
-    $("form#form_paymentin_add").submit(function(e) {
+//===========================paymode ===========================//
+  $("form#form_paymode_add").submit(function(e) {
       e.preventDefault();
-      var clkbtn = $("#btn_paymentin_add");
+      var clkbtn = $("#btn_paymode_add");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_payment_in'); ?>",
+        url: "<?php echo site_url('Main/insert_paymode'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -699,10 +689,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -723,7 +713,154 @@
     });
 
 
-    $("form#form_paymentin_edit").submit(function(e) {
+   $("form#form_paymode_edit").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_paymode_edit");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/update_paymode'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+    $("#paymode_tbl").on("click", ".paymode-delete", function() {
+      var clkbtn = $(this);
+      clkbtn.prop('disabled', true);
+      var dlt_id = $(this).data('value');
+      
+
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+
+          $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('Main/delete_paymode'); ?>",
+            data: {
+              delete_id: dlt_id
+            },
+            dataType: "JSON",
+            success: function(data) {
+              if (data.status == 'success') {
+                swal(data.message, {
+                  icon: "success",
+                  timer: 1000,
+                });
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+              } else {
+                clkbtn.prop('disabled', false);
+                swal(data.message, {
+                  icon: "error",
+                  timer: 5000,
+                });
+              }
+            },
+            error: function(jqXHR, status, err) {
+              clkbtn.prop('disabled', false);
+              swal("Some Problem Occurred!! please try again", {
+                icon: "error",
+                timer: 2000,
+              });
+            }
+          });
+
+        } else {
+          clkbtn.prop('disabled', false);
+          swal("Your Data is safe!", {
+            icon: "info",
+            timer: 2000,
+          });
+        }
+      });
+    });
+
+
+//===========================paymode ===========================//
+
+    //===========================paymentin ===========================//
+  $("form#form_paymentin_add").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_paymentin_add");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('User/insert_payment_in'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+
+   $("form#form_paymentin_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_paymentin_edit");
       clkbtn.prop('disabled', true);
@@ -742,10 +879,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -769,7 +906,7 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -824,9 +961,9 @@
     });
 
 
-    //===========================payment in ===========================//
-    //===========================paymentout ===========================//
-    $("form#form_paymentout_add").submit(function(e) {
+//===========================payment in ===========================//
+ //===========================paymentout ===========================//
+  $("form#form_paymentout_add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_paymentout_add");
       clkbtn.prop('disabled', true);
@@ -845,10 +982,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -869,7 +1006,7 @@
     });
 
 
-    $("form#form_paymentout_edit").submit(function(e) {
+   $("form#form_paymentout_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_paymentout_edit");
       clkbtn.prop('disabled', true);
@@ -888,10 +1025,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -915,7 +1052,7 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -970,9 +1107,9 @@
     });
 
 
-    //===========================payment out ===========================//   
-    //===========================coupon ===========================//
-    $("form#form_coupon_add").submit(function(e) {
+//===========================payment out ===========================//   
+//===========================coupon ===========================//
+  $("form#form_coupon_add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_coupon_add");
       clkbtn.prop('disabled', true);
@@ -991,10 +1128,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1015,7 +1152,7 @@
     });
 
 
-    $("form#form_coupon_edit").submit(function(e) {
+   $("form#form_coupon_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_coupon_edit");
       clkbtn.prop('disabled', true);
@@ -1034,10 +1171,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1061,7 +1198,7 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -1116,18 +1253,17 @@
     });
 
 
-    //===========================/coupon ===========================//
-
-    //===========================expcategory ===========================//
-    $("form#form_expcat_add").submit(function(e) {
+//===========================/coupon ===========================//
+//===========================color ===========================//
+  $("form#form_color_add").submit(function(e) {
       e.preventDefault();
-      var clkbtn = $("#btn_expcat_add");
+      var clkbtn = $("#btn_color_add");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_expense_categories'); ?>",
+        url: "<?php echo site_url('Main/insert_color'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1138,10 +1274,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1162,7 +1298,591 @@
     });
 
 
-    $("form#form_expcat_edit").submit(function(e) {
+   $("form#form_color_edit").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_color_edit");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/update_color'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+    $("#color_tbl").on("click", ".color-delete", function() {
+      var clkbtn = $(this);
+      clkbtn.prop('disabled', true);
+      var dlt_id = $(this).data('value');
+      
+
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+
+          $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('Main/delete_color'); ?>",
+            data: {
+              delete_id: dlt_id
+            },
+            dataType: "JSON",
+            success: function(data) {
+              if (data.status == 'success') {
+                swal(data.message, {
+                  icon: "success",
+                  timer: 1000,
+                });
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+              } else {
+                clkbtn.prop('disabled', false);
+                swal(data.message, {
+                  icon: "error",
+                  timer: 5000,
+                });
+              }
+            },
+            error: function(jqXHR, status, err) {
+              clkbtn.prop('disabled', false);
+              swal("Some Problem Occurred!! please try again", {
+                icon: "error",
+                timer: 2000,
+              });
+            }
+          });
+
+        } else {
+          clkbtn.prop('disabled', false);
+          swal("Your Data is safe!", {
+            icon: "info",
+            timer: 2000,
+          });
+        }
+      });
+    });
+
+
+//===========================color ===========================//
+    //===========================size ===========================//
+  $("form#form_size_add").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_size_add");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/insert_size'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+
+   $("form#form_size_edit").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_size_edit");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/update_size'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+    $("#size_tbl").on("click", ".size-delete", function() {
+      var clkbtn = $(this);
+      clkbtn.prop('disabled', true);
+      var dlt_id = $(this).data('value');
+      
+
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+
+          $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('Main/delete_size'); ?>",
+            data: {
+              delete_id: dlt_id
+            },
+            dataType: "JSON",
+            success: function(data) {
+              if (data.status == 'success') {
+                swal(data.message, {
+                  icon: "success",
+                  timer: 1000,
+                });
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+              } else {
+                clkbtn.prop('disabled', false);
+                swal(data.message, {
+                  icon: "error",
+                  timer: 5000,
+                });
+              }
+            },
+            error: function(jqXHR, status, err) {
+              clkbtn.prop('disabled', false);
+              swal("Some Problem Occurred!! please try again", {
+                icon: "error",
+                timer: 2000,
+              });
+            }
+          });
+
+        } else {
+          clkbtn.prop('disabled', false);
+          swal("Your Data is safe!", {
+            icon: "info",
+            timer: 2000,
+          });
+        }
+      });
+    });
+
+
+//===========================size ===========================//
+ //===========================fabric ===========================//
+  $("form#form_fabric_add").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_fabric_add");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/insert_fabric'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+
+   $("form#form_fabric_edit").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_fabric_edit");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/update_fabric'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+    $("#fabric_tbl").on("click", ".fabric-delete", function() {
+      var clkbtn = $(this);
+      clkbtn.prop('disabled', true);
+      var dlt_id = $(this).data('value');
+      
+
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+
+          $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('Main/delete_fabric'); ?>",
+            data: {
+              delete_id: dlt_id
+            },
+            dataType: "JSON",
+            success: function(data) {
+              if (data.status == 'success') {
+                swal(data.message, {
+                  icon: "success",
+                  timer: 1000,
+                });
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+              } else {
+                clkbtn.prop('disabled', false);
+                swal(data.message, {
+                  icon: "error",
+                  timer: 5000,
+                });
+              }
+            },
+            error: function(jqXHR, status, err) {
+              clkbtn.prop('disabled', false);
+              swal("Some Problem Occurred!! please try again", {
+                icon: "error",
+                timer: 2000,
+              });
+            }
+          });
+
+        } else {
+          clkbtn.prop('disabled', false);
+          swal("Your Data is safe!", {
+            icon: "info",
+            timer: 2000,
+          });
+        }
+      });
+    });
+
+
+//===========================fabric ===========================//
+    //===========================Taxgst ===========================//
+  $("form#form_taxgst_add").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_taxgst_add");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/insert_taxgst'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+
+   $("form#form_taxgst_edit").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_taxgst_edit");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/update_taxgst'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+    $("#taxgst_tbl").on("click", ".taxgst-delete", function() {
+      var clkbtn = $(this);
+      clkbtn.prop('disabled', true);
+      var dlt_id = $(this).data('value');
+      
+
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this data!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+
+          $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('Main/delete_taxgst'); ?>",
+            data: {
+              delete_id: dlt_id
+            },
+            dataType: "JSON",
+            success: function(data) {
+              if (data.status == 'success') {
+                swal(data.message, {
+                  icon: "success",
+                  timer: 1000,
+                });
+                setTimeout(function() {
+                  location.reload();
+                }, 1000);
+              } else {
+                clkbtn.prop('disabled', false);
+                swal(data.message, {
+                  icon: "error",
+                  timer: 5000,
+                });
+              }
+            },
+            error: function(jqXHR, status, err) {
+              clkbtn.prop('disabled', false);
+              swal("Some Problem Occurred!! please try again", {
+                icon: "error",
+                timer: 2000,
+              });
+            }
+          });
+
+        } else {
+          clkbtn.prop('disabled', false);
+          swal("Your Data is safe!", {
+            icon: "info",
+            timer: 2000,
+          });
+        }
+      });
+    });
+
+
+//===========================/Taxgst ===========================//
+//===========================expcategory ===========================//
+  $("form#form_expcat_add").submit(function(e) {
+      e.preventDefault();
+      var clkbtn = $("#btn_expcat_add");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('User/insert_expense_categories'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
+
+
+   $("form#form_expcat_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_expcat_edit");
       clkbtn.prop('disabled', true);
@@ -1181,10 +1901,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1208,7 +1928,7 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -1263,10 +1983,10 @@
     });
 
 
-    //===========================/expcat ===========================//
+//===========================/expcat ===========================//
 
     //===========================expense ===========================//
-    $("form#form_expense_add").submit(function(e) {
+  $("form#form_expense_add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_expense_add");
       clkbtn.prop('disabled', true);
@@ -1285,10 +2005,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1309,7 +2029,7 @@
     });
 
 
-    $("form#form_expense_edit").submit(function(e) {
+   $("form#form_expense_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_expense_edit");
       clkbtn.prop('disabled', true);
@@ -1328,10 +2048,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1355,7 +2075,7 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -1410,29 +2130,27 @@
     });
 
 
-    //===========================/expense ===========================//
+//===========================/expense ===========================//
     //===========================product ===========================//
-    $(".btn_add_product").click(function(e) {
-      var frmid = $(this).data('frmid');
-      var prodid = $(this).data('prodid');
-      
-      // alert(frmid)
-      var myContent = tinymce.get("m_product_details"+prodid).getContent();
-      $('#m_product_details'+prodid).val(myContent);
-
-      var myContent1 = tinymce.get("m_product_information"+prodid).getContent();
-      $('#m_product_information'+prodid).val(myContent1);
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
+  $("form#add_product_form").submit(function(e) {
+      e.preventDefault();
      
-      var formData = $(frmid).serialize();
+       var myContent = tinymce.get("m_product_details").getContent();
+      $('#m_product_details').val(myContent);
+
+       var myContent1 = tinymce.get("m_product_information").getContent();
+      $('#m_product_information').val(myContent1);
+
+      var clkbtn = $("#add_product_btn");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
         url: "<?php echo site_url('Main/insert_product'); ?>",
         data: formData,
-        // processData: false,
-        // contentType: false,
+        processData: false,
+        contentType: false,
         dataType: "JSON",
         success: function(data) {
           if (data.status == 'success') {
@@ -1440,10 +2158,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1464,15 +2182,65 @@
     });
 
 
+   $("form#update_product_form").submit(function(e) {
+      e.preventDefault();
+      
+      var myContent2 = tinymce.get("m_product_details1").getContent();
+      $('#m_product_details1').val(myContent2);
+
+       var myContent3 = tinymce.get("m_product_information1").getContent();
+      $('#m_product_information1').val(myContent3);
+
+
+      var clkbtn = $("#update_product_btn");
+      clkbtn.prop('disabled', true);
+      var formData = new FormData(this);
+
+      $.ajax({
+        type: "POST",
+        url: "<?php echo site_url('Main/update_product'); ?>",
+        data: formData,
+        processData: false,
+        contentType: false,
+        dataType: "JSON",
+        success: function(data) {
+          if (data.status == 'success') {
+            swal(data.message, {
+              icon: "success",
+              timer: 1000,
+            });
+            
+            setTimeout(function() {
+                  location.reload();
+                }, 1000);
+          } else {
+            clkbtn.prop('disabled', false);
+            swal(data.message, {
+              icon: "error",
+              timer: 5000,
+            });
+          }
+        },
+        error: function(jqXHR, status, err) {
+          clkbtn.prop('disabled', false);
+          swal("Some Problem Occurred!! please try again", {
+            icon: "error",
+            timer: 2000,
+          });
+        }
+      });
+
+    });
 
     $("#product_tbl").on("click", ".delete_product", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
+      
 
       swal({
         title: "Are you sure?",
-        text: "Once deleted,all sales and purchase data of this product will also deleted and you will not be able to recover this data!",
+        text: "Once deleted, you will not be able to recover this data!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -1523,9 +2291,9 @@
     });
 
 
-    //===========================product ===========================//
-    //===========================product image ===========================//
-    $("form#form_image_add").submit(function(e) {
+//===========================product ===========================//
+      //===========================product image ===========================//
+  $("form#form_image_add").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_image_add");
       clkbtn.prop('disabled', true);
@@ -1544,10 +2312,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1568,7 +2336,7 @@
     });
 
 
-    $("form#form_image_edit").submit(function(e) {
+   $("form#form_image_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_image_edit");
       clkbtn.prop('disabled', true);
@@ -1587,10 +2355,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -1614,7 +2382,7 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
+      
 
       swal({
         title: "Are you sure?",
@@ -1669,11 +2437,11 @@
     });
 
 
-    //===========================product imag ===========================//
+//===========================product imag ===========================//
+  
 
 
-
-    ///====================== offer ============================================////
+  ///====================== offer ============================================////
 
     $("form#frm-add-offer").submit(function(e) {
       e.preventDefault();
@@ -1718,7 +2486,7 @@
     });
 
 
-    $("form#frm-edit-offer").submit(function(e) {
+     $("form#frm-edit-offer").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn-edit-offer");
       clkbtn.prop('disabled', true);
@@ -1820,7 +2588,7 @@
 
     ///====================== offer ============================================////
 
-    ///====================== banners ============================================////
+     ///====================== banners ============================================////
 
     $("form#form_slider_add").submit(function(e) {
       e.preventDefault();
@@ -1865,7 +2633,7 @@
     });
 
 
-    $("form#form_slider_edit").submit(function(e) {
+     $("form#form_slider_edit").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#btn_slider_edit");
       clkbtn.prop('disabled', true);
@@ -2027,14 +2795,14 @@
     ///====================== sales ============================================////
 
 
-    $("form#form-add-sale").submit(function(e) {
+     $("form#form-add-sale").submit(function(e) {
       e.preventDefault();
 
 
       var clkbtn = $("#btn-add-sale");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
-      // alert('hello');
+          // alert('hello');
 
       $.ajax({
         type: "POST",
@@ -2070,15 +2838,15 @@
       });
 
     });
-
-    $("form#form-edit-sale").submit(function(e) {
+    
+     $("form#form-edit-sale").submit(function(e) {
       e.preventDefault();
 
 
       var clkbtn = $("#btn-edit-sale");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
-      // alert('hello');
+          // alert('hello');
 
       $.ajax({
         type: "POST",
@@ -2114,7 +2882,7 @@
       });
 
     });
-
+   
 
     $(document).on("click", ".del-sale-product", function() {
       var clkbtn = $(this);
@@ -2173,7 +2941,7 @@
     });
 
 
-
+     
     $('#sales_tbl').on("click", ".sales-delete", function() {
 
       // alert('hello');
@@ -2234,16 +3002,16 @@
 
 
     ///====================== sales ============================================////
-
+    
     ///====================== Purchase ============================================////
-    $("form#form-add-purchase").submit(function(e) {
+      $("form#form-add-purchase").submit(function(e) {
       e.preventDefault();
 
 
       var clkbtn = $("#btn-add-purchase");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
-      // alert('hello');
+          // alert('hello');
 
       $.ajax({
         type: "POST",
@@ -2258,7 +3026,7 @@
               icon: "success",
               timer: 1000,
             });
-            setTimeout(function() {
+             setTimeout(function() {
               window.location = "<?php echo site_url('User/purchase'); ?>";
             }, 1000);
           } else {
@@ -2279,97 +3047,7 @@
       });
 
     });
-
-    $("form#form-edit-purchase").submit(function(e) {
-      e.preventDefault();
-
-
-      var clkbtn = $("#btn-edit-purchase");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-      // alert('hello');
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/update_purchase'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            setTimeout(function() {
-              window.location = "<?php echo site_url('User/purchase'); ?>";
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-    $("form#form-add-preturn").submit(function(e) {
-      e.preventDefault();
-
-
-      var clkbtn = $("#btn-add-preturn");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-      // alert('hello');
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/insert_preturn'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            setTimeout(function() {
-              window.location = "<?php echo site_url('User/purchase_return'); ?>";
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
+    
 
     $(document).on("click", ".del-purchase-product", function() {
       var clkbtn = $(this);
@@ -2489,11 +3167,11 @@
 
 
 
-    ///====================== Purchase ============================================////
+ ///====================== Purchase ============================================////
+    
+///====================== queries ============================================////
 
-    ///====================== queries ============================================////
-
-    $("#queries_tbl").on("click", ".quert-delete", function() {
+ $("#queries_tbl").on("click", ".quert-delete", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
@@ -2549,7 +3227,7 @@
         }
       });
     });
-    ///====================== /contact us ============================================////
+  ///====================== /contact us ============================================////
 
     ///====================== /review ============================================////
 
@@ -2612,14 +3290,14 @@
 
 
     ///====================== /review ============================================////
+    
 
 
 
 
-
-    //===========================appliction setting  ===========================//
-
-    $("form#update_app_form").submit(function(e) {
+ //===========================appliction setting  ===========================//
+  
+  $("form#update_app_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#update_app_btn");
       clkbtn.prop('disabled', true);
@@ -2638,10 +3316,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -2662,8 +3340,8 @@
     });
 
 
-
-    $("form#update_social_form").submit(function(e) {
+  
+   $("form#update_social_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#update_social_btn");
       clkbtn.prop('disabled', true);
@@ -2682,10 +3360,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -2705,8 +3383,8 @@
 
     });
 
-
-    $("form#update_logo_form").submit(function(e) {
+  
+  $("form#update_logo_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#update_logo_btn");
       clkbtn.prop('disabled', true);
@@ -2725,10 +3403,10 @@
               icon: "success",
               timer: 1000,
             });
-
+            
             setTimeout(function() {
-              location.reload();
-            }, 1000);
+                  location.reload();
+                }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -2748,272 +3426,198 @@
 
     });
 
-    //===========================/appliction setting  ===========================//
+ //===========================/appliction setting  ===========================//
+ 
+ //===========================profile ===========================//
 
-    //===========================profile ===========================//
+$("form#frm-update-profile").submit(function(e) {
+  e.preventDefault();
+  var clkbtn = $("#btn-update-profile"); clkbtn.prop('disabled',true);
 
-    $("form#frm-update-profile").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-update-profile");
-      clkbtn.prop('disabled', true);
+  var adminname = $("#aname").val();
+  if(adminname==""){ alert("Please Enter Admin Name");
+    $("#aname").focus(); $("#aname").addClass('input-error');
 
-      var adminname = $("#aname").val();
-      if (adminname == "") {
-        alert("Please Enter Admin Name");
-        $("#aname").focus();
-        $("#aname").addClass('input-error');
+    clkbtn.prop('disabled',false); return false;
+  }
 
-        clkbtn.prop('disabled', false);
-        return false;
-      }
+  var adminemail = $("#aemail").val();
+  if(adminemail==""){ alert("Please Entervalid Emailid");
+    $("#aemail").focus(); $("#aemail").addClass('input-error');
 
-      var adminemail = $("#aemail").val();
-      if (adminemail == "") {
-        alert("Please Entervalid Emailid");
-        $("#aemail").focus();
-        $("#aemail").addClass('input-error');
+    clkbtn.prop('disabled',false); return false;
+  }
 
-        clkbtn.prop('disabled', false);
-        return false;
-      }
+  var adminpassword = $("#apass").val();
+  if(adminpassword==""){ alert("Please Enter Password");
+    $("#apass").focus(); $("#apass").addClass('input-error');
 
-      var adminpassword = $("#apass").val();
-      if (adminpassword == "") {
-        alert("Please Enter Password");
-        $("#apass").focus();
-        $("#apass").addClass('input-error');
+    clkbtn.prop('disabled',false); return false;
+  }
 
-        clkbtn.prop('disabled', false);
-        return false;
-      }
+  var formData = new FormData(this);
+  $.ajax({
+    type: "POST",
+    url: "<?php echo site_url('Setting/update_profile'); ?>",
+    data: formData,
+    processData: false,
+    contentType: false,
+    dataType: "JSON", 
+    success: function(data) {
+      if(data.status=='success'){
+        swal(data.message, {icon: "success", timer: 1000, });
+        setTimeout(function(){ location.reload(); },1000);
+      }else{ clkbtn.prop('disabled',false);
+        swal(data.message, {icon: "error", timer: 5000, });
+      }  
+    }, error: function (jqXHR, status, err) { clkbtn.prop('disabled',false);
+      swal("Some Problem Occurred!! please try again",{ icon: "error", timer: 2000, });
+    }
+  });
 
-      var formData = new FormData(this);
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Setting/update_profile'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
+});
 
-    });
-
-    //===========================/profile ===========================//
+ //===========================/profile ===========================//
 
 
-    //------------customer------------------\\
+   //------------customer------------------\\
 
-    tinymce.init({
+   tinymce.init({
       selector: '.editor',
-      plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
-      imagetools_cors_hosts: ['picsum.photos'],
-      menubar: 'file edit view insert format tools table help',
-      toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
-      toolbar_sticky: true,
-      autosave_ask_before_unload: true,
-      autosave_interval: "30s",
-      autosave_prefix: "{path}{query}-{id}-",
-      autosave_restore_when_empty: false,
-      autosave_retention: "2m",
-      image_advtab: true,
-      content_css: '//www.tiny.cloud/css/codepen.min.css',
-      link_list: [{
-          title: 'My page 1',
-          value: 'http://www.tinymce.com'
-        },
-        {
-          title: 'My page 2',
-          value: 'http://www.moxiecode.com'
-        }
-      ],
-      image_list: [{
-          title: 'My page 1',
-          value: 'http://www.tinymce.com'
-        },
-        {
-          title: 'My page 2',
-          value: 'http://www.moxiecode.com'
-        }
-      ],
-      image_class_list: [{
-          title: 'None',
-          value: ''
-        },
-        {
-          title: 'Some class',
-          value: 'class-name'
-        }
-      ],
-      importcss_append: true,
-      file_picker_callback: function(callback, value, meta) {
-        / Provide file and text for the link dialog /
-        if (meta.filetype === 'file') {
-          callback('https://www.google.com/logos/google.jpg', {
-            text: 'My text'
-          });
-        }
+  plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
+  imagetools_cors_hosts: ['picsum.photos'],
+  menubar: 'file edit view insert format tools table help',
+  toolbar: 'undo redo | bold italic underline strikethrough | fontfamily fontsize blocks | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist | forecolor backcolor removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesample | ltr rtl',
+  toolbar_sticky: true,
+  autosave_ask_before_unload: true,
+  autosave_interval: "30s",
+  autosave_prefix: "{path}{query}-{id}-",
+  autosave_restore_when_empty: false,
+  autosave_retention: "2m",
+  image_advtab: true,
+  content_css: '//www.tiny.cloud/css/codepen.min.css',
+  link_list: [
+    { title: 'My page 1', value: 'http://www.tinymce.com' },
+    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+  ],
+  image_list: [
+    { title: 'My page 1', value: 'http://www.tinymce.com' },
+    { title: 'My page 2', value: 'http://www.moxiecode.com' }
+  ],
+  image_class_list: [
+    { title: 'None', value: '' },
+    { title: 'Some class', value: 'class-name' }
+  ],
+  importcss_append: true,
+  file_picker_callback: function (callback, value, meta) {
+    / Provide file and text for the link dialog /
+    if (meta.filetype === 'file') {
+      callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
+    }
 
-        / Provide image and alt text for the image dialog /
-        if (meta.filetype === 'image') {
-          callback('https://www.google.com/logos/google.jpg', {
-            alt: 'My alt text'
-          });
-        }
+    / Provide image and alt text for the image dialog /
+    if (meta.filetype === 'image') {
+      callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
+    }
 
-        / Provide alternative source and posted for the media dialog /
-        if (meta.filetype === 'media') {
-          callback('movie.mp4', {
-            source2: 'alt.ogg',
-            poster: 'https://www.google.com/logos/google.jpg'
-          });
-        }
-      },
-      templates: [{
-          title: 'New Table',
-          description: 'creates a new table',
-          content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>'
-        },
-        {
-          title: 'Starting my story',
-          description: 'A cure for writers block',
-          content: 'Once upon a time...'
-        },
-        {
-          title: 'New list with dates',
-          description: 'New List with dates',
-          content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>'
-        }
-      ],
-      template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
-      template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
-      height: 520,
-      image_caption: true,
-      quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-      noneditable_noneditable_class: "mceNonEditable",
-      toolbar_mode: 'sliding',
-      contextmenu: "link image imagetools table",
-    });
+    / Provide alternative source and posted for the media dialog /
+    if (meta.filetype === 'media') {
+      callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
+    }
+  },
+  templates: [
+        { title: 'New Table', description: 'creates a new table', content: '<div class="mceTmpl"><table width="98%%"  border="0" cellspacing="0" cellpadding="0"><tr><th scope="col"> </th><th scope="col"> </th></tr><tr><td> </td><td> </td></tr></table></div>' },
+    { title: 'Starting my story', description: 'A cure for writers block', content: 'Once upon a time...' },
+    { title: 'New list with dates', description: 'New List with dates', content: '<div class="mceTmpl"><span class="cdate">cdate</span><br /><span class="mdate">mdate</span><h2>My List</h2><ul><li></li><li></li></ul></div>' }
+  ],
+  template_cdate_format: '[Date Created (CDATE): %m/%d/%Y : %H:%M:%S]',
+  template_mdate_format: '[Date Modified (MDATE): %m/%d/%Y : %H:%M:%S]',
+  height: 520,
+  image_caption: true,
+  quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+  noneditable_noneditable_class: "mceNonEditable",
+  toolbar_mode: 'sliding',
+  contextmenu: "link image imagetools table",
+ });
 
-    //===========================/product tany editor ===========================//
+ //===========================/product tany editor ===========================//
 
 
+ 
 
-
-
+   
   });
 </script>
 
 <script type="text/javascript">
-  $("#uploadImagebtn").click(function() {
-    $("#uploadImage").trigger('click');
-    return false;
-  });
 
-  function PreviewImage() {
-    var myadminimg = document.getElementById("myadminimg");
-    var myuploadimg = $('#uploadImage').val();
-    if (myuploadimg == '') {
-      document.getElementById("uploadPreview").src = myadminimg.src;
-    }
+$("#uploadImagebtn").click(function(){
+  $("#uploadImage").trigger('click');
+  return false;
+});
 
-    var oFReader = new FileReader();
-    oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
+function PreviewImage(){
+  var myadminimg = document.getElementById("myadminimg");
+  var myuploadimg = $('#uploadImage').val();
+  if(myuploadimg==''){ 
+    document.getElementById("uploadPreview").src = myadminimg.src; 
+  }
 
-    oFReader.onload = function(oFREvent) {
-      document.getElementById("uploadPreview").src = oFREvent.target.result;
-    };
+  var oFReader = new FileReader();
+  oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
+
+  oFReader.onload = function (oFREvent) {
+    document.getElementById("uploadPreview").src = oFREvent.target.result;
   };
+};
 </script>
 
 <script>
-  function changeStatus(feed_id) {
-    var feed_status = $('#feed_status' + feed_id).val();
+  function changeStatus(feed_id){
+    var feed_status = $('#feed_status'+feed_id).val();
     // alert(cand_id);
     //  alert(cand_status);
-    if (feed_status == 1) {
-      var tuser = 'New';
-    } else if (feed_status == 2) {
-      var tuser = ' Reviewed ';
-    } else {
-      var tuser = ' Resolved';
-    }
+     if(feed_status==1){
+            var tuser = 'New';
+        }
+        else if(feed_status==2){
+            var tuser = ' Reviewed ';
+         }
+        else{
+            var tuser = ' Resolved';
+        }
 
     swal({
-      title: "Are you sure?",
-      text: tuser,
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
+    title: "Are you sure?",
+    text: tuser,
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
 
-        $.ajax({
+    $.ajax({
           type: "POST",
           url: "<?php echo site_url('Query/update_query_status'); ?>",
-          data: {
-            feed_id: feed_id,
-            feed_status: feed_status
-          },
+          data: {feed_id:feed_id,feed_status:feed_status},
           dataType: "JSON",
-          success: function(data) {
-            if (data.status == 'success') {
-              swal(data.message, {
-                icon: "success",
-                timer: 1000,
-              });
-              setTimeout(function() {
-                location.reload();
-              }, 1000);
-            } else {
-              clkbtn.prop('disabled', false);
-              swal(data.message, {
-                icon: "error",
-                timer: 5000,
-              });
-            }
-          },
-          error: function(jqXHR, status, err) {
-            clkbtn.prop('disabled', false);
-            swal("Some Problem Occurred!! please try again", {
-              icon: "error",
-              timer: 2000,
-            });
+          success: function(data) { 
+            if(data.status=='success'){
+              swal(data.message, {icon: "success", timer: 1000, });
+              setTimeout(function(){ location.reload(); },1000);
+            }else{ clkbtn.prop('disabled',false);
+              swal(data.message, {icon: "error", timer: 5000, });
+            }  
+          }, error: function (jqXHR, status, err) { clkbtn.prop('disabled',false);
+            swal("Some Problem Occurred!! please try again", { icon: "error", timer: 2000, });
           }
         });
 
-      } else {
-        clkbtn.prop('disabled', false);
-        swal("Your Data is safe!", {
-          icon: "info",
-          timer: 2000,
-        });
-      }
-    });
+     } else { clkbtn.prop('disabled',false);
+      swal("Your Data is safe!", { icon: "info", timer: 2000, });
+    }
+  });
 
   }
 </script>
+

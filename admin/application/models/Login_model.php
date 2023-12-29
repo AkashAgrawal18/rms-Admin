@@ -77,7 +77,7 @@ public function get_user_profile_details(){
 
 					public function get_all_order() {  
 				    // Select specific columns from tables
-				    $this->db->select('master_sales_tbl.m_sale_customer,master_sales_tbl.m_sale_spo,master_sales_tbl.m_sale_paydated,master_sales_tbl.m_sale_status,master_sales_tbl.m_sale_pstatus,master_sales_tbl.m_sale_invoiceno,master_sales_tbl.m_sale_added_on as sale_date,master_sales_tbl.m_sale_paid_amount as paid_amount,added_by.m_user_name as added_by_name,master_sales_tbl.m_sale_date');
+				    $this->db->select('master_sales_tbl.m_sale_customer,master_sales_tbl.m_sale_spo,master_sales_tbl.m_sale_paydated,master_sales_tbl.m_sale_status,master_sales_tbl.m_sale_pstatus,master_sales_tbl.m_sale_invoiceno,master_sales_tbl.m_sale_added_on as sale_date,master_sales_tbl.m_sale_payamt as paid_amount,added_by.m_user_name as added_by_name,master_sales_tbl.m_sale_date');
 
 				    // Calculate and select the total base total
 				    $this->db->select("SUM(master_sales_tbl.m_sale_qty * master_sales_tbl.m_sale_price) AS total_base_total");

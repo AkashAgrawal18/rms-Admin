@@ -42,7 +42,15 @@ class Login_model extends CI_model
           );
            
 
-         return  $this->db->insert('master_users_tbl',$data);
+         $this->db->insert('master_users_tbl',$data);
+
+
+         $email = $this->input->post('email');
+         $subject = "Register has been Added successfully";
+           
+         $msg = "Order has been successfully";
+         $res = $this->sendMail($email, $subject, $msg);
+         return $res;
       }
 
 
@@ -87,6 +95,24 @@ class Login_model extends CI_model
          return  $this->db->where('m_user_id',$this->input->post('m_user_id'))->update('master_users_tbl',$data);
       }
 
+       public function update_profile1()
+      {
+
+              
+          $data = array(
+
+             "m_user_name" => $this->input->post('m_user_name'),
+             "m_user_email" => $this->input->post('m_user_email'),
+              "m_user_mobile" => $this->input->post('m_user_mobile'),
+             "m_user_type" => 3,
+             "m_user_status" => 1,
+            "m_user_updated_on" =>date('Y-m-d H:i'),
+            
+          );
+           
+
+         return  $this->db->where('m_user_id',$this->input->post('m_user_id'))->update('master_users_tbl',$data);
+      }
 
 
      public function getmobileById($mobile_id)  
@@ -100,15 +126,15 @@ class Login_model extends CI_model
          return $user_mobile;
     }
 
-    //  public function getemailById($email_id)  
-    // {
+     public function getemailById($email_id)  
+    {
 
-    //  //print_r($id);die();
-    //    $user_email = $this->db->select('m_user_email,m_user_id,m_user_type')
-    //    ->where('m_user_email',$email_id)->where('m_user_type',3)->get('master_users_tbl')->result();
+     //print_r($id);die();
+       $user_email = $this->db->select('m_user_email,m_user_id,m_user_type')
+       ->where('m_user_email',$email_id)->where('m_user_type',3)->get('master_users_tbl')->result();
            
-    //     return $user_email;
-    // }
+        return $user_email;
+    }
 
     public function customer_details(){
 
@@ -160,6 +186,61 @@ class Login_model extends CI_model
            
         return $user_mobile;
       }
+
+
+    public function sendMail($email, $subject, $msg)
+   {
+
+
+    // Load PHPMailer library
+    $this->load->library('phpmailer_lib');
+
+    // PHPMailer object
+    $mail = $this->phpmailer_lib->load();
+
+        $mail->isSMTP();
+        $mail->Host     = 'smtp.hostinger.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'contact@fashionlane.in';
+        $mail->Password = 'jdfd@#$5DeTR#';
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port     = 465;
+
+        $mail->setfrom('contact@fashionlane.in', 'Logixhunt');
+        $mail->addReplyTo($email);
+
+    
+    // Add a recipient
+    $mail->addAddress($email);
+
+    // Add cc or bcc 
+    // $mail->addcc('cc@example.com');
+    // $mail->addbcc('bcc@example.com');
+
+    // Email subject
+    $mail->Subject = $subject;
+
+    // Set email format to HTML
+    $mail->isHTML(true);
+
+    // Email body content
+
+    $data['content'] = $msg;
+    $mailContent = $this->load->view('mail/welcome-mail', $data, TRUE);
+    $mail->Body = $mailContent;
+
+    // Send email
+    if (!$mail->send()) {
+      // echo 'Message could not be sent.';
+      // echo 'Mailer Error: ' . $mail->ErrorInfo;
+      // return false;
+    } else {
+      // echo 'Message has been sent';
+      return true;
+    }
+    }
+
+  
 
 
 	

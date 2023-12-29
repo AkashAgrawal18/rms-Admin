@@ -21,7 +21,7 @@
 <section class="py-1" style="background: #797979;">
     <div class="container-fluid">
         <div class="row align-items-center">
-            <div class="col-xl-10 col-lg-10">
+            <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
                     <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Query/queries'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Queries</span></a>
                 </p>

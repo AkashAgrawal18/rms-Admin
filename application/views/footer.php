@@ -1,3 +1,9 @@
+<style>
+    .bgcolor {
+        background-color: #a01074;
+        color: #fff;
+    }
+</style>
 
 <!-- bottom navigation -->
 <main class="bottom-nav d-md-none d-block position-fixed w-100" style="bottom:0; z-index:99999;">
@@ -31,6 +37,67 @@
         </div>
     </div>
 </main>
+
+
+<?php if(count($this->cart->contents()) > 0){?>
+<section class="stick ">
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+
+            <!-- checkout web -->
+            <div class="col-md-12 bg-light w-100 p-2 d-md-block d-none dis-none position-fixed" style="bottom:0; z-index:99999;">
+                <div class="container-fluid">
+                    <div class="row g-3">
+                        <div class="col-md-10 text-dark">
+                            <div class="row">
+                                <?php
+                                $cart_subtotal = 0;
+                                foreach ($this->cart->contents() as $item) {
+                                    $cart_subtotal += ($item['qty']* $item['price']);
+                                    $product_detail = $this->Main_model->getproduct_details($item['id']);
+
+                                    if (!empty($product_detail[0]->m_product_image[0]->m_image_product_img)) {
+                                        $product_img = base_url('admin/uploads/product/' . $product_detail[0]->m_product_image[0]->m_image_product_img);
+                                    } else {
+                                        $product_img = base_url('admin/uploads/default.jpg');
+                                    }
+                                    // Your existing PHP code for each item
+
+                                ?>
+                                    <div class="col-md-1">
+                                        <div class="p-1 d-flex align-items-center gap-2 rounded-pill" style="background-color: #cfcbcb;">
+                                            <img src="<?= $product_img ?>" alt="<?= $product_detail[0]->m_product_name?>" style="width:40px; aspect-ratio:1/1; object-fit:cover" class="rounded-circle">
+                                            <div>
+                                                <!-- <h6 class="m-0 fw-bold"> <?= $product_detail[0]->m_product_name?></h6> -->
+                                                <p class="m-0"> x <?= $item['qty'] ?> </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="col-md-2 mt-2">
+                            <button class="btn w-100 bgcolor"><a href="<?php echo base_url('Cart') ?>" class="text-white">₹ <?= $cart_subtotal ?> checkout </a></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- checkout mobile -->
+            <div class="col-md-12 w-100 bg-light p-3 d-md-none d-block dis-none" style="position: fixed; bottom:60px;z-index:9999">
+                <div class="row g-3">
+                    <div class="col-md-10 col-7 text-dark fw-bold">
+                        <span><i class="fas fa-shopping-cart text-dark"></i> Cart Total <span class="cart_g_total">₹ <?= $cart_subtotal ?></span></span>
+                    </div>
+                    <div class="col-md-2 col-5">
+                        <button class="btn w-100 bgcolor"><a href="<?php echo base_url('Cart') ?>" style="font-size: 12px; color:#fff"> Proceed to checkout</a></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</section>
+<?php } ?>
 
 <!-- Footer Start -->
 <div class="container-fluid bg-dark text-secondary pt-5" style="background-image: url('assets/img/footerbg.png');">

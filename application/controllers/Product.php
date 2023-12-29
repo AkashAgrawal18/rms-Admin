@@ -28,14 +28,21 @@ class Product extends CI_Controller
         $data['search'] = $this->input->post('search');
         $data['cat'] = $this->input->get('cat');
         $cname = $this->Main_model->catname($data['cat']);
-        $data['pagename'] = $cname[0]->m_category_name;
+
+
+        
         $data['offer'] = $this->input->get('offer');
+        if(!empty($data['offer'])){
+           $data['pagename'] = 'Offer Products';
+        }else{
+             $data['pagename'] = $cname[0]->m_category_name;
+        }
         $data['all_category'] = $this->Main_model->getcategory();
         $data['all_color'] = $this->Main_model->getcolor();
         $data['all_size'] = $this->Main_model->getsize();
         $data['all_fabric'] = $this->Main_model->getfabric();
 		    $data['all_product'] = $this->Main_model->getproduct($config['per_page'], $offset,$data['cat'],$data['offer'],$data['search'],$data['size'], $data['color'], $data['fabric']);
-		  // echo "<pre>";print_r($data['cname']);die();
+		 // echo "<pre>";print_r($data['all_product']);die();
 		$this->load->view('product',$data);
 
     }
@@ -63,8 +70,9 @@ class Product extends CI_Controller
 
 		$data['all_review'] = $this->Main_model->get_all_review($data['id']);
     $data['pfeatured'] = $this->Main_model->getpfeatured_details();
-            // echo "<pre>";print_r($data['product_details']); die();
+           // echo "<pre>";print_r($data['product_details']); die();
 		$this->load->view('product_details',$data);
+
 	}
 
  public function review_add()

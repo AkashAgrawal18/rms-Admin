@@ -56,32 +56,33 @@ class Register extends CI_Controller {
            }
          }
 
-         // public function get_email()
-         // {
+         public function get_email()
+         {
 
-         //   $email_id = $this->input->post('cust_email');
-         //   $customer_email = $this->Login_model->getemailById($email_id);
-         //   if ($customer_email) {
-         //       echo json_encode([
-         //                    'status'=>true,
-         //                    'message'=>'Email already exits'
-         //       ]);
-         //   }else{
-         //      echo json_encode([
-         //                    'status'=>false,
-         //                    'message'=>'Email not exits'
-         //       ]);
-         //   }
-         // }
+           $email_id = $this->input->post('cust_email');
+           $customer_email = $this->Login_model->getemailById($email_id);
+           if ($customer_email) {
+               echo json_encode([
+                            'status'=>true,
+                            'message'=>'Email already exits'
+               ]);
+           }else{
+              echo json_encode([
+                            'status'=>false,
+                            'message'=>'Email not exits'
+               ]);
+           }
+         }
 
 	public function insert_user()
         {
           if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if ($data = $this->Login_model->insert_user()) {
+            $data = $this->Login_model->insert_user();
+             if($data ==1){
 
               $info = array(
                 'status' => 'success',
-                'message' => 'User has been Added successfully!'
+                'message' => 'Register has been Added successfully!'
               );
             } else {
               $info = array(

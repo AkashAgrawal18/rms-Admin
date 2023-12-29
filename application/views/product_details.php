@@ -1,6 +1,36 @@
 <?php include("head.php"); ?>
 <?php include("header.php"); ?>
+  <style>
+       
 
+        .color-option {
+            /* Your styles for color options */
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .color-option.active {
+            /* Your styles for active color */
+            border: 2px solid #000;
+            background-color: #a01074;
+            color: #fff;
+
+        }
+
+         .size-option {
+            /* Your styles for color options */
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .size-option.active {
+            /* Your styles for active color */
+            border: 2px solid #000;
+            background-color: #a01074;
+            color: #fff;
+            
+        }
+    </style>
 
 <!-- Breadcrumb Start -->
 <div class="container-fluid">
@@ -19,7 +49,7 @@
 <?php
 
 
-$image = $this->db->where('m_image_product_id', $product_details[0]->m_product_id)->get('master_image_tbl')->result();
+// $image = $this->db->where('m_image_product_id', $product_details[0]->m_product_id)->get('master_image_tbl')->result();
 
 // print_r($image);die();
 
@@ -33,23 +63,22 @@ $image = $this->db->where('m_image_product_id', $product_details[0]->m_product_i
     <div class="row px-xl-5">
         <div class="col-lg-4 mb-30">
             <div id="product-carousel" class="carousel slide" data-ride="carousel">
-                <div class="carousel-inner bg-light">
+               <div class="carousel-inner bg-light">
+    <?php foreach ($product_details[0]->m_product_image as $index => $image): ?>
+        <?php
+        if (!empty($image->m_image_product_img) && file_exists('admin/uploads/product/' . $image->m_image_product_img)) {
+            $product_img = base_url('admin/uploads/product/' . $image->m_image_product_img);
+        } else {
+            $product_img = base_url('admin/uploads/default.jpg');
+        }
 
-                    <?php foreach ($image as $cau => $value) :
-
-                        if (!empty($value->m_image_product_img) && file_exists('admin/uploads/product/' . $value->m_image_product_img)) {
-                            $product_img = base_url('admin/uploads/product/' . $value->m_image_product_img);
-                        } else {
-                            $product_img = base_url('admin/uploads/default.jpg');
-                        }
-                        $ctive = $cau == 0 ? 'active' : '';
-                    ?>
-                        <div class="carousel-item <?= $ctive   ?>">
-                            <img class="w-75 h-100 m-auto d-block" src="<?php echo $product_img; ?>" alt="Image">
-                        </div>
-                    <?php endforeach; ?>
-
-                </div>
+        $active_class = $index === 0 ? 'active' : '';
+        ?>
+        <div class="carousel-item <?= $active_class ?>">
+            <img class="w-75 h-100 m-auto d-block" src="<?php echo $product_img; ?>" alt="Image">
+        </div>
+    <?php endforeach; ?>
+</div>
                 <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
                     <i class="fa fa-2x fa-angle-left text-dark"></i>
                 </a>
@@ -78,65 +107,46 @@ $image = $this->db->where('m_image_product_id', $product_details[0]->m_product_i
                     </div>
                     <small class="pt-1">(<?= $totalreview ?>)</small>
                 </div>
-                <h3 class="font-weight-semi-bold">₹<?php echo round($product_details[0]->m_product_mrp, 3); ?></h3>
+                 <div class="font-weight-semi-bold d-flex align-items-center">
+                                <h5>₹<?php echo round($product_details[0]->m_product_seles_price, 3); ?></h5>
+                                <h6 class="text-muted ml-2 mvc"><del>₹<?php echo round($product_details[0]->m_product_mrp, 3); ?></del></h6>
+                            </div>
+                <!-- <h3 class="font-weight-semi-bold">₹<?php echo round($product_details[0]->m_product_seles_price, 3); ?><h3 class="text-muted ml-2 mvc"><del>₹<?php echo round($product_details[0]->m_product_mrp, 3); ?></del></h3></h3> -->
+                            
                 <span class="badge badge-pill badge-secondary mb-4 mt-2 p-2 bp"> Free Delivery</span>
                 <p class="mb-4"><?php echo $product_details[0]->m_product_des; ?></p>
-                <div class="d-flex mb-3">
-                    <strong class="text-dark mr-3 mt-2">Sizes:</strong>
-                    <form>
-                        <?php
-                        // An array of size options
-                        $sizeOptions = $this->db->where('m_size_status', 1)->get('master_size_tbl')->result();
+            <div class="d-flex mb-3">
+    <strong class="text-dark mr-3 mt-2">Sizes:</strong>
+       <input type="hidden" id="size<?php echo $product_details[0]->m_product_id; ?>" value="<?php echo $product_details[0]->m_product_size[0]->m_size_id; ?>">
+    <form>
+        <?php foreach ($product_details[0]->m_product_size as $index => $size): ?>
+            <div class="custom-control1 custom-radio ">
+                <span class="psize size-option <?php echo $index === 0 ? 'active' : ''; ?>"
+                      data-size-id="<?php echo $size->m_size_id; ?>">
+                    <input type="radio" id="size_value<?php echo $product_details[0]->m_product_id; ?>" value="<?php echo $size->m_size_id; ?>" hidden
+                           <?php echo $index === 0 ? 'checked' : ''; ?>>
+                    <label for="size<?php echo $size->m_size_id; ?>">
+                        <span class="fb"><?php echo $size->m_size_name; ?></span>
+                    </label>
+                </span>
+            </div>
+        <?php endforeach; ?>
+    </form>
+</div>
 
-                        // Loop through the size options and create checkboxes
-                        foreach ($sizeOptions as $size) {
-                            if ($size->m_size_id == in_array($size->m_size_id, explode(',', $product_details[0]->m_product_size))) {
-
-
-                        ?>
-                                <div class="custom-control1 custom-radio ">
-                                    <!-- <input type="radio" class="custom-control1-input" id="size-<?php echo $size->m_size_id; ?>" name="size" value="<?php echo $size->m_size_id; ?>">
-                            <label class="custom-control1-label" for="size-<?php echo $size->m_size_id; ?>"> -->
-                                    <span class="psize" >
-                                        <!-- <input type="hidden" id="size<?php echo $product_details[0]->m_product_id; ?>" value="<?php echo $size->m_size_id; ?>"> -->
-                                        <span class="fb"><?php echo $size->m_size_name; ?></span>
-                                    </span>
-                                    </label>
-                                </div>
-                        <?php
-                            }
-                        }
-                        ?>
-                    </form>
-                </div>
-                <div class="d-flex mb-4">
-                    <strong class="text-dark mr-3 mt-2">Colors:</strong>
-                    <form>
-                        <?php
-                        // An array of color options
-                        $colorOptions = $this->db->where('m_color_status', 1)->get('master_color_tbl')->result();
-
-                        // Loop through the color options and create radio buttons
-                        foreach ($colorOptions as $color) {
-                            if ($color->m_color_id == in_array($color->m_color_id, explode(',', $product_details[0]->m_product_color))) {
-
-                        ?>
-                                <div class="custom-control custom-radio">
-                                    <!-- <input type="radio" class="custom-control-input" id="color-<?php echo $color->m_color_id; ?>" name="color" value="<?php echo $color->m_color_id; ?>">
-                <label class="custom-control-label" for="color-<?php echo $color->m_color_id; ?>"> -->
-                                    <span class="psize">
-                                        <!-- <input type="hidden" id="color<?php echo $product_details[0]->m_product_id; ?>" value ="<?php echo $color->m_color_id; ?>"> -->
-                                        <span class="fb"><?php echo $color->m_color_name; ?></span>
-                                    </span>
-                                    </label>
-                                </div>
-                        <?php
-                            }
-                        }
-                        ?>
-                    </form>
-                </div>
-
+<div class="d-flex mb-4">
+    <strong class="text-dark mr-3 mt-2">Colors:</strong>
+    <input type="hidden" id="color<?php echo $product_details[0]->m_product_id; ?>" value="<?php echo $product_details[0]->m_product_color[0]->m_color_id; ?>">
+    <div class="color-options d-flex">
+        <?php foreach ($product_details[0]->m_product_color as $index => $color): ?>
+            <span class="psize color-option <?php echo $index === 0 ? 'active' : ''; ?>"
+                  data-color-id="<?php echo $color->m_color_id; ?>">
+                <input type="hidden" id="color_value<?php echo $product_details[0]->m_product_id; ?>" value="<?php echo $color->m_color_id; ?>" <?php echo $index === 0 ? 'checked' : ''; ?>>
+                <span class="fb"><?php echo $color->m_color_name; ?></span>
+            </span>
+        <?php endforeach; ?>
+    </div>
+</div>
                 <div class="d-flex align-items-center mb-4 pt-2">
                         <div class="input-group qtySelector mr-3" style="width: 130px;">
                             <div class="input-group-btn">
@@ -170,7 +180,7 @@ $image = $this->db->where('m_image_product_id', $product_details[0]->m_product_i
 
                             <a class="add_to_cart" href="javascript:void(0)"
                                data-tippy="Add to cart" data-productid='<?php echo $product_details[0]->m_product_id ;?>'
-                               data-productname='<?=$product_details[0]->m_product_name ;?>' data-price='<?php echo $product_details[0]->m_product_mrp ?>'><button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
+                               data-productname='<?=$product_details[0]->m_product_name ;?>' data-price='<?php echo $product_details[0]->m_product_seles_price ?>'><button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
                             Cart</button>
                               
                             </a>
@@ -420,7 +430,10 @@ $image = $this->db->where('m_image_product_id', $product_details[0]->m_product_i
         <div class="col">
             <div class="owl-carousel related-carousel">
 
-                <?php foreach ($releted_product as $value) :
+                <?php
+
+
+                 foreach ($releted_product as $value) :
 
                     $totalreview = $this->db->where('m_review_produ_id', $value->m_product_id)->get('master_review_tbl')->num_rows();
 
@@ -588,5 +601,29 @@ $(".decreaseQty").on('click', function(){
     });
 
   });
+
 </script>
-   
+
+<script>
+    // jQuery script for toggling selected and active states
+    $(document).ready(function () {
+        $('.size-option').on('click', function () {
+            $('.size-option').removeClass('active');
+            $(this).addClass('active');
+            var selectedSize = $(this).data('size-id');
+            $("#size<?php echo $product_details[0]->m_product_id; ?>").val(selectedSize);
+        });
+
+        $('.color-option').on('click', function () {
+            $('.color-option').removeClass('active');
+            $(this).addClass('active');
+            var selectedColor = $(this).data('color-id');
+            $("#color<?php echo $product_details[0]->m_product_id; ?>").val(selectedColor);
+        });
+    });
+</script>
+
+
+
+
+
