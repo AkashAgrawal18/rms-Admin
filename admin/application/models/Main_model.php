@@ -146,134 +146,155 @@ class Main_model extends CI_model
 
   //===================product ==============================//
 
-  public function get_product($search, $cat)
+  public function all_product($category = '')
   {
-    $this->db->select('*');
-    if (!empty($cat)) {
-      $this->db->where('m_product_cat_id', $cat);
-    }
-    if ($search != NULL) {
-
-      $this->db->like('m_product_name', $search, 'both');
-      $this->db->or_like('m_product_slug', $search, 'both');
-
-
-      // $this->db->or_like('address',$search_key,'both');
-
-    }
-    // $this->db->join('master_image_tbl', 'master_image_tbl.m_image_product_id = master_product.m_product_id', 'left');
-
+    $this->db->select('master_product.*,m_category_name,fabric.m_group_name as m_fabric_name');
     $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
-
-    $res = $this->db->get('master_product')->result();
-    return $res;
-  }
-
-  public function all_product($category)
-  {
-    $this->db->select('*');
-    $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
-
-
+    $this->db->join('master_fabric_tbl fabric', 'fabric.m_fabric_id = master_product.m_product_fabric', 'left');
     if ($category != '') {
       $query = $this->db->where("m_product_cat_id", $category);
     }
-    // $this->db->where("o_product_id !=",$m_product_id);
-    $sql = $this->db->get('master_product')->result();
-    return  $sql;
+    $this->db->where("m_product_status", 1);
+    return $this->db->get('master_product')->result();
   }
 
 
-  public function get_active_products()
+  public function get_active_products($cat = '', $fabric = '', $search = '', $status = '', $item = '')
   {
-    $this->db->select('*');
+    $result = array();
 
-    $this->db->where('m_product_status', 1);
-    // $this->db->join('master_image_tbl', 'master_image_tbl.m_image_product_id = master_product.m_product_id', 'left');
-    $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
-    $res = $this->db->get('master_product')->result();
-    return $res;
+    if (!empty($item)) {
+      $this->db->where('m_product_id', $item);
+    }
+    if (!empty($status)) {
+      $this->db->where('m_product_status', $status);
+    }
+    if (!empty($cat)) {
+      $this->db->where('m_product_cat_id', $cat);
+    }
+    if (!empty($fabric)) {
+      $this->db->where('m_product_fabric', $fabric);
+    }
+    if (!empty($search)) {
+
+      $this->db->like('m_product_name', $search, 'both');
+      $this->db->or_like('m_product_slug', $search, 'both');
+      $this->db->or_like('m_product_barscode', $search, 'both');
+    }
+    $sql = $this->db->select('master_product.*,m_category_name,taxgst.m_group_name as m_tax_value,taxgst.m_group_name as m_tax_value,unit.m_group_name as m_unit_title,fabric.m_group_name as m_fabric_name')
+      ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
+      ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
+      ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
+      ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+      ->get('master_product')->result();
+
+    if (!empty($sql)) {
+      foreach ($sql as $key => $value) {
+        $product_colors = $this->db->select('m_group_id as m_color_id,m_group_name as m_color_name')->where_in('m_group_id', explode(',', $value->m_product_color))->get('master_goups_tbl')->result();
+
+        $product_size = $this->db->select('m_group_id as m_size_id,m_group_name as m_size_name')->where_in('m_group_id', explode(',', $value->m_product_size))->get('master_goups_tbl')->result();
+
+        $product_images = $this->db->select('m_image_id,m_image_product_img')->where('m_image_product_id', $value->m_product_id)->get('master_image_tbl')->result();
+
+        $res = (object) array(
+          "m_product_id" => $value->m_product_id,
+          "m_product_name" => $value->m_product_name,
+          "m_product_slug" => $value->m_product_slug,
+          "m_product_cat_id" => $value->m_product_cat_id,
+          "m_category_name" => $value->m_category_name,
+          "m_product_taxgst" => $value->m_product_taxgst,
+          "m_tax_value" => $value->m_tax_value,
+          "m_product_unit" => $value->m_product_unit,
+          "m_unit_title" => $value->m_unit_title,
+          "m_product_barscode" => $value->m_product_barscode,
+          "m_product_purche_price" => $value->m_product_purche_price,
+          "m_product_seles_price" => $value->m_product_seles_price,
+          "m_product_mrp" => $value->m_product_mrp,
+          "m_product_details" => $value->m_product_details,
+          "m_product_information" => $value->m_product_information,
+
+          "m_product_status" => $value->m_product_status,
+          'm_product_fabric' => $value->m_product_fabric,
+          'm_fabric_name' => $value->m_fabric_name ?: '',
+          'product_color' => $value->m_product_color,
+          'm_product_color' => $product_colors,
+          'product_size' => $value->m_product_size,
+          'm_product_size' => $product_size,
+          'm_product_image' => $product_images,
+        );
+
+        $result[] = $res;
+      }
+    }
+
+    return $result;
   }
 
 
   public function insert_product()
   {
     // Extract the selected colors, sizes, and fabrics
-    $selectedColors = $this->input->post('colors');
-    $selectedSizes = $this->input->post('sizes');
 
+    if (!empty($this->input->post('m_product_color'))) {
+      $selectedColors = implode(',', $this->input->post('m_product_color'));
+    } else {
+      $selectedColors = '';
+    }
+    if (!empty($this->input->post('m_product_size'))) {
+      $selectedSizes = implode(',', $this->input->post('m_product_size'));
+    } else {
+      $selectedSizes = '';
+    }
     // Prepare the data array
     $data = array(
-      "m_product_cat_id" => $this->input->post('category'),
-      "m_product_name" => $this->input->post('product_name'),
-      "m_product_slug" => $this->input->post('product_slug'),
-      "m_product_unit" => $this->input->post('product_unit'),
-      // "m_product_quantity" => $this->input->post('product_quantity'),
-      // "m_product_openstock" => $this->input->post('open_stock'),
-      // "m_product_expiry" => $this->input->post('expiry_date'),
-      "m_product_barscode" => $this->input->post('product_barcode'),
+      "m_product_cat_id" => $this->input->post('m_product_cat_id'),
+      "m_product_name" => $this->input->post('m_product_name'),
+      "m_product_slug" => $this->input->post('m_product_slug'),
+      "m_product_unit" => $this->input->post('m_product_unit'),
+
+      "m_product_barscode" => $this->input->post('m_product_barscode'),
       // "m_product_code" => $this->input->post('product_code'),
       // "m_product_purche_price" => $this->input->post('product_purchese'),
-      "m_product_seles_price" => $this->input->post('product_sales'),
-      "m_product_mrp" => $this->input->post('product_mrp'),
-      "m_product_taxgst" => $this->input->post('product_tax'),
+      "m_product_seles_price" => $this->input->post('m_product_seles_price'),
+      "m_product_mrp" => $this->input->post('m_product_mrp'),
+      "m_product_taxgst" => $this->input->post('m_product_taxgst'),
       "m_product_details" => $this->input->post('m_product_details'),
       "m_product_information" => $this->input->post('m_product_information'),
-      "m_product_des" => $this->input->post('m_product_des'),
       "m_product_status" => 1,
-      'm_product_color' => implode(',', $selectedColors),
-      'm_product_size' => implode(',', $selectedSizes),
-      'm_product_fabric' => $this->input->post('fabrics'),
+      'm_product_color' => $selectedColors,
+      'm_product_size' => $selectedSizes,
+      'm_product_fabric' => $this->input->post('m_product_fabric'),
     );
 
-    // Add the timestamp
-    $data['m_product_added_on'] = date('Y-m-d H:i');
+    if (!empty($this->input->post('m_product_id'))) {
+      $data['m_product_updated_on'] = date('Y-m-d H:i');
+      $res = $this->db->where('m_product_id', $this->input->post('m_product_id'))->update('master_product', $data);
+      return $res;
+    } else {
+      // Add the timestamp
+      $data['m_product_added_on'] = date('Y-m-d H:i');
+      // Insert data into the 'master_product' table
+      $res = $this->db->insert('master_product', $data);
 
-    // Insert data into the 'master_product' table
-    $res = $this->db->insert('master_product', $data);
-
-    return $res;
-  }
-
-  public function update_product()
-  {
-
-
-    $selectedColors = $this->input->post('colors');
-    $selectedSizes = $this->input->post('sizes');
-
-    // Prepare the data array
-    $data = array(
-      "m_product_cat_id" => $this->input->post('category'),
-      "m_product_name" => $this->input->post('product_name'),
-      "m_product_slug" => $this->input->post('product_slug'),
-      "m_product_unit" => $this->input->post('product_unit'),
-      // "m_product_quantity" => $this->input->post('product_quantity'),
-      // "m_product_openstock" => $this->input->post('open_stock'),
-      // "m_product_expiry" => $this->input->post('expiry_date'),
-      "m_product_barscode" => $this->input->post('product_barcode'),
-      // "m_product_code" => $this->input->post('product_code'),
-      // "m_product_purche_price" => $this->input->post('product_purchese'),
-      "m_product_seles_price" => $this->input->post('product_sales'),
-      "m_product_mrp" => $this->input->post('product_mrp'),
-      "m_product_taxgst" => $this->input->post('product_tax'),
-      "m_product_details" => $this->input->post('m_product_details'),
-      "m_product_information" => $this->input->post('m_product_information'),
-      "m_product_des" => $this->input->post('m_product_des'),
-      "m_product_status" => 1,
-      'm_product_color' => implode(',', $selectedColors),
-      'm_product_size' => implode(',', $selectedSizes),
-      'm_product_fabric' => $this->input->post('fabrics'),
-    );
-
-
-    $data['m_product_updated_on'] = date('Y-m-d H:i');
-    $res = $this->db->where('m_product_id', $this->input->post('product_id'))->update('master_product', $data);
-    return $res;
+      return $res;
+    }
   }
 
   public function delete_product()
   {
+
+    $this->db->where('m_purchase_product', $this->input->post('delete_id'));
+    return $this->db->delete('master_purchase_tbl');
+
+    $this->db->where('m_wishlist_product_id', $this->input->post('delete_id'));
+    return $this->db->delete('master_wishlist');
+
+    $this->db->where('m_sale_product', $this->input->post('delete_id'));
+    return $this->db->delete('master_sales_tbl');
+
+    $this->db->where('o_product_id', $this->input->post('delete_id'));
+    return $this->db->delete('product_offers');
+
     $this->db->where('m_product_id', $this->input->post('delete_id'));
     return $this->db->delete('master_product');
   }
@@ -281,15 +302,14 @@ class Main_model extends CI_model
   //===================/product ==============================//
 
   //=================== master group ==============================//
-  public function get_group_list($type,$search)
+  public function get_group_list($type, $search)
   {
     $this->db->select('*');
     if ($search != NULL) {
       $this->db->like('m_group_name', $search, 'both');
     }
-    $this->db->where('m_group_type',$type);
+    $this->db->where('m_group_type', $type);
     return $this->db->get('master_goups_tbl')->result();
-    
   }
 
 
@@ -306,28 +326,27 @@ class Main_model extends CI_model
     $this->db->select('*');
     $this->db->where('m_group_id', $group_id);
     return $this->db->get('master_goups_tbl')->result();
-    
   }
 
 
   public function insert_group()
   {
-   $m_group_id = $this->input->post('m_group_id');
+    $m_group_id = $this->input->post('m_group_id');
 
     $data = array(
       "m_group_name" => $this->input->post('m_group_name'),
       "m_group_type" => $this->input->post('m_group_type'),
-      "m_group_status" => $this->input->post('m_group_status') ?:1,
+      "m_group_status" => $this->input->post('m_group_status') ?: 1,
     );
 
-    if(!empty($m_group_id)){
+    if (!empty($m_group_id)) {
       $data['m_group_updatedon'] = date('Y-m-d H:i');
-      $res = $this->db->where('m_group_id',$m_group_id)->update('master_goups_tbl', $data);
-    }else {
+      $res = $this->db->where('m_group_id', $m_group_id)->update('master_goups_tbl', $data);
+    } else {
       $data['m_group_added_on'] = date('Y-m-d H:i');
       $res = $this->db->insert('master_goups_tbl', $data);
     }
-   
+
     return $res;
   }
 

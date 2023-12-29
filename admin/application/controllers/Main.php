@@ -197,18 +197,18 @@ class Main extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Products';
-    $data['search'] = '';
-    $data['cat'] = '';
+   
     $data['search'] =  $this->input->get('search');
     $data['cat'] =  $this->input->get('category');
+    $data['fabric'] =  $this->input->get('fabric');
     $data['categories'] = $this->Main_model->get_active_category();
     $data['fabric_list'] = $this->Main_model->get_active_group(5);
     $data['color_list'] = $this->Main_model->get_active_group(2);
     $data['size_list'] = $this->Main_model->get_active_group(3);
     $data['unit'] = $this->Main_model->get_active_group(1);
     $data['taxgst'] = $this->Main_model->get_active_group(4);
-    $data['all_value'] = $this->Main_model->get_product($data['search'], $data['cat']);
-    // echo "<pre>";print_r($data['product']);die();
+    $data['all_value'] = $this->Main_model->get_active_products($data['cat'],$data['fabric'],$data['search']);
+    // echo "<pre>";print_r($data['all_value']);die();
     $this->load->view('product_list', $data);
   }
 
@@ -283,7 +283,6 @@ class Main extends CI_Controller
     $data['search'] =  $this->input->get('search');
     $data['category'] = $this->Main_model->get_active_category();
     $data['customer'] = $this->User_model->get_active_customer();
-    // $data['products'] = $this->Main_model->get_active_products($data['slug'],$data['search']);
     //echo "<pre>"; print_r($data['products']);die();
     $this->load->view('pos', $data);
   }

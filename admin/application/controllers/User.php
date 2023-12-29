@@ -405,7 +405,6 @@ class User extends CI_Controller
     } else {
       $data['pagename'] = 'Add Sales';
     }
-    $data['product_list'] = $this->User_model->get_active_products();
     $data['texgst'] = $this->Main_model->get_active_taxgst();
     $data['all_user'] = $this->User_model->get_active_customer();
     // echo "<pre>";print_r($data['texgst']); die();
@@ -671,7 +670,7 @@ class User extends CI_Controller
   public function get_product_dtl()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $data = $this->User_model->get_active_products(null, $this->input->post('itemid'));
+      $data = $this->Main_model->get_active_products(null,null,null,null, $this->input->post('itemid'));
 
       echo json_encode($data);
     }
@@ -711,7 +710,7 @@ class User extends CI_Controller
     } else {
       $data['pagename'] = 'Add Purchase';
     }
-    $data['product_list'] = $this->User_model->get_active_products();
+    $data['product_list'] = $this->Main_model->all_product();
     $data['texgst'] = $this->Main_model->get_active_taxgst();
     $data['all_user'] = $this->User_model->get_active_supplier();
 

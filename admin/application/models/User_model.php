@@ -676,59 +676,7 @@ class User_model extends CI_model
 
   //-----------------------------purchese----------------------------//
 
-  public function get_active_products($cat='',$item='')
-  {
-    $result = array();
-
-    if(!empty($cat)){
-      $this->db->where('m_product_cat_id',$cat);
-    }
-    if(!empty($item)){
-      $this->db->where('m_product_id',$item);
-    }
-    $sql = $this->db->join('master_taxgst', 'master_taxgst.m_taxgst_id = master_product.m_product_taxgst', 'left')->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')->join('master_unit', 'master_unit.m_unit_id = master_product.m_product_unit', 'left')->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id = master_product.m_product_fabric', 'left')->where('m_product_status', 1)->get('master_product')->result();
-
-    if (!empty($sql)) {
-      foreach ($sql as $key => $value) {
-        $product_colors = $this->db->select('m_color_id,m_color_name')->where_in('m_color_id', explode(',', $value->m_product_color))->get('master_color_tbl')->result();
-
-        $product_size = $this->db->select('m_size_id,m_size_name')->where_in('m_size_id', explode(',', $value->m_product_size))->get('master_size_tbl')->result();
-
-        $product_images = $this->db->select('m_image_id,m_image_product_img')->where('m_image_product_id', $value->m_product_id)->get('master_image_tbl')->result();
-
-        $res = (object) array(
-          "m_product_id" => $value->m_product_id,
-          "m_product_name" => $value->m_product_name,
-          "m_product_slug" => $value->m_product_slug,
-          "m_product_cat_id" => $value->m_product_cat_id,
-          "m_category_name" => $value->m_category_name,
-          "m_product_taxgst" => $value->m_product_taxgst,
-          "m_tax_value" => $value->m_tax_value,
-          "m_product_unit" => $value->m_product_unit,
-          "m_unit_title" => $value->m_unit_title,
-          "m_product_barscode" => $value->m_product_barscode,
-          "m_product_purche_price" => $value->m_product_purche_price,
-          "m_product_seles_price" => $value->m_product_seles_price,
-          "m_product_mrp" => $value->m_product_mrp,
-          "m_product_details" => $value->m_product_details,
-          "m_product_information" => $value->m_product_information,
-          "m_product_des" => $value->m_product_des,
-          "m_product_status" => $value->m_product_status,
-          'm_product_fabric' => $value->m_product_fabric,
-          'm_fabric_name' => $value->m_fabric_name ?:'',
-          'm_product_color' => $product_colors,
-          'm_product_size' => $product_size,
-          'm_product_image' => $product_images,
-        );
-
-        $result[] = $res;
-      }
-    }
-
-    return $result;
-  }
-
-
+ 
   public function get_all_purchase($user, $search, $from_date, $to_date, $purtype)
   {
 
