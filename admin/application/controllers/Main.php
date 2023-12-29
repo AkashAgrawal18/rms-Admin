@@ -88,9 +88,8 @@ class Main extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Categories';
-    $data['search'] = '';
     $data['search'] =  $this->input->get('search');
-    $data['category'] = $this->Main_model->get_category();
+    // $data['category'] = $this->Main_model->get_category();
     $data['all_value'] = $this->Main_model->get_categories($data['search']);
     // echo "<pre>";print_r($data['all_value']);die();
     $this->load->view('categories', $data);
@@ -168,35 +167,6 @@ class Main extends CI_Controller
         $i++;
         if ($i != 1) {
 
-          // $checkState = $this->db->where('m_state_name', $row[5])->get('master_state_tbl')->result();
-          // if (empty($checkState)) {
-          //   $s_data = array(
-          //     "m_state_name" => $row[5],
-          //     "m_state_country" => 1,
-          //     "m_state_status" => 1,
-          //     "m_state_added_on" => date('Y-m-d H:i'),
-          //   );
-          //   $this->db->insert('master_state_tbl', $s_data);
-          //   $state_id = $this->db->insert_id();
-          // } else {
-          //   $state_id = $checkState[0]->m_state_id;
-          // }
-          // $checkcity = $this->db->where('m_city_name', $row[4])->get('master_city_tbl')->result();
-          // if (empty($checkcity)) {
-          //   $data = array(
-          //     "m_city_name" => $row[4],
-          //     "m_city_state" => $state_id,
-          //     "m_city_country" => 1,
-          //     "m_city_status" => 1,
-          //     "m_city_added_on" => date('Y-m-d H:i'),
-
-          //   );
-          //   $this->db->insert('master_city_tbl', $data);
-          //   $city_id = $this->db->insert_id();
-          // } else {
-          //   $city_id = $checkcity[0]->m_city_id;
-          // }
-
           $s_data = array(
             "m_category_name" => $row[1],
             "m_category_slug" => $row[2],
@@ -221,21 +191,13 @@ class Main extends CI_Controller
 
 
   //-----------------------------------categories----------------------------------//
-  //-------------------------------------variations--------------------------------//
-
-  public function variations()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Variations';
-    $this->load->view('variations', $data);
-  }
-  //-------------------------------------/variations--------------------------------//
   //-------------------------------------products--------------------------------//
 
   public function products()
   {
     $data = $this->login_details();
     $data['pagename'] = 'Products';
+   
     $data['search'] =  $this->input->get('search');
     $data['cat'] =  $this->input->get('category');
     $data['fabric'] =  $this->input->get('fabric');
@@ -268,7 +230,7 @@ class Main extends CI_Controller
       echo json_encode($info);
     }
   }
- 
+
   public function delete_product()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -289,7 +251,7 @@ class Main extends CI_Controller
   }
 
   //-------------------------------------/products--------------------------------//
-  //-------------------pos ----------------------------------------------//
+   //-------------------pos ----------------------------------------------//
 
   public function pos()
   {

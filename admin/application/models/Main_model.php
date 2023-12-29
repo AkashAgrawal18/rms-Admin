@@ -10,110 +10,58 @@ class Main_model extends CI_model
     return $res;
   }
 
-  public function get_category()
+  public function get_categories($search, $cat_id = '')
   {
-    $this->db->select('*');
-    $this->db->where('m_pcategory_id', 0);
-    $this->db->where('m_category_status', 1);
-
-    $res = $this->db->get('master_categories')->result();
-    return $res;
-  }
-
-  public function get_categories($search)
-  {
-    $this->db->select('main_cat.*,main_cat.m_category_id as main_id,main_cat.m_category_name as main_name,parent_cat.m_category_name as parent_name');
+    if (!empty($cat_id)) {
+      $this->db->where('main_cat.m_category_id', $cat_id);
+    }
     if ($search != NULL) {
-
       $this->db->like('main_cat.m_category_name', $search, 'both');
     }
-
-    $this->db->join('master_categories parent_cat', 'parent_cat.m_pcategory_id = main_cat.m_category_id', 'left');
-    $res = $this->db->get('master_categories main_cat')->result();
-    return $res;
+    return $this->db->get('master_categories main_cat')->result();
   }
 
   public function insert_categories()
   {
 
-    if (!empty($_FILES['cat_image']['name'])) {
-      $config['file_name'] = $_FILES['cat_image']['name'];
+    if (!empty($_FILES['m_category_image']['name'])) {
+      $config['file_name'] = $_FILES['m_category_image']['name'];
       $config['upload_path'] = 'uploads/categories';
       $config['allowed_types'] = 'jpg|jpeg|png';
       $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['cat_image']['name'];
+      $config['file_name'] = $_FILES['m_category_image']['name'];
       //Load upload library and initialize configuration
       $this->load->library('upload', $config);
       $this->upload->initialize($config);
-      if ($this->upload->do_upload('cat_image')) {
+      if ($this->upload->do_upload('m_category_image')) {
         $uploadData = $this->upload->data();
-        if (!empty($update_data['cat_image'])) {
-          if (file_exists($config['cat_image'] . $update_data['cat_image'])) {
-            unlink($config['upload_path'] . $update_data['cat_image']); /* deleting Image */
+        if (!empty($update_data['m_category_image'])) {
+          if (file_exists($config['m_category_image'] . $update_data['m_category_image'])) {
+            unlink($config['upload_path'] . $update_data['m_category_image']); /* deleting Image */
           }
         }
-        $cat_image = $uploadData['file_name'];
+        $m_category_image = $uploadData['file_name'];
       }
     } else {
-      $cat_image = '';
+      $m_category_image = $this->input->post('m_category_image1');
     }
+    $m_category_id = $this->input->post('m_category_id');
 
     $data = array(
-
-      "m_pcategory_id" => $this->input->post('parent_cat'),
-      "m_category_name" => $this->input->post('cat_name'),
-      "m_category_slug" => $this->input->post('cat_slug'),
-      "m_category_status" => 1,
-      "m_category_image" => $cat_image,
-
-
+      // "m_pcategory_id" => $this->input->post('parent_cat'),
+      "m_category_name" => $this->input->post('m_category_name'),
+      "m_category_slug" => $this->input->post('m_category_slug'),
+      "m_category_status" => $this->input->post('m_category_status') ?: 1,
+      "m_category_image" => $m_category_image,
     );
-
-    $data['m_category_added_on'] = date('Y-m-d h:i:s');
-    $res = $this->db->insert('master_categories', $data);
-    return $res;
-  }
-
-  public function update_categories()
-  {
-    if (!empty($_FILES['cat_image']['name'])) {
-      $config['file_name'] = $_FILES['cat_image']['name'];
-      $config['upload_path'] = 'uploads/categories';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['cat_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('cat_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['cat_image'])) {
-          if (file_exists($config['cat_image'] . $update_data['cat_image'])) {
-            unlink($config['upload_path'] . $update_data['cat_image']); /* deleting Image */
-          }
-        }
-        $cat_image = $uploadData['file_name'];
-      }
+    if (!empty($m_category_id)) {
+      $data['m_category_updated_on'] = date('Y-m-d H:i');
+      $res = $this->db->where('m_category_id', $m_category_id)->update('master_categories', $data);
     } else {
-      $cat_image = $this->input->post('cat_image1');
+      $data['m_category_added_on'] = date('Y-m-d H:i');
+      $res = $this->db->insert('master_categories', $data);
     }
 
-    $cat_id = $this->input->post('cat_id');
-
-    $data = array(
-
-      "m_pcategory_id" => $this->input->post('parent_cat'),
-      "m_category_name" => $this->input->post('cat_name'),
-      "m_category_slug" => $this->input->post('cat_slug'),
-      "m_category_status" => 1,
-      "m_category_image" => $cat_image,
-
-
-    );
-
-
-    $data['m_category_updated_on'] = date('Y-m-d h:i:s');
-    $res = $this->db->where('m_category_id', $cat_id)->update('master_categories', $data);
     return $res;
   }
 
@@ -312,7 +260,6 @@ class Main_model extends CI_model
       "m_product_taxgst" => $this->input->post('m_product_taxgst'),
       "m_product_details" => $this->input->post('m_product_details'),
       "m_product_information" => $this->input->post('m_product_information'),
-      // "m_product_des" => $this->input->post('m_product_des'),
       "m_product_status" => 1,
       'm_product_color' => $selectedColors,
       'm_product_size' => $selectedSizes,
@@ -326,7 +273,6 @@ class Main_model extends CI_model
     } else {
       // Add the timestamp
       $data['m_product_added_on'] = date('Y-m-d H:i');
-
       // Insert data into the 'master_product' table
       $res = $this->db->insert('master_product', $data);
 
@@ -411,7 +357,6 @@ class Main_model extends CI_model
   }
 
   //===================/ master group ==============================//
-
 
   //===================Expense Categories ==============================//
   public function get_expense_categories($search)

@@ -375,8 +375,7 @@
 
   
   //===========================/supplier ===========================//
-
-//===========================category ===========================//
+  //===========================category ===========================//
   $("form#cat_add_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#cat_add_btn");
@@ -396,10 +395,10 @@
               icon: "success",
               timer: 1000,
             });
-            
+
             setTimeout(function() {
-                  location.reload();
-                }, 1000);
+              location.reload();
+            }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -420,7 +419,7 @@
     });
 
 
-   $("form#cat_edit_form").submit(function(e) {
+    $("form#cat_edit_form").submit(function(e) {
       e.preventDefault();
       var clkbtn = $("#cat_edit_btn");
       clkbtn.prop('disabled', true);
@@ -428,7 +427,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/update_categories'); ?>",
+        url: "<?php echo site_url('Main/insert_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -439,10 +438,10 @@
               icon: "success",
               timer: 1000,
             });
-            
+
             setTimeout(function() {
-                  location.reload();
-                }, 1000);
+              location.reload();
+            }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -462,11 +461,11 @@
 
     });
 
-    $("#category_tbl").on("click", ".delete_cotegory", function() {
+    $(".delete_cotegory").on("click", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-      
+
 
       swal({
         title: "Are you sure?",
@@ -521,17 +520,18 @@
     });
 
 
-//===========================category ===========================//
-  //===========================unit ===========================//
-  $("form#form_unit_add").submit(function(e) {
+    //===========================category ===========================//
+    //=========================== Group Master ===========================//
+
+    $("form#form_group_add").submit(function(e) {
       e.preventDefault();
-      var clkbtn = $("#btn_unit_add");
+      var clkbtn = $("#btn_group_add");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_unit'); ?>",
+        url: "<?php echo site_url('Main/insert_group'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -542,10 +542,10 @@
               icon: "success",
               timer: 1000,
             });
-            
+
             setTimeout(function() {
-                  location.reload();
-                }, 1000);
+              location.reload();
+            }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -566,15 +566,15 @@
     });
 
 
-   $("form#form_unit_edit").submit(function(e) {
+    $("form#form_group_edit").submit(function(e) {
       e.preventDefault();
-      var clkbtn = $("#btn_unit_edit");
+      var clkbtn = $("#btn_group_edit");
       clkbtn.prop('disabled', true);
       var formData = new FormData(this);
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/update_unit'); ?>",
+        url: "<?php echo site_url('Main/insert_group'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -585,10 +585,10 @@
               icon: "success",
               timer: 1000,
             });
-            
+
             setTimeout(function() {
-                  location.reload();
-                }, 1000);
+              location.reload();
+            }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -608,11 +608,11 @@
 
     });
 
-    $("#unit_tbl").on("click", ".unit-delete", function() {
+    $(".group-delete").on("click", ".group-delete", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-      
+
 
       swal({
         title: "Are you sure?",
@@ -625,7 +625,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_unit'); ?>",
+            url: "<?php echo site_url('Main/delete_group'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -667,154 +667,8 @@
     });
 
 
-//===========================unit ===========================//
+    //=========================== Group Master ===========================//
 
-//===========================paymode ===========================//
-  $("form#form_paymode_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_paymode_add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/insert_paymode'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-   $("form#form_paymode_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_paymode_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/update_paymode'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    $("#paymode_tbl").on("click", ".paymode-delete", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-      
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('Main/delete_paymode'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-//===========================paymode ===========================//
 
     //===========================paymentin ===========================//
   $("form#form_paymentin_add").submit(function(e) {
@@ -1254,590 +1108,7 @@
 
 
 //===========================/coupon ===========================//
-//===========================color ===========================//
-  $("form#form_color_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_color_add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
 
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/insert_color'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-   $("form#form_color_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_color_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/update_color'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    $("#color_tbl").on("click", ".color-delete", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-      
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('Main/delete_color'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-//===========================color ===========================//
-    //===========================size ===========================//
-  $("form#form_size_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_size_add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/insert_size'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-   $("form#form_size_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_size_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/update_size'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    $("#size_tbl").on("click", ".size-delete", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-      
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('Main/delete_size'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-//===========================size ===========================//
- //===========================fabric ===========================//
-  $("form#form_fabric_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_fabric_add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/insert_fabric'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-   $("form#form_fabric_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_fabric_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/update_fabric'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    $("#fabric_tbl").on("click", ".fabric-delete", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-      
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('Main/delete_fabric'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-//===========================fabric ===========================//
-    //===========================Taxgst ===========================//
-  $("form#form_taxgst_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_taxgst_add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/insert_taxgst'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-   $("form#form_taxgst_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_taxgst_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/update_taxgst'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    $("#taxgst_tbl").on("click", ".taxgst-delete", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-      
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('Main/delete_taxgst'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-//===========================/Taxgst ===========================//
 //===========================expcategory ===========================//
   $("form#form_expcat_add").submit(function(e) {
       e.preventDefault();
@@ -2132,25 +1403,27 @@
 
 //===========================/expense ===========================//
     //===========================product ===========================//
-  $("form#add_product_form").submit(function(e) {
-      e.preventDefault();
-     
-       var myContent = tinymce.get("m_product_details").getContent();
-      $('#m_product_details').val(myContent);
+    $(".btn_add_product").click(function(e) {
+      var frmid = $(this).data('frmid');
+      var prodid = $(this).data('prodid');
+      
+      // alert(frmid)
+      var myContent = tinymce.get("m_product_details"+prodid).getContent();
+      $('#m_product_details'+prodid).val(myContent);
 
-       var myContent1 = tinymce.get("m_product_information").getContent();
-      $('#m_product_information').val(myContent1);
-
-      var clkbtn = $("#add_product_btn");
+      var myContent1 = tinymce.get("m_product_information"+prodid).getContent();
+      $('#m_product_information'+prodid).val(myContent1);
+      var clkbtn = $(this);
       clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
+     
+      var formData = $(frmid).serialize();
 
       $.ajax({
         type: "POST",
         url: "<?php echo site_url('Main/insert_product'); ?>",
         data: formData,
-        processData: false,
-        contentType: false,
+        // processData: false,
+        // contentType: false,
         dataType: "JSON",
         success: function(data) {
           if (data.status == 'success') {
@@ -2158,10 +1431,10 @@
               icon: "success",
               timer: 1000,
             });
-            
+
             setTimeout(function() {
-                  location.reload();
-                }, 1000);
+              location.reload();
+            }, 1000);
           } else {
             clkbtn.prop('disabled', false);
             swal(data.message, {
@@ -2182,65 +1455,15 @@
     });
 
 
-   $("form#update_product_form").submit(function(e) {
-      e.preventDefault();
-      
-      var myContent2 = tinymce.get("m_product_details1").getContent();
-      $('#m_product_details1').val(myContent2);
-
-       var myContent3 = tinymce.get("m_product_information1").getContent();
-      $('#m_product_information1').val(myContent3);
-
-
-      var clkbtn = $("#update_product_btn");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Main/update_product'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
 
     $("#product_tbl").on("click", ".delete_product", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-      
 
       swal({
         title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
+        text: "Once deleted,all sales and purchase data of this product will also deleted and you will not be able to recover this data!",
         icon: "warning",
         buttons: true,
         dangerMode: true,
@@ -2291,7 +1514,8 @@
     });
 
 
-//===========================product ===========================//
+    //===========================product ===========================//
+
       //===========================product image ===========================//
   $("form#form_image_add").submit(function(e) {
       e.preventDefault();

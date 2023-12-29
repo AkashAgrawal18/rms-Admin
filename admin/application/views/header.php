@@ -103,17 +103,17 @@
                         <li><a class="dropdown-item" href="<?php echo base_url('Setting/front_setting'); ?>">Front Setting</a></li>
                     </ul>
                 </li>
-                <li class="nav-item dropdown me-xl-3 me-1">
+                <li class="nav-item dropdown me-3">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Master
+                       Master
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/unit'); ?>">Units</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/taxgst'); ?>">Taxgsts</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/color'); ?>">Colors</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/size'); ?>">Sizes</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/fabric'); ?>">Fabrics</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/paymode'); ?>">Pay Mode</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/1'); ?>">Units</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/4'); ?>">Taxgsts</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/2'); ?>">Colors</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/3'); ?>">Sizes</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/5'); ?>">Fabrics</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/6'); ?>">Pay Mode</a></li>
                     </ul>
                 </li>
                 <!-- <li class="nav-item dropdown me-xl-3 me-1">
