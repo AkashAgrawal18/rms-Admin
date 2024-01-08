@@ -51,15 +51,18 @@ class Main_model extends CI_model
       // "m_pcategory_id" => $this->input->post('parent_cat'),
       "m_category_name" => $this->input->post('m_category_name'),
       "m_category_slug" => $this->input->post('m_category_slug'),
-      "m_category_status" => $this->input->post('m_category_status') ?: 1,
       "m_category_image" => $m_category_image,
     );
     if (!empty($m_category_id)) {
+      $data['m_category_status'] = $this->input->post('m_category_status');
       $data['m_category_updated_on'] = date('Y-m-d H:i');
-      $res = $this->db->where('m_category_id', $m_category_id)->update('master_categories', $data);
+       $this->db->where('m_category_id', $m_category_id)->update('master_categories', $data);
+       $res = 2;
     } else {
+      $data['m_category_status'] = 1;
       $data['m_category_added_on'] = date('Y-m-d H:i');
-      $res = $this->db->insert('master_categories', $data);
+     $this->db->insert('master_categories', $data);
+     $res = 1 ;
     }
 
     return $res;
@@ -150,7 +153,7 @@ class Main_model extends CI_model
   {
     $this->db->select('master_product.*,m_category_name,fabric.m_group_name as m_fabric_name');
     $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
-    $this->db->join('master_fabric_tbl fabric', 'fabric.m_fabric_id = master_product.m_product_fabric', 'left');
+    $this->db->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left');
     if ($category != '') {
       $query = $this->db->where("m_product_cat_id", $category);
     }
@@ -268,16 +271,16 @@ class Main_model extends CI_model
 
     if (!empty($this->input->post('m_product_id'))) {
       $data['m_product_updated_on'] = date('Y-m-d H:i');
-      $res = $this->db->where('m_product_id', $this->input->post('m_product_id'))->update('master_product', $data);
-      return $res;
+       $this->db->where('m_product_id', $this->input->post('m_product_id'))->update('master_product', $data);
+       $res = 2;
     } else {
       // Add the timestamp
       $data['m_product_added_on'] = date('Y-m-d H:i');
       // Insert data into the 'master_product' table
-      $res = $this->db->insert('master_product', $data);
-
-      return $res;
+     $this->db->insert('master_product', $data);
+      $res = 1;
     }
+    return $res;
   }
 
   public function delete_product()

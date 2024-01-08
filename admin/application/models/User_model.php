@@ -425,10 +425,10 @@ class User_model extends CI_model
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")<=', $to_date);
     }
 
-    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_saddress,m_user_email,pmode1.m_pmode_name as pmodename1,pmode2.m_pmode_name as pmodename2');
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_saddress,m_user_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
     $this->db->join(' master_users_tbl mct', 'mct.m_user_id = master_sales_tbl.m_sale_customer', 'left');
-    $this->db->join('master_paymode_tbl pmode1', 'pmode1.m_pmode_id = master_sales_tbl.m_sale_pmode', 'left');
-    $this->db->join('master_paymode_tbl pmode2', 'pmode2.m_pmode_id = master_sales_tbl.m_sale_pmode2', 'left');
+    $this->db->join('master_goups_tbl pmode1', 'pmode1.m_group_id = master_sales_tbl.m_sale_pmode', 'left');
+    $this->db->join('master_goups_tbl pmode2', 'pmode2.m_group_id = master_sales_tbl.m_sale_pmode2', 'left');
     $this->db->group_by('m_sale_spo');
     $sale_list = $this->db->get('master_sales_tbl')->result();
 
@@ -474,13 +474,13 @@ class User_model extends CI_model
 
   public function get_sale_items($order_id, $uid = '')
   {
-    $this->db->select('m_sale_spo,m_sale_qty,m_sale_price,m_sale_total,m_sale_date,m_sale_product,m_sale_size,m_sale_price,m_sale_gst,m_sale_color,m_product_name,m_color_name,m_size_name,m_unit_title,m_category_name,m_fabric_name');
+    $this->db->select('m_sale_spo,m_sale_qty,m_sale_price,m_sale_total,m_sale_date,m_sale_product,m_sale_size,m_sale_price,m_sale_gst,m_sale_color,m_product_name,color.m_group_name as m_color_name,size.m_group_name as m_size_name,unit.m_group_name as m_unit_title,m_category_name,fabric.m_group_name as m_fabric_name');
     $this->db->join('master_product mit', 'mit.m_product_id = master_sales_tbl.m_sale_product', 'left')
-      ->join('master_color_tbl as color', 'color.m_color_id  = master_sales_tbl.m_sale_color', 'left')
-      ->join('master_size_tbl as size', 'size.m_size_id  = master_sales_tbl.m_sale_size', 'left')
-      ->join('master_unit as unit', 'unit.m_unit_id = mit.m_product_unit', 'left')
+      ->join('master_goups_tbl as color', 'color.m_group_id  = master_sales_tbl.m_sale_color', 'left')
+      ->join('master_goups_tbl as size', 'size.m_group_id  = master_sales_tbl.m_sale_size', 'left')
       ->join('master_categories as cate', 'cate.m_category_id  = mit.m_product_cat_id', 'left')
-      ->join('master_fabric_tbl as fabric', 'fabric.m_fabric_id  = mit.m_product_fabric', 'left');
+      ->join('master_goups_tbl unit', 'unit.m_group_id = mit.m_product_unit', 'left')
+      ->join('master_goups_tbl fabric', 'fabric.m_group_id = mit.m_product_fabric', 'left');
 
     if (!empty($uid)) {
       $this->db->where('m_sale_customer', $uid);
@@ -607,57 +607,6 @@ class User_model extends CI_model
 
   //-----------------------------purchese----------------------------//
 
-  public function get_active_products($cat = '', $item = '')
-  {
-    $result = array();
-
-    if (!empty($cat)) {
-      $this->db->where('m_product_cat_id', $cat);
-    }
-    if (!empty($item)) {
-      $this->db->where('m_product_id', $item);
-    }
-    $sql = $this->db->join('master_taxgst', 'master_taxgst.m_taxgst_id = master_product.m_product_taxgst', 'left')->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')->join('master_unit', 'master_unit.m_unit_id = master_product.m_product_unit', 'left')->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id = master_product.m_product_fabric', 'left')->where('m_product_status', 1)->get('master_product')->result();
-
-    if (!empty($sql)) {
-      foreach ($sql as $key => $value) {
-        $product_colors = $this->db->select('m_color_id,m_color_name')->where_in('m_color_id', explode(',', $value->m_product_color))->get('master_color_tbl')->result();
-
-        $product_size = $this->db->select('m_size_id,m_size_name')->where_in('m_size_id', explode(',', $value->m_product_size))->get('master_size_tbl')->result();
-
-        $product_images = $this->db->select('m_image_id,m_image_product_img')->where('m_image_product_id', $value->m_product_id)->get('master_image_tbl')->result();
-
-        $res = (object) array(
-          "m_product_id" => $value->m_product_id,
-          "m_product_name" => $value->m_product_name,
-          "m_product_slug" => $value->m_product_slug,
-          "m_product_cat_id" => $value->m_product_cat_id,
-          "m_category_name" => $value->m_category_name,
-          "m_product_taxgst" => $value->m_product_taxgst,
-          "m_tax_value" => $value->m_tax_value,
-          "m_product_unit" => $value->m_product_unit,
-          "m_unit_title" => $value->m_unit_title,
-          "m_product_barscode" => $value->m_product_barscode,
-          "m_product_purche_price" => $value->m_product_purche_price,
-          "m_product_seles_price" => $value->m_product_seles_price,
-          "m_product_mrp" => $value->m_product_mrp,
-          "m_product_details" => $value->m_product_details,
-          "m_product_information" => $value->m_product_information,
-          "m_product_des" => $value->m_product_des,
-          "m_product_status" => $value->m_product_status,
-          'm_product_fabric' => $value->m_product_fabric,
-          'm_fabric_name' => $value->m_fabric_name,
-          'm_product_color' => $product_colors,
-          'm_product_size' => $product_size,
-          'm_product_image' => $product_images,
-        );
-
-        $result[] = $res;
-      }
-    }
-
-    return $result;
-  }
 
   public function get_all_purchase($pur_id = '', $user = '', $search = '', $from_date = '', $to_date = '', $pur_type='')
   {
@@ -728,13 +677,14 @@ class User_model extends CI_model
 
   public function get_purchase_item($pur_id,$supplier)
     {
-        $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,m_color_name,m_size_name,m_fabric_name,m_product_name,m_category_name,m_unit_title,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt,m_product_color,m_product_size,m_purchase_size,m_purchase_color')
-            ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
-           ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
-            ->join('master_unit', 'master_unit.m_unit_id = master_product.m_product_unit', 'left')
-            ->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id = master_product.m_product_fabric', 'left')
-            ->join('master_size_tbl', 'master_size_tbl.m_size_id = master_purchase_tbl.m_purchase_size', 'left')
-            ->join('master_color_tbl', 'master_color_tbl.m_color_id = master_purchase_tbl.m_purchase_color', 'left');
+        $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,fabric.m_group_name as m_fabric_name,m_product_id,m_product_name,m_product_cat_id,m_category_name,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt')
+        ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
+        ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
+        ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
+        ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
+        ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+        ->join('master_goups_tbl size', 'size.m_group_id = master_purchase_tbl.m_purchase_size', 'left')
+        ->join('master_goups_tbl colour', 'colour.m_group_id = master_purchase_tbl.m_purchase_color', 'left');
 
         if (!empty($pur_id)) {
             $this->db->where('m_purchase_spo', $pur_id);

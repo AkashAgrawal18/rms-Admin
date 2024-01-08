@@ -24,15 +24,15 @@ class Report_model extends CI_model
 
     public function get_purchase_item($from = '', $to = '',  $type = '', $item = '', $cat = '',$search='', $size = '', $color = '')
     {
-        $this->db->select('sum(m_purchase_qty) as itemqty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,sum(m_purchase_total)  as subtotal,m_purchase_invoiceno,m_purchase_type,m_color_name,m_size_name,m_fabric_name,m_product_id,m_product_name,m_product_purche_price,m_product_mrp,m_product_seles_price,m_product_cat_id,m_category_name,m_product_slug,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_product_des,m_product_barscode,m_purchase_color,m_purchase_size,m_unit_title,m_tax_value')
+        $this->db->select('sum(m_purchase_qty) as itemqty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,sum(m_purchase_total)  as subtotal,m_purchase_invoiceno,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,fabric.m_group_name as m_fabric_name,m_product_id,m_product_name,m_product_purche_price,m_product_mrp,m_product_seles_price,m_product_cat_id,m_category_name,m_product_slug,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_product_des,m_product_barscode,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value')
             ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
-            ->join('master_taxgst', 'master_taxgst.m_taxgst_id = master_product.m_product_taxgst', 'left')
+            ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
             ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
-            ->join('master_unit', 'master_unit.m_unit_id = master_product.m_product_unit', 'left')
-            ->join('master_fabric_tbl', 'master_fabric_tbl.m_fabric_id = master_product.m_product_fabric', 'left')
-            ->join('master_size_tbl', 'master_size_tbl.m_size_id = master_purchase_tbl.m_purchase_size', 'left')
-            ->join('master_color_tbl', 'master_color_tbl.m_color_id = master_purchase_tbl.m_purchase_color', 'left');
-
+            ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
+            ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+            ->join('master_goups_tbl size', 'size.m_group_id = master_purchase_tbl.m_purchase_size', 'left')
+            ->join('master_goups_tbl colour', 'colour.m_group_id = master_purchase_tbl.m_purchase_color', 'left');
+        
         if (!empty($type)) {
             $this->db->where('m_purchase_type', $type);
         }
@@ -172,7 +172,7 @@ class Report_model extends CI_model
                     "m_fabric_name" => $key->m_fabric_name,
                     "m_product_des" => $key->m_product_des,
                     "m_product_barscode" => $key->m_product_barscode,
-                    "m_product_image" => $product_images[0]->m_image_product_img,
+                    "m_product_image" => isset($product_images[0]->m_image_product_img) ? $product_images[0]->m_image_product_img : '',
                     "purchase_qty" => $open_pur_qty,
                     "return_qty" => $retun_qty,
                     "sale_qty" => $sale_qty,

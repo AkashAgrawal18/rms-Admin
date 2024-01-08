@@ -125,9 +125,9 @@
                        
                         foreach ($edit_value[0]->m_purchase_items as $kry) {
 
-                            $product_colors = $this->db->select('m_color_id,m_color_name')->where_in('m_color_id', explode(',', $kry->m_product_color))->get('master_color_tbl')->result();
+                            $product_colors = $this->db->select('m_group_id as m_color_id,m_group_name as m_color_name')->where_in('m_group_id', explode(',', $kry->m_product_color))->get('master_goups_tbl')->result();
 
-                            $product_size = $this->db->select('m_size_id,m_size_name')->where_in('m_size_id', explode(',', $kry->m_product_size))->get('master_size_tbl')->result();
+                            $product_size = $this->db->select('m_group_id as m_size_id,m_group_name as m_size_name')->where_in('m_group_id', explode(',', $kry->m_product_size))->get('master_goups_tbl')->result();
 
                             $cou++;
                     ?>

@@ -99,30 +99,17 @@ class Main extends CI_Controller
   public function insert_categories()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_categories()) {
+      $data = $this->Main_model->insert_categories();
+      if ($data == 1) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'categories has been Added successfully!'
+          'message' => 'Category has been Added Successfully!'
         );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_categories()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_categories()) {
-
+      } else if($data == 2) {
         $info = array(
           'status' => 'success',
-          'message' => 'categories has been Updated successfully!'
+          'message' => 'Category has been Updated Successfully!'
         );
       } else {
         $info = array(
@@ -215,11 +202,16 @@ class Main extends CI_Controller
   public function insert_product()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_product()) {
-
+      $data = $this->Main_model->insert_product();
+      if ($data == 1) {
         $info = array(
           'status' => 'success',
-          'message' => 'Product has been Added successfully!'
+          'message' => 'Product has been Added Successfully!'
+        );
+      } else if($data == 2) {
+        $info = array(
+          'status' => 'success',
+          'message' => 'Product has been Updated Successfully!'
         );
       } else {
         $info = array(
@@ -261,7 +253,7 @@ class Main extends CI_Controller
     $data['search'] = '';
     $data['slug'] = $this->uri->segment(3);
     $data['search'] =  $this->input->get('search');
-    $data['paymode_list'] = $this->Main_model->get_active_paymode();
+    $data['paymode_list'] = $this->Main_model->get_active_group(6);
     $data['category'] = $this->Main_model->get_active_category();
     $data['customer'] = $this->User_model->get_active_customer();
    

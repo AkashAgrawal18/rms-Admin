@@ -369,7 +369,7 @@
                                                                     <select name="m_sale_pmode" id="m_sales_paytype" class="form-control select2">
                                                                         <?php if (!empty($paymode_list)) {
                                                                             foreach ($paymode_list as $pkey) {
-                                                                                echo '<option value="' . $pkey->m_pmode_id . '">' . $pkey->m_pmode_name . '</option>';
+                                                                                echo '<option value="' . $pkey->m_group_id . '">' . $pkey->m_group_name . '</option>';
                                                                             }
                                                                         }
                                                                         ?>
@@ -390,7 +390,7 @@
                                                                     <select name="m_sale_pmode2" id="m_sales_paytype2" class="form-control select2" style="width:100%">
                                                                         <?php if (!empty($paymode_list)) {
                                                                             foreach ($paymode_list as $pkey) {
-                                                                                echo '<option value="' . $pkey->m_pmode_id . '">' . $pkey->m_pmode_name . '</option>';
+                                                                                echo '<option value="' . $pkey->m_group_id . '">' . $pkey->m_group_name . '</option>';
                                                                             }
                                                                         }
                                                                         ?>

@@ -35,48 +35,6 @@ class Main_model extends CI_model
 	}
 
 
-	public function getcolor()
-	{
-		$this->db->select('*');
-		$this->db->where('m_color_status',1);
-		$res =$this->db->get('master_color_tbl')->result();
-		return $res;
-
-	}
-
-	public function get_color_name($id)
-	{
-		$this->db->select('m_color_name');
-		$this->db->where('m_color_id',$id);
-		return $this->db->get('master_color_tbl')->row();
-	
-	}
-
-	public function getsize()
-	{
-		$this->db->select('*');
-		$this->db->where('m_size_status',1);
-		$res =$this->db->get('master_size_tbl')->result();
-		return $res;
-
-	}
-	public function getfabric()
-	{
-		$this->db->select('*');
-		$this->db->where('m_fabric_status',1);
-		$res =$this->db->get('master_fabric_tbl')->result();
-		return $res;
-
-	}
-
-	public function get_paymode()
-	{
-		$this->db->select('*');
-		$this->db->where('m_pmode_status',1);
-		$res =$this->db->get('master_paymode_tbl')->result();
-		return $res;
-
-	}
 
 	public function getproduct($limit, $offset,$cat,$offer,$search,$size,$color,$fabric)
 	{
