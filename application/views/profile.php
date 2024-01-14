@@ -22,7 +22,7 @@
         </div>
         <div class="col-md-9">
 
-            <div class="container-fluid bg-light">
+            <div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
                 <div class="offer-text text-right py-2">
                     <!-- <a href="<?php echo base_url('Profile/edit_profile') ?>" class="btn btn-primary">Edit Profile</a> -->
                 </div>

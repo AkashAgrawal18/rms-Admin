@@ -15,52 +15,35 @@ class User_model extends CI_model
   //-------------------user-----------------------------------//
 
   //--------------------------------customer-----------------------//
-  public function getcustmobileById($mobile_id)
+  public function getcustmobileById($mobile_id, $type)
   {
 
     //print_r($id);die();
     $user_mobile = $this->db->select('m_user_mobile,m_user_id,m_user_type')
-      ->where('m_user_mobile', $mobile_id)->where('m_user_type', 3)->get('master_users_tbl')->result();
+      ->where('m_user_mobile', $mobile_id)->where('m_user_type', $type)->get('master_users_tbl')->result();
 
     // print_r($user_mobile); die(); 
     return $user_mobile;
   }
 
 
-  public function get_customer($status, $search)
+  public function get_customer($type, $status='', $search='')
   {
     $this->db->select('*');
 
-    // $this->db->select_sum('m_user_open_balance', 'total_balance');
-    $this->db->order_by('m_user_id');
-    $this->db->where('m_user_type', 3);
+    $this->db->where('m_user_type', $type);
+
     if (!empty($status)) {
       $this->db->where('m_user_status', $status);
     }
-    if ($search != NULL) {
-
-      $this->db->like('m_user_name', $search, 'both');
-      $this->db->or_like('m_user_mobile', $search, 'both');
-      $this->db->or_like('m_user_email', $search, 'both');
-
-      // $this->db->or_like('address',$search_key,'both');
-
+    if (!empty($search)) {
+      $this->db->where("(m_user_name LIKE '%$search%' OR m_user_mobile LIKE '%$search%' OR m_user_email LIKE '%$search%')");
+        
     }
+    $this->db->order_by('m_user_id', 'desc');
     $res = $this->db->get('master_users_tbl')->result();
     return $res;
   }
-
-  public function get_active_customer()
-  {
-    $this->db->select('*');
-    $this->db->order_by('m_user_id');
-    $this->db->where('m_user_type', 3);
-    $this->db->where('m_user_status', 1);
-    $res = $this->db->get('master_users_tbl')->result();
-    return $res;
-  }
-
-
 
   public function insert_customer()
   {
@@ -92,83 +75,34 @@ class User_model extends CI_model
       "m_user_name" => $this->input->post('cust_name'),
       "m_user_mobile" => $this->input->post('cust_mobile'),
       "m_user_email" => $this->input->post('cust_email'),
-      "m_user_status" => $this->input->post('cust_status'),
       // "m_user_city" => $this->input->post('m_user_city'),
       // "m_user_state" => $this->input->post('m_user_state'),
-      "m_user_address" => $this->input->post('Billing_address'),
-      "m_user_saddress" => $this->input->post('shipping_address'),
-      "m_user_credit_limit" => $this->input->post('credit_limit'),
-      "m_user_credit_period" => $this->input->post('cust_credit_period'),
+      "m_user_address" => $this->input->post('Billing_address') ?: '',
+      "m_user_credit_limit" => $this->input->post('credit_limit') ?: '',
+      "m_user_credit_period" => $this->input->post('cust_credit_period') ?: '',
       "m_user_open_balance" => $this->input->post('cust_open_balance'),
-      "m_user_text_num" => $this->input->post('cust_text_num'),
       "m_user_type" => $this->input->post('m_user_type'),
-      "m_user_design" => 3,  //customer design
-      "m_user_login_allow" => 1,
-      "m_user_loginid" => $this->input->post('cust_email'),
-      "m_user_password" => $this->input->post('cust_pass'),
+      // "m_user_design" => 3,  //customer design
+      // "m_user_login_allow" => 1,
+      // "m_user_loginid" => $this->input->post('cust_email'),
+      // "m_user_password" => $this->input->post('cust_pass'),
       "m_user_image" => $cust_image,
-
-
     );
-
-    $data['m_user_added_on'] = date('Y-m-d H:i');
-    $data['m_user_added_by'] = $this->session->userdata('user_id');
-    $res = $this->db->insert('master_users_tbl', $data);
-    return $res;
-  }
-
-  public function update_customer()
-  {
-
-    if (!empty($_FILES['cust_image']['name'])) {
-      $config['file_name'] = $_FILES['cust_image']['name'];
-      $config['upload_path'] = 'uploads/user';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['cust_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('cust_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['cust_image'])) {
-          if (file_exists($config['cust_image'] . $update_data['cust_image'])) {
-            unlink($config['upload_path'] . $update_data['cust_image']); /* deleting Image */
-          }
-        }
-        $cust_image = $uploadData['file_name'];
-      }
+    $cust_id = $this->input->post('cust_id');
+    if (!empty($cust_id)) {
+      $data['m_user_updated_by'] = $this->session->userdata('user_id');
+      $data['m_user_status'] = $this->input->post('cust_status');
+      $data['m_user_updated_on'] = date('Y-m-d H:i');
+      $this->db->where('m_user_id', $cust_id)->update('master_users_tbl', $data);
+      $res = 2;
     } else {
-      $cust_image = $this->input->post('cust_image1');
+      $data['m_user_status'] = 1;
+      $data['m_user_added_on'] = date('Y-m-d H:i');
+      $data['m_user_added_by'] = $this->session->userdata('user_id');
+      $this->db->insert('master_users_tbl', $data);
+      $res = 1;
     }
 
-    $cust_id = $this->input->post('cust_id');
-
-    $data = array(
-
-      "m_user_name" => $this->input->post('cust_name'),
-      "m_user_mobile" => $this->input->post('cust_mobile'),
-      "m_user_email" => $this->input->post('cust_email'),
-      "m_user_status" => $this->input->post('cust_status'),
-      // "m_user_city" => $this->input->post('m_user_city'),
-      // "m_user_state" => $this->input->post('m_user_state'),
-      "m_user_address" => $this->input->post('Billing_address'),
-      "m_user_saddress" => $this->input->post('shipping_address'),
-      "m_user_credit_limit" => $this->input->post('credit_limit'),
-      "m_user_credit_period" => $this->input->post('cust_credit_period'),
-      "m_user_open_balance" => $this->input->post('cust_open_balance'),
-      "m_user_text_num" => $this->input->post('cust_text_num'),
-      "m_user_type" => $this->input->post('m_user_type'),
-      "m_user_design" => 3,  //customer design
-      "m_user_login_allow" => 1,
-      "m_user_loginid" => $this->input->post('cust_email'),
-      "m_user_password" => $this->input->post('cust_pass'),
-      "m_user_image" => $cust_image,
-
-    );
-    $data['m_user_updated_by'] = $this->session->userdata('user_id');
-    $data['m_user_updated_on'] = date('Y-m-d H:i');
-    $res = $this->db->where('m_user_id', $cust_id)->update('master_users_tbl', $data);
     return $res;
   }
 
@@ -178,229 +112,7 @@ class User_model extends CI_model
     return $this->db->delete('master_users_tbl');
   }
 
-
-
-  //pos page add customer 
-  public function insert_newcustomer()
-  {
-
-    if (!empty($_FILES['cust_image']['name'])) {
-      $config['file_name'] = $_FILES['cust_image']['name'];
-      $config['upload_path'] = 'uploads/user';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['cust_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('cust_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['cust_image'])) {
-          if (file_exists($config['cust_image'] . $update_data['cust_image'])) {
-            unlink($config['upload_path'] . $update_data['cust_image']); /* deleting Image */
-          }
-        }
-        $cust_image = $uploadData['file_name'];
-      }
-    } else {
-      $cust_image = '';
-    }
-
-    $data = array(
-
-      "m_user_name" => $this->input->post('cust_name'),
-      "m_user_mobile" => $this->input->post('cust_mobile'),
-      "m_user_email" => $this->input->post('cust_email'),
-      "m_user_status" => $this->input->post('cust_status'),
-      // "m_user_city" => $this->input->post('m_user_city'),
-      // "m_user_state" => $this->input->post('m_user_state'),
-      "m_user_address" => $this->input->post('Billing_address'),
-      "m_user_saddress" => $this->input->post('shipping_address'),
-      "m_user_credit_limit" => $this->input->post('credit_limit'),
-      "m_user_credit_period" => $this->input->post('cust_credit_period'),
-      "m_user_open_balance" => $this->input->post('cust_open_balance'),
-      "m_user_text_num" => $this->input->post('cust_text_num'),
-      "m_user_type" => $this->input->post('m_user_type'),
-      "m_user_design" => 3,  //customer design
-      "m_user_login_allow" => 1,
-      "m_user_loginid" => $this->input->post('cust_email'),
-      "m_user_password" => $this->input->post('cust_pass'),
-      "m_user_image" => $cust_image,
-
-
-    );
-
-    $data['m_user_added_on'] = date('Y-m-d H:i');
-    $data['m_user_added_by'] = $this->session->userdata('user_id');
-    $res = $this->db->insert('master_users_tbl', $data);
-    return $res;
-  }
-
-
   //--------------------------------/customer-----------------------//
-
-  //--------------------------------Supplier-----------------------//
-
-  public function getsuppmobileById($mobile_id)
-  {
-
-    //print_r($id);die();
-    $user_mobile = $this->db->select('m_user_mobile,m_user_id,m_user_type')
-      ->where('m_user_mobile', $mobile_id)->where('m_user_type', 4)->get('master_users_tbl')->result();
-
-    // print_r($user_mobile); die(); 
-    return $user_mobile;
-  }
-
-
-
-
-  public function get_supplier($status, $search)
-  {
-    $this->db->select('*');
-
-    // $this->db->select_sum('m_user_open_balance', 'total_balance');
-    $this->db->order_by('m_user_id');
-    $this->db->where('m_user_type', 4);
-
-    if (!empty($status)) {
-      $this->db->where('m_user_status', $status);
-    }
-    if ($search != NULL) {
-
-      $this->db->like('m_user_name', $search, 'both');
-      $this->db->or_like('m_user_mobile', $search, 'both');
-      $this->db->or_like('m_user_email', $search, 'both');
-    }
-    $res = $this->db->get('master_users_tbl')->result();
-    return $res;
-  }
-
-  public function get_active_supplier()
-  {
-    $this->db->select('*');
-    $this->db->order_by('m_user_id');
-    $this->db->where('m_user_type', 4);
-    $this->db->where('m_user_status', 1);
-    $res = $this->db->get('master_users_tbl')->result();
-    return $res;
-  }
-
-
-
-  public function insert_supplier()
-  {
-
-    if (!empty($_FILES['suppl_image']['name'])) {
-      $config['file_name'] = $_FILES['suppl_image']['name'];
-      $config['upload_path'] = 'uploads/user';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['suppl_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('suppl_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['suppl_image'])) {
-          if (file_exists($config['suppl_image'] . $update_data['suppl_image'])) {
-            unlink($config['upload_path'] . $update_data['suppl_image']); /* deleting Image */
-          }
-        }
-        $suppl_image = $uploadData['file_name'];
-      }
-    } else {
-      $suppl_image = '';
-    }
-
-    $data = array(
-
-      "m_user_name" => $this->input->post('suppl_name'),
-      "m_user_mobile" => $this->input->post('suppl_mobile'),
-      "m_user_email" => $this->input->post('suppl_email'),
-      "m_user_status" => $this->input->post('suppl_status'),
-      // "m_user_city" => $this->input->post('m_user_city'),
-      // "m_user_state" => $this->input->post('m_user_state'),
-      "m_user_address" => $this->input->post('Billing_address'),
-      "m_user_saddress" => $this->input->post('shipping_address'),
-      "m_user_credit_limit" => $this->input->post('credit_limit'),
-      "m_user_credit_period" => $this->input->post('suppl_credit_period'),
-      "m_user_open_balance" => $this->input->post('suppl_open_balance'),
-      "m_user_text_num" => $this->input->post('suppl_text_num'),
-      "m_user_type" => $this->input->post('m_user_type'),
-      "m_user_design" => 4,  //supplier design
-      "m_user_login_allow" => 1,
-      "m_user_loginid" => $this->input->post('suppl_email'),
-      "m_user_password" => $this->input->post('suppl_pass'),
-      "m_user_image" => $suppl_image,
-
-    );
-    $data['m_user_added_by'] = $this->session->userdata('user_id');
-    $data['m_user_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_users_tbl', $data);
-    return $res;
-  }
-
-  public function update_supplier()
-  {
-
-    if (!empty($_FILES['suppl_image']['name'])) {
-      $config['file_name'] = $_FILES['suppl_image']['name'];
-      $config['upload_path'] = 'uploads/user';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['suppl_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('suppl_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['suppl_image'])) {
-          if (file_exists($config['suppl_image'] . $update_data['suppl_image'])) {
-            unlink($config['upload_path'] . $update_data['suppl_image']); /* deleting Image */
-          }
-        }
-        $suppl_image = $uploadData['file_name'];
-      }
-    } else {
-      $suppl_image = $this->input->post('suppl_image1');
-    }
-
-    $suppl_id = $this->input->post('suppl_id');
-
-    $data = array(
-
-      "m_user_name" => $this->input->post('suppl_name'),
-      "m_user_mobile" => $this->input->post('suppl_mobile'),
-      "m_user_email" => $this->input->post('suppl_email'),
-      "m_user_status" => $this->input->post('suppl_status'),
-      // "m_user_city" => $this->input->post('m_user_city'),
-      // "m_user_state" => $this->input->post('m_user_state'),
-      "m_user_address" => $this->input->post('Billing_address'),
-      "m_user_saddress" => $this->input->post('shipping_address'),
-      "m_user_credit_limit" => $this->input->post('credit_limit'),
-      "m_user_credit_period" => $this->input->post('suppl_credit_period'),
-      "m_user_open_balance" => $this->input->post('suppl_open_balance'),
-      "m_user_text_num" => $this->input->post('suppl_text_num'),
-      "m_user_type" => $this->input->post('m_user_type'),
-      "m_user_design" => 4,  //supplier design
-      "m_user_login_allow" => 1,
-      "m_user_loginid" => $this->input->post('suppl_email'),
-      "m_user_password" => $this->input->post('suppl_pass'),
-      "m_user_image" => $suppl_image,
-
-    );
-    $data['m_user_updated_by'] = $this->session->userdata('user_id');
-    $data['m_user_updated_on'] = date('Y-m-d H:i');
-    $res = $this->db->where('m_user_id', $suppl_id)->update('master_users_tbl', $data);
-    return $res;
-  }
-
-  public function delete_supplier()
-  {
-    $this->db->where('m_user_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_users_tbl');
-  }
 
   //--------------------------------sales-----------------------//
 
@@ -425,7 +137,7 @@ class User_model extends CI_model
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")<=', $to_date);
     }
 
-    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_saddress,m_user_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
     $this->db->join(' master_users_tbl mct', 'mct.m_user_id = master_sales_tbl.m_sale_customer', 'left');
     $this->db->join('master_goups_tbl pmode1', 'pmode1.m_group_id = master_sales_tbl.m_sale_pmode', 'left');
     $this->db->join('master_goups_tbl pmode2', 'pmode2.m_group_id = master_sales_tbl.m_sale_pmode2', 'left');
@@ -458,7 +170,6 @@ class User_model extends CI_model
           "m_user_name" => $skey->m_user_name,
           "m_user_mobile" => $skey->m_user_mobile,
           "m_user_address" => $skey->m_user_address,
-          "m_user_saddress" => $skey->m_user_saddress,
           "m_user_email" => $skey->m_user_email,
           "pmodename1" => $skey->pmodename1,
           "pmodename2" => $skey->pmodename2,
@@ -608,7 +319,7 @@ class User_model extends CI_model
   //-----------------------------purchese----------------------------//
 
 
-  public function get_all_purchase($pur_id = '', $user = '', $search = '', $from_date = '', $to_date = '', $pur_type='')
+  public function get_all_purchase($pur_id = '', $user = '', $search = '', $from_date = '', $to_date = '', $pur_type = '')
   {
     if (!empty($pur_id)) {
       $this->db->where('m_purchase_spo', $pur_id);
@@ -632,7 +343,7 @@ class User_model extends CI_model
       $this->db->where('m_purchase_type', $pur_type);
     }
 
-    $this->db->select('m_purchase_spo,sum(m_purchase_qty) as total_qty,sum(m_purchase_total) as item_sub_total,sum(m_purchase_netamt) as item_net_total,m_purchase_type,m_purchase_invoiceno,m_purchase_date,sum(m_purchase_gstamt) as total_tax,sum(m_purchase_disamt) as total_disc,m_purchase_shipping,m_purchase_status,m_purchase_added_on,m_purchase_user,m_purchase_supplier,m_purchase_note,m_purchase_terms,m_user_name,m_user_mobile,m_user_email,m_user_address,m_user_saddress');
+    $this->db->select('m_purchase_spo,sum(m_purchase_qty) as total_qty,sum(m_purchase_total) as item_sub_total,sum(m_purchase_netamt) as item_net_total,m_purchase_type,m_purchase_invoiceno,m_purchase_date,sum(m_purchase_gstamt) as total_tax,sum(m_purchase_disamt) as total_disc,m_purchase_shipping,m_purchase_status,m_purchase_added_on,m_purchase_user,m_purchase_supplier,m_purchase_note,m_purchase_terms,m_user_name,m_user_mobile,m_user_email,m_user_address');
     $this->db->join('master_users_tbl mct', 'mct.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
 
     $this->db->group_by('m_purchase_spo');
@@ -663,8 +374,7 @@ class User_model extends CI_model
           "m_user_mobile" => $skey->m_user_mobile,
           "m_user_email" => $skey->m_user_email,
           "m_user_address" => $skey->m_user_address,
-          "m_user_saddress" => $skey->m_user_saddress,
-        
+         
           "m_purchase_items" => $this->get_purchase_item($skey->m_purchase_spo, $skey->m_purchase_supplier),
 
         );
@@ -675,26 +385,26 @@ class User_model extends CI_model
     return $result;
   }
 
-  public function get_purchase_item($pur_id,$supplier)
-    {
-        $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,fabric.m_group_name as m_fabric_name,m_product_id,m_product_name,m_product_cat_id,m_category_name,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt')
-        ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
-        ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
-        ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
-        ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
-        ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
-        ->join('master_goups_tbl size', 'size.m_group_id = master_purchase_tbl.m_purchase_size', 'left')
-        ->join('master_goups_tbl colour', 'colour.m_group_id = master_purchase_tbl.m_purchase_color', 'left');
+  public function get_purchase_item($pur_id, $supplier)
+  {
+    $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,fabric.m_group_name as m_fabric_name,m_product_id,m_product_name,m_product_cat_id,m_category_name,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt')
+      ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
+      ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
+      ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
+      ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
+      ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+      ->join('master_goups_tbl size', 'size.m_group_id = master_purchase_tbl.m_purchase_size', 'left')
+      ->join('master_goups_tbl colour', 'colour.m_group_id = master_purchase_tbl.m_purchase_color', 'left');
 
-        if (!empty($pur_id)) {
-            $this->db->where('m_purchase_spo', $pur_id);
-        }
-        if (!empty($supplier)) {
-            $this->db->where('m_purchase_supplier', $supplier);
-        }
-     
-        return $this->db->get('master_purchase_tbl')->result();
+    if (!empty($pur_id)) {
+      $this->db->where('m_purchase_spo', $pur_id);
     }
+    if (!empty($supplier)) {
+      $this->db->where('m_purchase_supplier', $supplier);
+    }
+
+    return $this->db->get('master_purchase_tbl')->result();
+  }
 
 
 
@@ -747,16 +457,16 @@ class User_model extends CI_model
           "m_purchase_gstamt" => $pur_item_gstamt[$i],
           "m_purchase_disamt" => $pur_item_discamt[$i],
           "m_purchase_netamt" => $pur_item_nettotal[$i],
-        
+
         );
 
-        if(!empty($pur_item_id[$i])){
+        if (!empty($pur_item_id[$i])) {
           $insert_data['m_purchase_updaded_by'] = $this->session->userdata('user_id');
           $insert_data['m_purchase_updaded_on'] = date('Y-m-d H:i');
 
           $this->db->where('m_purchase_id', $pur_item_id[$i])->update('master_purchase_tbl', $insert_data);
           $res = 2;
-        }else {
+        } else {
           $insert_data['m_purchase_spo'] = $spo;
           $insert_data['m_purchase_status'] = 1;
           $insert_data['m_purchase_user'] = $this->session->userdata('user_id');
@@ -764,12 +474,12 @@ class User_model extends CI_model
           $insert_data['m_purchase_added_on'] = date('Y-m-d H:i');
           $res = $this->db->insert('master_purchase_tbl', $insert_data);
         }
-     
+
 
         // echo '<pre>'; print_r($insert_data); 
 
-    
-      //  echo '<pre>'; print_r($res); 
+
+        //  echo '<pre>'; print_r($res); 
       }
     }
     // die;

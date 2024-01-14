@@ -281,10 +281,10 @@
                         }
 
                         $("#product_div").append(` 
-                        <div class="col-xl-3 col-lg-4">
+                        <div class="col-xl-2 col-lg-4">
                                     <div class="card h-100 p-2 groupproductclick" data-itemid="` + value.m_product_id + `" data-itemname="` + value.m_product_name + `" data-itemfabric="` + value.m_fabric_name + `">
                                         <img src="` + imagepath + `" alt="kurtis" class="w-100 h-80" style="aspect-ratio: 1/1; object-fit: cover;">
-                                        <p class="mt-2 fw-normal fn">` + value.m_product_name + ` (` + value.m_fabric_name + `)</p>
+                                        <p class="mt-2 mb-0 fw-normal fn wraptext">` + value.m_product_name + `</p><span class="badge bg-success" style="position: absolute;top: 3px;right: 3px;padding: 0.2rem;">` + value.m_fabric_name + `</span>
                                         <h6 class="mt-2">₹ ` + value.m_product_seles_price + ` <small> <del>₹  ` + value.m_product_mrp + `</del></small></h6>
                                     </div>
                                 </div>

@@ -52,7 +52,7 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-9">
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-plus"></i> Add New Offer</button>

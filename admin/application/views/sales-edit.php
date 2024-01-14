@@ -35,7 +35,7 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <form class="row pt-3" method="post" <?php if(!empty($id)){ ?>id="form-edit-sale"<?php  }else{?>id="form-add-sale"<?php } ?> >
 
        <?php 

@@ -23,60 +23,26 @@
       })
 
    // pos customer add
-   $("form#form-newcustomer-add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-newcustomer-add");
+   $(".btn-customer-add").click(function(e) {
+      var frmid = $(this).data('frmid');
+      var clkbtn = $(this);
       clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
+     
+      var formData = $(frmid).serialize();
 
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/insert_newcustomer'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-  $("form#form-customer-add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-customer-add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
+      var pagtype = $('#user_type').val();
+      if(pagtype == 3){
+        var relink = "<?= base_url('User/customer')?>";
+      }else  if(pagtype == 4){
+        var relink = "<?= base_url('User/suppiler')?>";
+      }
 
       $.ajax({
         type: "POST",
         url: "<?php echo site_url('User/insert_customer'); ?>",
         data: formData,
-        processData: false,
-        contentType: false,
+        // processData: false,
+        // contentType: false,
         dataType: "JSON",
         success: function(data) {
           if (data.status == 'success') {
@@ -107,48 +73,7 @@
 
     });
 
-  $("form#form-customer-edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-customer-edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/update_customer'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
+ 
    $("#customer_tbl").on("click", ".delete_customer", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
@@ -229,91 +154,6 @@
         },'json');
       })
 
-
-
-  $("form#form-supplier-add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-supplier-add");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/insert_supplier'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-  $("form#form-supplier-edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-supplier-edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/update_supplier'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            
-            setTimeout(function() {
-                  location.reload();
-                }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
 
    $("#supplier_tbl").on("click", ".delete_supplier", function() {
       var clkbtn = $(this);
@@ -608,7 +448,7 @@
 
     });
 
-    $(".group-delete").on("click", ".group-delete", function() {
+    $(document).on("click", ".group-delete", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');

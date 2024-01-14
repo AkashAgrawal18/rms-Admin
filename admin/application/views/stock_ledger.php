@@ -47,7 +47,7 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-12">
             <form method="post" action="<?php echo base_url('Report/stock_ledger'); ?>">

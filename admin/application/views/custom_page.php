@@ -42,13 +42,14 @@
 
                     <label for="Name">Name<span class="text-danger">*</span></label>
                     <input type="text" class="form-control  mb-3" id="cat_name" name="m_category_name" required placeholder="Please Enter Name">
+                    <input type="hidden" class="clspagetype" name="m_cat_type" value="">
 
                     <label for="slug">Slug<span class="text-danger">*</span></label>
                     <input type="text" class="form-control  mb-3" id="slug" name="m_category_slug" placeholder="Please Enter Slug">
 
                     <label for="image">Logo</label><br>
                     <input type="file" class="form-control-file mb-3" name="m_category_image" id="exampleFormControlFile1">
-                    <input type="hidden" class="form-control-file mb-3" name="m_category_image1" >
+                    <input type="hidden" class="form-control-file mb-3" name="m_category_image1">
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="cat_add_btn" class="btn btn-primary btn-sm"><i class="fa-regular fa-pen-to-square"></i> Add</button>
@@ -65,7 +66,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <form class="modal-content" method="post" id="form_group_add">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add <?= $pagetitle?></h5>
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -74,9 +75,9 @@
                         <label for="Name">Name<span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="m_group_name" required placeholder="Enter Name">
                         <input type="hidden" name="m_group_id" value="">
-                        <input type="hidden" name="m_group_type" value="<?= $type ?>">
+                        <input type="hidden" class="clspagetype" name="m_group_type" value="">
                     </div>
-                   
+
                 </div>
             </div>
             <div class="modal-footer">
@@ -88,3 +89,106 @@
 </div>
 
 <!-- Add Group Modal -->
+
+<!--add customer modal  -->
+
+<div class="modal fade" id="addcustomermodal" tabindex="-1" style="--bs-modal-margin: 0px !important">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title m-0" id="staticBackdropLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+            </div>
+            <div class="modal-body">
+                <form class="row g-3" method="POST" id="form-customer-add">
+
+                    <div class="col-md-6">
+                        <label for="Name">Name<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="cust_name" required placeholder="Please Enter Name">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="cmobile">Phone Number<span class="text-danger">*</span></label>
+                        <input type="tel" class="form-control" name="cust_mobile" id="cmobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Name">Email</label>
+                        <input type="hidden" class="clspagetype" name="m_user_type" id="user_type" value="">
+                        <input type="email" class="form-control" name="cust_email" placeholder="Please Enter Email">
+                    </div>
+                    <!-- <div class="col-md-6">
+                            <label for="order">Status </label>
+                            <select class="form-control" name="cust_status" >
+                                <option value="1" selected>Active</option>
+                                <option value="2">In-Active</option>
+                            </select>
+                        </div> -->
+                    <!-- <div class="col-md-6">
+                            <label for="Name">Password</label>
+                            <input type="text" class="form-control" name="cust_pass" placeholder="Please Enter Password">
+                        </div> -->
+                    <div class="col-md-6 ">
+                        <label for="image">Profile Image</label>
+                        <input type="file" class="form-control-file" name="cust_image">
+                    </div>
+                    <!-- <div class="col-md-6">
+                            <label for="Name">Tax Number</label>
+                            <input type="text" class="form-control" name="cust_text_num"  placeholder="Please Enter Tax Number"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"  value="0" >
+                        </div> -->
+                    <div class="col-md-6">
+                        <label for="Name">Opening Balance</label>
+                        <input type="text" class="form-control" name="cust_open_balance" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="0">
+                    </div>
+
+                    <div class="col-md-6 suppfiled">
+                        <label for="Name">Credit Period</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="cust_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="0">
+                            <span class="input-group-text">Day(s)</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 suppfiled">
+                        <label for="Name">Credit Limit</label>
+                        <div class="input-group">
+                            <span class="input-group-text">₹</span>
+                            <input type="text" class="form-control" name="credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="0">
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="Name">Billing Address</label>
+                        <textarea class="form-control" name="Billing_address" rows="2"></textarea>
+                    </div>
+
+                    <div class="canvas-footer justify-content-end d-flex">
+                        <button type="submit" class="btn btn-primary me-2 btn-customer-add" data-frmid="#form-customer-add"><i class="fa-regular fa-pen-to-square"></i> Create</button>
+                        <button type="button" class="btn btn-secondary" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!--add customer modal  -->
+
+<script>
+    function openmodalfun(id, modaltitle, pagetype, addon) {
+        $(id).modal('show');
+        $(id).find('.modal-title').text(modaltitle)
+        $(id).find('.clspagetype').val(pagetype)
+
+        if (id == '#addcustomermodal') {
+            if(pagetype == 1){
+                $('.suppfiled').addClass('d-none');
+            }else {
+                $('.suppfiled').removeClass('d-none');
+            }
+          
+        }
+
+    }
+</script>

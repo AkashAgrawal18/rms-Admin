@@ -255,7 +255,7 @@ class Main extends CI_Controller
     $data['search'] =  $this->input->get('search');
     $data['paymode_list'] = $this->Main_model->get_active_group(6);
     $data['category'] = $this->Main_model->get_active_category();
-    $data['customer'] = $this->User_model->get_active_customer();
+    $data['customer'] = $this->User_model->get_customer(1,1);
    
     $this->load->view('pos', $data);
   }

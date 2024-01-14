@@ -36,7 +36,7 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-6">
             <label for="Name">Invoice Number</label>

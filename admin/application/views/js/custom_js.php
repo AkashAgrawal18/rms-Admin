@@ -24,12 +24,12 @@
 
 
  var cls_table = $(".my_custom_datatable").DataTable({
-
+  dom: 'rtip',
    'order': [[0, "asc"]],
 
    'paging': true,
 
-   'pageLength': 50,
+   'pageLength': 200,
 
    'pagingType': "numbers",
 

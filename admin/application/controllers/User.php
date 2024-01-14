@@ -8,13 +8,23 @@ class User extends CI_Controller
   public function customer()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'Customer';
-    $data['status'] = '';
-    $data['search'] = '';
+    $data['pagename'] = 'Customers List';
+    $data['pagtype'] = 3;
     $data['search'] = $this->input->get('search');
     $data['status'] = $this->input->get('status');
-    $data['all_value'] = $this->User_model->get_customer($data['status'], $data['search']);
+    $data['all_value'] = $this->User_model->get_customer($data['pagtype'], $data['status'], $data['search']);
     // echo "<pre>"; print_r($data['all_value']);die();
+    $this->load->view('customer', $data);
+  }
+
+  public function supplier()
+  {
+    $data = $this->login_details();
+    $data['pagename'] = 'Suppliers List';
+    $data['pagtype'] = 4;
+    $data['search'] = $this->input->get('search');
+    $data['status'] = $this->input->get('status');
+    $data['all_value'] = $this->User_model->get_customer($data['pagtype'], $data['status'], $data['search']);
     $this->load->view('customer', $data);
   }
 
@@ -22,7 +32,8 @@ class User extends CI_Controller
   {
 
     $mobile_id = $this->input->post('cust_mobile');
-    $customer_mobile = $this->User_model->getcustmobileById($mobile_id);
+    $pagtype = $this->input->post('pagtype');
+    $customer_mobile = $this->User_model->getcustmobileById($mobile_id,$pagtype);
     if ($customer_mobile) {
       echo json_encode([
         'status' => true,
@@ -39,11 +50,17 @@ class User extends CI_Controller
   public function insert_customer()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->insert_customer()) {
+      $data = $this->User_model->insert_customer();
+      if ($data == 1) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Customer has been Added successfully!'
+          'message' => 'Data has been Added successfully!'
+        );
+      } else if ($data == 2) {
+        $info = array(
+          'status' => 'success',
+          'message' => 'Data has been Updated successfully!'
         );
       } else {
         $info = array(
@@ -54,28 +71,6 @@ class User extends CI_Controller
       echo json_encode($info);
     }
   }
-
-
-
-  public function update_customer()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->update_customer()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Customer has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
 
   public function delete_customer()
   {
@@ -84,7 +79,7 @@ class User extends CI_Controller
 
         $info = array(
           'status' => 'success',
-          'message' => 'Customer has been Delete successfully!'
+          'message' => 'Data has been Delete successfully!'
         );
       } else {
         $info = array(
@@ -166,191 +161,7 @@ class User extends CI_Controller
   }
 
 
-  //pos page new customer add
-  public function insert_newcustomer()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->insert_newcustomer()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Customer has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
   //--------------------------------customer-----------------------//
-  //--------------------------------supplier-----------------------//
-
-
-  public function supplier()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Supplier';
-    $data['status'] = '';
-    $data['search'] = '';
-    $data['search'] = $this->input->get('search');
-    $data['status'] = $this->input->get('status');
-    $data['all_value'] = $this->User_model->get_supplier($data['status'], $data['search']);
-    $this->load->view('supplier', $data);
-  }
-
-  public function get_suppl_mobile()
-  {
-
-    $mobile_id = $this->input->post('supl_mobile');
-    $supplier_mobile = $this->User_model->getsuppmobileById($mobile_id);
-    if ($supplier_mobile) {
-      echo json_encode([
-        'status' => true,
-        'message' => 'Mobile already exits'
-      ]);
-    } else {
-      echo json_encode([
-        'status' => false,
-        'message' => 'Mobile not exits'
-      ]);
-    }
-  }
-
-
-  public function insert_supplier()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->insert_supplier()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Supplier has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_supplier()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->update_supplier()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Supplier has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_supplier()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->User_model->delete_supplier()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Supplier has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function import_supplier()
-  {
-    //$salon_id = $this->session->userdata('s_id');
-    if (isset($_FILES['import_file'])) {
-      require_once "Simplexlsx.class.php";
-      $xlsx = new SimpleXLSX($_FILES['import_file']['tmp_name']);
-      list($cols, $rows) = $xlsx->dimension();
-      $i = 0;
-      foreach ($xlsx->rows() as $row) {
-        $i++;
-        if ($i != 1) {
-
-          // $checkState = $this->db->where('m_state_name', $row[5])->get('master_state_tbl')->result();
-          // if (empty($checkState)) {
-          //   $s_data = array(
-          //     "m_state_name" => $row[5],
-          //     "m_state_country" => 1,
-          //     "m_state_status" => 1,
-          //     "m_state_added_on" => date('Y-m-d H:i'),
-          //   );
-          //   $this->db->insert('master_state_tbl', $s_data);
-          //   $state_id = $this->db->insert_id();
-          // } else {
-          //   $state_id = $checkState[0]->m_state_id;
-          // }
-          // $checkcity = $this->db->where('m_city_name', $row[4])->get('master_city_tbl')->result();
-          // if (empty($checkcity)) {
-          //   $data = array(
-          //     "m_city_name" => $row[4],
-          //     "m_city_state" => $state_id,
-          //     "m_city_country" => 1,
-          //     "m_city_status" => 1,
-          //     "m_city_added_on" => date('Y-m-d H:i'),
-
-          //   );
-          //   $this->db->insert('master_city_tbl', $data);
-          //   $city_id = $this->db->insert_id();
-          // } else {
-          //   $city_id = $checkcity[0]->m_city_id;
-          // }
-
-          $s_data = array(
-            "m_user_name" => $row[1],
-            "m_user_mobile" => $row[2],
-            "m_user_email" => $row[3],
-            "m_user_status" => 1,
-            // "m_user_city" => $city_id,
-            // "m_user_state" => $state_id,
-            "m_user_address" => $row[4],
-            "m_user_type" => 4,
-            "m_user_login_allow" => 1,
-            // "m_user_loginid" => $row[3],
-            // "m_user_password" => $row[9],
-            "m_user_added_by" => $this->session->userdata('user_id'),
-            "m_user_added_on" => date('Y-m-d H:i'),
-
-          );
-
-          $redirt = 'User/customer';
-          $this->db->insert('master_users_tbl', $s_data);
-        }
-      }
-      echo "<script> alert('import Successfull'); </script>";
-      redirect($redirt);
-    } else {
-      echo "<script> alert('Import is wrong'); </script>";
-    }
-  }
-
-
-  //--------------------------------supplier-----------------------//
 
   //--------------------------------sales-----------------------//
 
@@ -359,13 +170,13 @@ class User extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Sales ';
-   
+
     $data['from_date'] = $this->input->get('from_date');
     $data['to_date'] = $this->input->get('to_date');
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
-    $data['all_value'] = $this->User_model->get_all_sales(null, $data['user'],$data['search'], $data['from_date'], $data['to_date']);
-    $data['all_user'] = $this->User_model->get_active_customer();
+    $data['all_value'] = $this->User_model->get_all_sales(null, $data['user'], $data['search'], $data['from_date'], $data['to_date']);
+    $data['all_user'] = $this->User_model->get_customer(3,1);
 
     // echo "<pre>"; print_r($data['all_value']);die();
     $this->load->view('sales', $data);
@@ -431,8 +242,8 @@ class User extends CI_Controller
 
   public function insert_sales()
   {
-//     echo 'customer=' . $this->input->post('m_sale_customer');
-// die ;
+    //     echo 'customer=' . $this->input->post('m_sale_customer');
+    // die ;
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($data = $this->User_model->insert_sales()) {
 
@@ -516,7 +327,7 @@ class User extends CI_Controller
     $data['search'] =  $this->input->get('search');
     $data['user'] =  $this->input->get('user');
     $data['all_value'] = $this->User_model->get_payment_in($data['search'], $data['user']);
-    $data['all_user'] = $this->User_model->get_active_customer();
+    $data['all_user'] = $this->User_model->get_customer(3,1);
     $data['all_pmode'] = $this->Main_model->get_active_paymode();
     // print_r($data['all_pmode']);die();
     $this->load->view('payment-in', $data);
@@ -608,8 +419,8 @@ class User extends CI_Controller
     $data['to_date'] = $this->input->get('to_date');
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
-    $data['all_value'] = $this->User_model->get_all_purchase(null, $data['user'],$data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
-    $data['all_user'] = $this->User_model->get_active_supplier();
+    $data['all_value'] = $this->User_model->get_all_purchase(null, $data['user'], $data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
+    $data['all_user'] = $this->User_model->get_customer(4,1);
     // echo "<pre>";print_r($data['all_value']); die();
     $this->load->view('purchase', $data);
   }
@@ -623,15 +434,15 @@ class User extends CI_Controller
     $data['to_date'] = $this->input->get('to_date');
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
-    $data['all_value'] = $this->User_model->get_all_purchase(null, $data['user'],$data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
-    $data['all_user'] = $this->User_model->get_active_supplier();
+    $data['all_value'] = $this->User_model->get_all_purchase(null, $data['user'], $data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
+    $data['all_user'] = $this->User_model->get_customer(4,1);
     $this->load->view('purchase', $data);
   }
 
   public function get_product_dtl()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $data = $this->Main_model->get_active_products(null,null,null,null, $this->input->post('itemid'));
+      $data = $this->Main_model->get_active_products(null, null, null, null, $this->input->post('itemid'));
 
       echo json_encode($data);
     }
@@ -644,7 +455,7 @@ class User extends CI_Controller
       $cat = $this->input->post('cat') ?: '';
       $group = $this->input->post('group') ?: '';
       $search = $this->input->post('search') ?: '';
-      $data = $this->Report_model->get_stock_list(null, date('Y-m-d'), $item, $cat,$search,$group);
+      $data = $this->Report_model->get_stock_list(null, date('Y-m-d'), $item, $cat, $search, $group);
 
       echo json_encode($data);
     }
@@ -654,17 +465,17 @@ class User extends CI_Controller
   {
     $data = $this->login_details();
     $data['id'] = $this->input->get('id');
-     $data['purtype'] = $type;
-   
+    $data['purtype'] = $type;
+
     if (!empty($data['id'])) {
-      $data['pagename'] = $type == 1 ?'Edit Purchase' : 'Edit Return';
+      $data['pagename'] = $type == 1 ? 'Edit Purchase' : 'Edit Return';
       $data['edit_value'] = $this->User_model->get_all_purchase($data['id']);
     } else {
-      $data['pagename'] = $type == 1 ?'Add Purchase' : 'Add Return';
+      $data['pagename'] = $type == 1 ? 'Add Purchase' : 'Add Return';
     }
     $data['product_list'] = $this->Main_model->get_active_products();
     $data['texgst'] = $this->Main_model->get_active_group(4);
-    $data['all_user'] = $this->User_model->get_active_supplier();
+    $data['all_user'] = $this->User_model->get_customer(4,1);
 
     // echo "<pre>"; print_r($data['edit_value']); die();
     $this->load->view('purchase-edit', $data);
@@ -752,7 +563,7 @@ class User extends CI_Controller
     $data['user'] =  $this->input->get('user');
     $data['search'] =  $this->input->get('search');
     $data['all_value'] = $this->User_model->get_payment_out($data['search'], $data['user']);
-    $data['all_user'] = $this->User_model->get_active_supplier();
+    $data['all_user'] = $this->User_model->get_customer(4,1);
     $data['all_pmode'] = $this->Main_model->get_active_paymode();
     $this->load->view('payment-out', $data);
   }

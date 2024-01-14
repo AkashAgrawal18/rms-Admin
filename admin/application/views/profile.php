@@ -63,7 +63,7 @@
          }
          ?>
 
-<div class="container-fluid bg-light" style="padding-top: 40px;">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh" style="padding-top: 40px;">
     <div class="card profile-card">
         <div class="container">
             <form class="row py-5" method="post" id="frm-update-profile">

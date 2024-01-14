@@ -45,39 +45,37 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
-        <div class="col-md-7">
+        <div class="col-md-4">
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addproductmodal"><i class="fa-solid fa-plus"></i> Add New Products</button>
             <!-- <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-import"></i> Import Products</button> -->
         </div>
-        <div class="col-md-5">
-            <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('Main/products');  ?>">
-                    <div class="form-outline" data-mdb-input-init>
-                        <input type="text" name="search" class="form-control" value="<?php echo $search; ?>" />
-                        <!-- <label class="form-label" for="form1">Search</label> -->
+        <div class="col-md-8">
+        <form method="get" action="<?php echo base_url('Main/products');  ?>">
+                <div class="row">
+                    
+                    <div class="col-6">
+                        <div class="form-group">
+                            <input type="text" name="search" class="form-control" onchange="this.form.submit();" value="<?php echo $search; ?>" placeholder="Search..." />
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
-                        <i class="fas fa-search"></i>
-                    </button>
-
-                </form>
-                <a type="submit" href="<?php echo base_url('Main/products');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
-                    <i class="fa-solid fa-rotate"></i>
-                </a>
-                <form action="<?php echo base_url('Main/products'); ?>" method="get">
-                    <select class="form-select" name="category" onchange="this.form.submit();" aria-label="Default select example">
-                        <option selected>Select Status</option>
-                        <?php foreach ($categories as $category) : ?>
-
-                            <option value="<?= $category->m_category_id  ?>" <?php if ($category->m_category_id == $cat) echo "selected";  ?>><?= $category->m_category_name ?></option>
-
-                        <?php endforeach; ?>
-                    </select>
-                </form>
-
-            </div>
+                    <div class="col-4">
+                        <div class="form-group">
+                            <select class="form-select" name="status" onchange="this.form.submit();" aria-label="Default select example">
+                                <option value="">All Status</option>
+                                <option value="1" <?php if ($status == 1) echo "selected"; ?>>Active</option>
+                                <option value="2" <?php if ($status == 2) echo "selected"; ?>>In-Active</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <a href="<?php echo base_url('Main/products'); ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                            <i class="fa-solid fa-rotate"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
     <br>
@@ -153,24 +151,23 @@
                                                             <b> Product Unit :</b> <?= $value->m_unit_title ?>
                                                         </div>
                                                         <div class="col-6">
-                                                            <b> Product Sizes :</b> 
-                                                            <?php 
-                                                        if(!empty($value->m_product_size)){
-                                                            foreach ($value->m_product_size as $siz) {
-                                                          echo '<span class="btn btn-info me-2" style=" --bs-btn-padding-x: 0.55rem; --bs-btn-padding-y: 0.205rem;">'.$siz->m_size_name . '</span>';
-                                                    }
-                                                }
-                                                        ?>
+                                                            <b> Product Sizes :</b>
+                                                            <?php
+                                                            if (!empty($value->m_product_size)) {
+                                                                foreach ($value->m_product_size as $siz) {
+                                                                    echo '<span class="btn btn-info me-2" style=" --bs-btn-padding-x: 0.55rem; --bs-btn-padding-y: 0.205rem;">' . $siz->m_size_name . '</span>';
+                                                                }
+                                                            }
+                                                            ?>
                                                         </div>
                                                         <div class="col-6">
-                                                            <b> Product Colors :</b>  <?php 
-                                                        if(!empty($value->m_product_color)){
-                                                            foreach ($value->m_product_color as $colu) {
-                                                                echo '<span class="btn me-2" style="background-color:'.$colu->m_color_name.' ;color:'.$colu->m_color_name.'; --bs-btn-padding-x: 0.55rem; --bs-btn-padding-y: 0.205rem;">X</span>';
-                                                         
-                                                    }
-                                                }
-                                                        ?>
+                                                            <b> Product Colors :</b> <?php
+                                                                                        if (!empty($value->m_product_color)) {
+                                                                                            foreach ($value->m_product_color as $colu) {
+                                                                                                echo '<span class="btn me-2" style="background-color:' . $colu->m_color_name . ' ;color:' . $colu->m_color_name . '; --bs-btn-padding-x: 0.55rem; --bs-btn-padding-y: 0.205rem;">X</span>';
+                                                                                            }
+                                                                                        }
+                                                                                        ?>
                                                         </div>
                                                         <div class="col-3">
                                                             <b> Tax (%) :</b> <?= $value->m_tax_value ?> %
@@ -185,29 +182,31 @@
                                                             <b> Sale Price : </b> ₹<?= $value->m_product_seles_price ?>
                                                         </div>
                                                         <div class="col-12">
-                                                            <b> Description : </b> <p><?= $value->m_product_details ?> </p>
+                                                            <b> Description : </b>
+                                                            <p><?= $value->m_product_details ?> </p>
                                                         </div>
                                                         <div class="col-12">
-                                                            <b> Information : </b> <p><?= $value->m_product_information ?> </p>
+                                                            <b> Information : </b>
+                                                            <p><?= $value->m_product_information ?> </p>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-3">
                                                     <div class="row">
-                                                        <?php 
-                                                        if(!empty($value->m_product_image)){
+                                                        <?php
+                                                        if (!empty($value->m_product_image)) {
                                                             foreach ($value->m_product_image as $key => $imval) {
-                                                              
-                                                        if (!empty($imval->m_image_product_img) && file_exists('uploads/product/' . $imval->m_image_product_img)) {
-                                                            $product_img = base_url('uploads/product/' . $imval->m_image_product_img);
-                                                        } else {
-                                                            $product_img = base_url('uploads/default.jpg');
-                                                        }
-                                                        echo ' <div class="col-12 mb-1">
+
+                                                                if (!empty($imval->m_image_product_img) && file_exists('uploads/product/' . $imval->m_image_product_img)) {
+                                                                    $product_img = base_url('uploads/product/' . $imval->m_image_product_img);
+                                                                } else {
+                                                                    $product_img = base_url('uploads/default.jpg');
+                                                                }
+                                                                echo ' <div class="col-12 mb-1">
                                                             <img src="' . $product_img . '" alt="" class="w-100">
                                                         </div> ';
-                                                    }
-                                                }
+                                                            }
+                                                        }
                                                         ?>
                                                     </div>
                                                 </div>

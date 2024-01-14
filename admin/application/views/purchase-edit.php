@@ -39,7 +39,7 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <form class="row pt-3" method="post" id="form-add-purchase" >
 
         <?php if (!empty($edit_value)) {
