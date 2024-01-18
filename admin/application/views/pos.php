@@ -225,13 +225,13 @@
                             <div class="card pcard p-2">
                                 <div class="row g-2">
                                     <div class="col-5">
-                                        <select class="form-select" id="m_sale_customer" name="m_sale_customer" aria-label="Default select example" required>
+                                        <select class="form-select" id="m_customer" name="m_sale_customer" aria-label="Default select example" required>
                                             <option value="" selected>Select Customer</option>
                                             <?php
                                             if (!empty($customer)) {
                                                 foreach ($customer as $value) {
                                             ?>
-                                                    <option value="<?php echo $value->m_user_id; ?>" data-custname="<?php echo $value->m_user_name; ?>"><?php echo $value->m_user_name; ?></option>
+                                                    <option value="<?php echo $value->m_acc_id; ?>" data-custname="<?php echo $value->m_acc_name; ?>"><?php echo $value->m_acc_name; ?></option>
                                             <?php
                                                 }
                                             }
@@ -239,7 +239,7 @@
                                         </select>
                                     </div>
                                     <div class="col-1">
-                                        <button type="button" class="btn btn-light" onclick="openmodalfun('#addcustomermodal','Add Customer','1','1')" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i></button>
+                                        <button type="button" class="btn btn-light" onclick="openmodalfun('#addcustomermodal','Add Customer','3','1')" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i></button>
 
                                     </div>
                                     <div class="col-5">

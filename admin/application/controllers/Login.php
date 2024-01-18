@@ -21,7 +21,7 @@ class Login extends CI_Controller {
 
 
        // print_r($data); die();
-        $usrdata=array('is_user_in' => true, 'user_id' => $data[0]->m_user_id,'user_type'=>$data[0]->m_user_type,'user_design'=>$data[0]->m_user_design);
+        $usrdata=array('is_user_in' => true, 'user_id' => $data[0]->m_admin_id,'user_type'=>$data[0]->m_admin_type,'user_name'=>$data[0]->m_admin_name);
         $this->session->set_userdata($usrdata);
          /* $this->User_model->manage_daily_activiy(); */     redirect('Dashboard');
       }else{ 

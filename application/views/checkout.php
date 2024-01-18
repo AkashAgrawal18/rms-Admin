@@ -40,17 +40,17 @@
 
                     <div class="col-md-12 form-group">
                         <label> Name</label>
-                        <input class="form-control" type="text" name="m_user_name" value="<?php echo $log_customer_dtl[0]->m_user_name; ?>"  placeholder="John" required>
-                        <input type="hidden" name="m_user_id" value="<?php echo $log_customer_dtl[0]->m_user_id; ?>">
+                        <input class="form-control" type="text" name="m_acc_name" value="<?php echo $log_customer_dtl[0]->m_acc_name; ?>"  placeholder="John" required>
+                        <input type="hidden" name="m_acc_id" value="<?php echo $log_customer_dtl[0]->m_acc_id; ?>">
                     </div>
                     
                     <div class="col-md-6 form-group">
                         <label>E-mail</label>
-                        <input class="form-control" type="email" name="m_user_email" value="<?php echo $log_customer_dtl[0]->m_user_email; ?>" placeholder="example@email.com" required>
+                        <input class="form-control" type="email" name="m_acc_email" value="<?php echo $log_customer_dtl[0]->m_acc_email; ?>" placeholder="example@email.com" required>
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Mobile No</label>
-                        <input class="form-control" readonly type="text" name="m_user_mobile" value="<?php echo $log_customer_dtl[0]->m_user_mobile; ?>" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Mobile No" required>
+                        <input class="form-control" readonly type="text" name="m_acc_mobile" value="<?php echo $log_customer_dtl[0]->m_acc_mobile; ?>" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Mobile No" required>
                     </div>
                 </div>
             </div>
@@ -61,11 +61,11 @@
 
                     <!-- <div class="col-md-6 form-group">
                         <label>Address Line 1</label>
-                        <input class="form-control" type="text" name="m_user_address" value="<?php echo $log_customer_dtl[0]->m_user_address; ?>" required placeholder="123 Street">
+                        <input class="form-control" type="text" name="m_acc_address" value="<?php echo $log_customer_dtl[0]->m_acc_address; ?>" required placeholder="123 Street">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Address Line 2</label>
-                        <input class="form-control" type="text" name="m_user_address1" value="<?php echo $log_customer_dtl[0]->m_user_address1; ?>" required placeholder="Address Line 2">
+                        <input class="form-control" type="text" name="m_acc_address1" value="<?php echo $log_customer_dtl[0]->m_acc_address1; ?>" required placeholder="Address Line 2">
                     </div> -->
                    <!--  <div class="col-md-6 form-group">
                         <label>Country</label>
@@ -77,28 +77,28 @@
                     </div> -->
                      <div class="col-md-6 form-group">
                         <label>Country<span class="text-danger"> *</span></label>
-                        <input class="form-control" type="text" name="m_user_country" value="<?php echo $log_customer_dtl[0]->m_user_country; ?>" required placeholder="Country">
+                        <input class="form-control" type="text" name="m_acc_country" value="<?php echo $log_customer_dtl[0]->m_acc_country; ?>" required placeholder="Country">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>State<span class="text-danger"> *</span></label>
-                        <input class="form-control" type="text"  name="m_user_state" value="<?php echo $log_customer_dtl[0]->m_user_state; ?>" required placeholder="State">
+                        <input class="form-control" type="text"  name="m_acc_state" value="<?php echo $log_customer_dtl[0]->m_acc_state; ?>" required placeholder="State">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>City<span class="text-danger"> *</span></label>
-                        <input class="form-control" type="text" name="m_user_city" value="<?php echo $log_customer_dtl[0]->m_user_city; ?>" required placeholder="city">
+                        <input class="form-control" type="text" name="m_acc_city" value="<?php echo $log_customer_dtl[0]->m_acc_city; ?>" required placeholder="city">
                     </div>
                     
                     <div class="col-md-6 form-group">
                         <label>Pincode<span class="text-danger"> *</span></label>
-                        <input class="form-control" type="text" name="m_user_pincode" value="<?php echo $log_customer_dtl[0]->m_user_pincode; ?>" maxlength="6" minlength="6" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required  placeholder="Pincode">
+                        <input class="form-control" type="text" name="m_acc_pincode" value="<?php echo $log_customer_dtl[0]->m_acc_pincode; ?>" maxlength="6" minlength="6" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" required  placeholder="Pincode">
                     </div>
 
                     <div class="col-md-12 form-group">
                         <label>Address <span class="text-danger"> *</span></label>
-                        <textarea class="form-control" type="text" name="m_user_address" placeholder="Full Address" required><?php echo $log_customer_dtl[0]->m_user_address; ?></textarea>
-                        <!-- <input class="form-control" type="text" name="m_user_address" value="<?php echo $log_customer_dtl[0]->m_user_address; ?>" required placeholder="123 Street"> -->
-                          <input class="form-control" type="hidden" name="user_email" value="<?php echo $log_customer_dtl[0]->m_user_email; ?>"  >
-                          <input class="form-control" type="hidden" name="user_name" value="<?php echo $log_customer_dtl[0]->m_user_name; ?>"  >
+                        <textarea class="form-control" type="text" name="m_acc_address" placeholder="Full Address" required><?php echo $log_customer_dtl[0]->m_acc_address; ?></textarea>
+                        <!-- <input class="form-control" type="text" name="m_acc_address" value="<?php echo $log_customer_dtl[0]->m_acc_address; ?>" required placeholder="123 Street"> -->
+                          <input class="form-control" type="hidden" name="user_email" value="<?php echo $log_customer_dtl[0]->m_acc_email; ?>"  >
+                          <input class="form-control" type="hidden" name="user_name" value="<?php echo $log_customer_dtl[0]->m_acc_name; ?>"  >
                     </div>
 
 
@@ -117,28 +117,28 @@
 
                          <div class="col-md-6 form-group">
                         <label>Address Line 1</label>
-                        <input class="form-control" type="text" name="m_user_address" value="<?php echo $log_customer_dtl[0]->m_user_address; ?>" required placeholder="123 Street">
+                        <input class="form-control" type="text" name="m_acc_address" value="<?php echo $log_customer_dtl[0]->m_acc_address; ?>" required placeholder="123 Street">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Address Line 2</label>
-                        <input class="form-control" type="text" name="m_user_address1" value="<?php echo $log_customer_dtl[0]->m_user_address1; ?>" required placeholder="123 Street">
+                        <input class="form-control" type="text" name="m_acc_address1" value="<?php echo $log_customer_dtl[0]->m_acc_address1; ?>" required placeholder="123 Street">
                     </div>
                         <div class="col-md-6 form-group">
                         <label>Country</label>
-                        <input class="form-control" type="text" name="m_user_scountry" value="<?php echo $log_customer_dtl[0]->m_user_country; ?>" required placeholder="Country">
+                        <input class="form-control" type="text" name="m_acc_scountry" value="<?php echo $log_customer_dtl[0]->m_acc_country; ?>" required placeholder="Country">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>State</label>
-                        <input class="form-control" type="text"  name="m_user_sstate" value="<?php echo $log_customer_dtl[0]->m_user_state; ?>" required placeholder="State">
+                        <input class="form-control" type="text"  name="m_acc_sstate" value="<?php echo $log_customer_dtl[0]->m_acc_state; ?>" required placeholder="State">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>City</label>
-                        <input class="form-control" type="text" name="m_user_scity" value="<?php echo $log_customer_dtl[0]->m_user_city; ?>" required placeholder="city">
+                        <input class="form-control" type="text" name="m_acc_scity" value="<?php echo $log_customer_dtl[0]->m_acc_city; ?>" required placeholder="city">
                     </div>
                     
                     <div class="col-md-6 form-group">
                         <label>Pincode</label>
-                        <input class="form-control" type="text" name="m_user_spincode" value="<?php echo $log_customer_dtl[0]->m_user_spincode; ?>" required  placeholder="Pincode">
+                        <input class="form-control" type="text" name="m_acc_spincode" value="<?php echo $log_customer_dtl[0]->m_acc_spincode; ?>" required  placeholder="Pincode">
                     </div>
                     </div>
                 </div>

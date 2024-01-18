@@ -55,8 +55,8 @@
 
 <?php 
          $admin_img = base_url('uploads/default-user0.png');
-         if (!empty($user_dtl[0]->m_user_image)) {
-           $img_title = $user_dtl[0]->m_user_image; 
+         if (!empty($user_dtl[0]->m_admin_img)) {
+           $img_title = $user_dtl[0]->m_admin_img; 
            if (file_exists('uploads/user/'.$img_title)){
              $admin_img = base_url('uploads/user/').$img_title;
            }
@@ -68,7 +68,7 @@
         <div class="container">
             <form class="row py-5" method="post" id="frm-update-profile">
                 <div class="col-md-5 text-center">
-                    <input type="hidden" name="pre_m_admin_img" value="<?php echo $user_dtl[0]->m_user_image; ?>">
+                    <input type="hidden" name="pre_m_admin_img" value="<?php echo $user_dtl[0]->m_admin_img; ?>">
                     <img src="<?php echo $admin_img; ?>" alt="" class="w-50 m-auto d-block" />
                     <!-- <input class="form-control mt-3" type="file" id="formFile"> -->
                     <button type="button" id="uploadImagebtn" class="btn btn-primary mt-3" style="text-align: center;"> 
@@ -77,7 +77,7 @@
                               type="file"
                               id="uploadImage"
                               class="form-control mt-3"
-                              name="m_user_image" onchange="PreviewImage();"
+                              name="m_admin_img" onchange="PreviewImage();"
                               hidden
                               accept="image/png, image/jpeg, image/jpg"
                             />
@@ -90,26 +90,26 @@
                             <label for="name">Admin Name</label>
                         </div>
                         <div class="col-9">
-                            <input type="text" class="form-control" name="m_user_name" value="<?php echo $user_dtl[0]->m_user_name; ?>" placeholder="Enter Name" required>
+                            <input type="text" class="form-control" name="m_admin_name" value="<?php echo $user_dtl[0]->m_admin_name; ?>" placeholder="Enter Name" required>
                         </div>
 
                         <div class="col-3">
                             <label for="email">Email</label>
                         </div>
                         <div class="col-9">
-                            <input type="email" class="form-control" name="m_user_email"  value="<?php echo $user_dtl[0]->m_user_email; ?>" placeholder="Enter Email" required>
+                            <input type="email" class="form-control" name="m_admin_email"  value="<?php echo $user_dtl[0]->m_admin_email; ?>" placeholder="Enter Email" required>
                         </div>
                         <div class="col-3">
                             <label for="pass">Password</label>
                         </div>
                         <div class="col-9">
-                            <input type="test" class="form-control" id="pass" name="m_user_pass" placeholder="Enter Password" required value="<?php echo $user_dtl[0]->m_user_password; ?>">
+                            <input type="test" class="form-control" id="pass" name="m_admin_pass" placeholder="Enter Password" required value="<?php echo $user_dtl[0]->m_admin_pass; ?>">
                         </div>
                         <div class="col-3">
                             <label for="mob">Mobile No.</label>
                         </div>
                         <div class="col-9">
-                            <input type="text" class="form-control" name="m_user_mobile"  maxlength="10" minlength="10" onkeypress="return /[0-9]/i.test(event.key)"   - only number  placeholder=" enter admin contact number" aria-label="" aria-describedby="" required  value="<?php echo $user_dtl[0]->m_user_mobile; ?>" placeholder="Enter mob">
+                            <input type="text" class="form-control" name="m_admin_mobile"  maxlength="10" minlength="10" onkeypress="return /[0-9]/i.test(event.key)"   - only number  placeholder=" enter admin contact number" aria-label="" aria-describedby="" required  value="<?php echo $user_dtl[0]->m_admin_contact; ?>" placeholder="Enter mob">
                         </div>
                         <div class="col-4">
                             <button type="submit" id="btn-update-profile" class="btn btn-primary"><i class="fa-solid fa-pen-to-square"></i> Update</button>

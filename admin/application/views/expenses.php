@@ -77,7 +77,7 @@
                                     <?php if($user){
                                          foreach($user as $value){  ?>
                                     
-                                    <option value="<?php echo $value->m_user_id;  ?>"><?php echo $value->m_user_name;  ?></option>
+                                    <option value="<?php echo $value->m_acc_id;  ?>"><?php echo $value->m_acc_name;  ?></option>
                                 <?php }} ?>
                                 </select>
                             </div>
@@ -125,7 +125,7 @@
                      <?php if($user){
                          foreach($user as $value){  ?>
                     
-                    <option value="<?php echo $value->m_user_id;  ?>"<?php if($user_exp ==$value->m_user_id)echo 'selected';  ?>><?php echo $value->m_user_name;  ?></option>
+                    <option value="<?php echo $value->m_acc_id;  ?>"<?php if($user_exp ==$value->m_acc_id)echo 'selected';  ?>><?php echo $value->m_acc_name;  ?></option>
                 <?php }} ?>
                 </select>
                 </form>
@@ -166,7 +166,7 @@
             <td><?php echo $value->m_expcat_title; ?></td>
             <td>₹<?php echo $value->m_expense_amount; ?></td>
             <td><?php echo date('d-n-Y', strtotime($value->m_expense_date)); ?></td>
-            <td><?php echo $value->m_user_name; ?></td>
+            <td><?php echo $value->m_acc_name; ?></td>
 
             <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight<?php echo $value->m_expense_id  ?>" aria-controls="offcanvasRight<?php echo $value->m_expense_id  ?>"><i class="fa-solid fa-pen-to-square"></i></button>
 
@@ -196,7 +196,7 @@
                                     <?php if($user){
                                          foreach($user as $val){  ?>
                                     
-                                    <option value="<?php echo $val->m_user_id;  ?>" <?php if($val->m_user_id == $value->m_expense_user_id)echo 'selected'; ?>><?php echo $val->m_user_name;  ?></option>
+                                    <option value="<?php echo $val->m_acc_id;  ?>" <?php if($val->m_acc_id == $value->m_expense_user_id)echo 'selected'; ?>><?php echo $val->m_acc_name;  ?></option>
                                 <?php }} ?>
                                 </select>
                             </div>

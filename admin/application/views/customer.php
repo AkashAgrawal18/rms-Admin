@@ -118,30 +118,30 @@ switch ($pagtype) {
 
                         <tr>
                             <td><?php echo $i; ?></td>
-                            <td><?php echo $value->m_user_name; ?></td>
-                            <td><?php echo $value->m_user_email; ?></td>
-                            <td><?php echo date('d-m-Y,h:i A', strtotime($value->m_user_added_on));  ?></td>
-                            <td><i class="fa-solid fa-arrow-up" style="color: #c61010;"></i> ₹<?php echo number_format($value->m_user_open_balance, 2, '.', ','); ?></td>
-                            <td><span class="badge badgef bg-success p-1"><?php if ($value->m_user_status == 1) {
+                            <td><?php echo $value->m_acc_name; ?></td>
+                            <td><?php echo $value->m_acc_email; ?></td>
+                            <td><?php echo date('d-m-Y,h:i A', strtotime($value->m_acc_added_on));  ?></td>
+                            <td><i class="fa-solid fa-arrow-up" style="color: #c61010;"></i> ₹<?php echo number_format($value->m_acc_open_balance, 2, '.', ','); ?></td>
+                            <td><span class="badge badgef bg-success p-1"><?php if ($value->m_acc_status == 1) {
                                                                                 echo 'Active';
                                                                             } else {
                                                                                 echo 'In-Active';
                                                                             }  ?></span></td>
-                            <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdropview<?php echo $value->m_user_id; ?>" aria-controls="staticBackdrop"><i class="fas fa-eye"></i></button>
+                            <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdropview<?php echo $value->m_acc_id; ?>" aria-controls="staticBackdrop"><i class="fas fa-eye"></i></button>
 
-                                <div class="modal fade" id="staticBackdropview<?php echo $value->m_user_id; ?>" tabindex="-1" style="--bs-modal-margin: 0px !important">
+                                <div class="modal fade" id="staticBackdropview<?php echo $value->m_acc_id; ?>" tabindex="-1" style="--bs-modal-margin: 0px !important">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="staticBackdropLabel"><?php echo $value->m_user_name; ?></h5>
+                                                <h5 class="modal-title" id="staticBackdropLabel"><?php echo $value->m_acc_name; ?></h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <div>
 
                                                     <?php
-                                                    if (!empty($value->m_user_image) && file_exists('uploads/user/' . $value->m_user_image)) {
-                                                        $user_img = base_url('uploads/user/' . $value->m_user_image);
+                                                    if (!empty($value->m_acc_image) && file_exists('uploads/user/' . $value->m_acc_image)) {
+                                                        $user_img = base_url('uploads/user/' . $value->m_acc_image);
                                                     } else {
                                                         $user_img = base_url('assets/imgs/user.png');
                                                     }
@@ -155,19 +155,19 @@ switch ($pagtype) {
                                                             <h6><?= $hedname ?> Details</h6>
                                                             <div class="row g-4">
                                                                 <div class="col-4">
-                                                                    Name : <br> <?php echo $value->m_user_name; ?>
+                                                                    Name : <br> <?php echo $value->m_acc_name; ?>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    Email :<br> <?php echo $value->m_user_email; ?>
+                                                                    Email :<br> <?php echo $value->m_acc_email; ?>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    Phone Number :<br> <?php echo $value->m_user_mobile; ?>
+                                                                    Phone Number :<br> <?php echo $value->m_acc_mobile; ?>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    Opening Balance :<br> ₹<?php echo number_format($value->m_user_open_balance, 2, '.', ','); ?>
+                                                                    Opening Balance :<br> ₹<?php echo number_format($value->m_acc_open_balance, 2, '.', ','); ?>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    Billing Address :<br> <?php echo $value->m_user_address; ?>
+                                                                    Billing Address :<br> <?php echo $value->m_acc_address; ?>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -175,13 +175,13 @@ switch ($pagtype) {
                                                             <div class="row g-4">
 
                                                                 <div class="col-4">
-                                                                    Credit Period :<br> <?php echo $value->m_user_credit_period; ?>Days
+                                                                    Credit Period :<br> <?php echo $value->m_acc_credit_period; ?>Days
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    Credit Limit :<br> <?php echo $value->m_user_credit_limit; ?>
+                                                                    Credit Limit :<br> <?php echo $value->m_acc_credit_limit; ?>
                                                                 </div>
                                                                 <div class="col-4">
-                                                                    Balance :<br><i class="fa-solid fa-arrow-down" style="color: #237500;"></i> ₹<?php echo number_format($value->m_user_open_balance, 2, '.', ','); ?>
+                                                                    Balance :<br><i class="fa-solid fa-arrow-down" style="color: #237500;"></i> ₹<?php echo number_format($value->m_acc_open_balance, 2, '.', ','); ?>
                                                                 </div>
 
                                                             </div>
@@ -194,9 +194,9 @@ switch ($pagtype) {
                                     </div>
                                 </div>
 
-                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdropedit<?php echo $value->m_user_id; ?>" aria-controls="staticBackdrop"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdropedit<?php echo $value->m_acc_id; ?>" aria-controls="staticBackdrop"><i class="fa-solid fa-pen-to-square"></i></button>
 
-                                <div class="modal fade" id="staticBackdropedit<?php echo $value->m_user_id; ?>" tabindex="-1" style="--bs-modal-margin: 0px !important">
+                                <div class="modal fade" id="staticBackdropedit<?php echo $value->m_acc_id; ?>" tabindex="-1" style="--bs-modal-margin: 0px !important">
                                     <div class="modal-dialog modal-lg">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -205,52 +205,52 @@ switch ($pagtype) {
 
                                             </div>
                                             <div class="modal-body">
-                                                <form class="row g-3" method="POST" id="form-customer-edit<?php echo $value->m_user_id; ?>">
+                                                <form class="row g-3" method="POST" id="form-customer-edit<?php echo $value->m_acc_id; ?>">
 
                                                     <div class="col-md-6">
                                                         <label for="Name">Name<span class="text-danger">*</span></label>
-                                                        <input type="hidden" class="form-control-file" name="cust_id" value="<?php echo $value->m_user_id;  ?>">
-                                                        <input type="hidden" class="form-control-file" name="m_user_type" value="<?= $value->m_user_type ?>">
+                                                        <input type="hidden" class="form-control-file" name="cust_id" value="<?php echo $value->m_acc_id;  ?>">
+                                                        <input type="hidden" class="form-control-file" name="m_acc_type" value="<?= $value->m_acc_type ?>">
 
-                                                        <input type="text" class="form-control" name="cust_name" required placeholder="Please Enter Name" value="<?php echo $value->m_user_name;  ?>">
+                                                        <input type="text" class="form-control" name="cust_name" required placeholder="Please Enter Name" value="<?php echo $value->m_acc_name;  ?>">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="Name">Phone Number<span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" name="cust_mobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" value="<?php echo $value->m_user_mobile;  ?>" required>
+                                                        <input type="text" class="form-control" name="cust_mobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" value="<?php echo $value->m_acc_mobile;  ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="Name">Email</label>
-                                                        <input type="email" class="form-control" name="cust_email" placeholder="Please Enter Email" value="<?php echo $value->m_user_email;  ?>">
+                                                        <input type="email" class="form-control" name="cust_email" placeholder="Please Enter Email" value="<?php echo $value->m_acc_email;  ?>">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="order">Status </label>
                                                         <select class="form-control" name="cust_status">
-                                                            <option value="1" <?php if ($value->m_user_status == 1) echo 'selected'; ?>>Active</option>
-                                                            <option value="2" <?php if ($value->m_user_status == 2) echo 'selected'; ?>>In-Active</option>
+                                                            <option value="1" <?php if ($value->m_acc_status == 1) echo 'selected'; ?>>Active</option>
+                                                            <option value="2" <?php if ($value->m_acc_status == 2) echo 'selected'; ?>>In-Active</option>
                                                         </select>
                                                     </div>
                                                     <!-- <div class="col-md-6">
 <label for="Name">Password</label>
-<input type="text" class="form-control" name="cust_pass" placeholder="Please Enter Password" value="<?php echo $value->m_user_password;  ?>">
+<input type="text" class="form-control" name="cust_pass" placeholder="Please Enter Password" value="<?php echo $value->m_acc_password;  ?>">
  </div> -->
                                                     <div class="col-md-6 ">
                                                         <label for="image">Profile Image</label>
-                                                        <input type="hidden" class="form-control-file" name="cust_image1" value="<?php echo $value->m_user_image;  ?>">
+                                                        <input type="hidden" class="form-control-file" name="cust_image1" value="<?php echo $value->m_acc_image;  ?>">
                                                         <input type="file" class="form-control-file" name="cust_image">
                                                     </div>
                                                     <!-- <div class="col-md-6">
 <label for="Name">Tax Number</label>
-<input type="text" class="form-control" name="cust_text_num" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_user_text_num;  ?>">
+<input type="text" class="form-control" name="cust_text_num" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_acc_text_num;  ?>">
  </div> -->
                                                     <div class="col-md-6">
                                                         <label for="Name">Opening Balance</label>
-                                                        <input type="text" class="form-control" name="cust_open_balance" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_user_open_balance;  ?>">
+                                                        <input type="text" class="form-control" name="cust_open_balance" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_acc_open_balance;  ?>">
                                                     </div>
                                                     <?php if ($pagtype == 4) { ?>
                                                         <div class="col-md-6">
                                                             <label for="Name">Credit Period</label>
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" name="cust_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_user_credit_period;  ?>">
+                                                                <input type="text" class="form-control" name="cust_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_acc_credit_period;  ?>">
                                                                 <span class="input-group-text">Day(s)</span>
                                                             </div>
                                                         </div>
@@ -258,17 +258,17 @@ switch ($pagtype) {
                                                             <label for="Name">Credit Limit</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">₹</span>
-                                                                <input type="text" class="form-control" name="credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_user_credit_limit;  ?>">
+                                                                <input type="text" class="form-control" name="credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_acc_credit_limit;  ?>">
                                                             </div>
                                                         </div>
                                                     <?php } ?>
                                                     <div class="col-md-12">
                                                         <label for="Name">Billing Address</label>
-                                                        <textarea class="form-control" name="Billing_address" rows="2"><?php echo $value->m_user_address  ?></textarea>
+                                                        <textarea class="form-control" name="Billing_address" rows="2"><?php echo $value->m_acc_address  ?></textarea>
                                                     </div>
 
                                                     <div class="canvas-footer justify-content-end d-flex">
-                                                        <button type="submit" class="btn btn-primary me-2 btn-customer-add" data-frmid="#form-customer-edit<?php echo $value->m_user_id; ?>"><i class="fa-regular fa-pen-to-square"></i> Create</button>
+                                                        <button type="submit" class="btn btn-primary me-2 btn-customer-add" data-frmid="#form-customer-edit<?php echo $value->m_acc_id; ?>"><i class="fa-regular fa-pen-to-square"></i> Create</button>
                                                         <button type="button" class="btn btn-secondary" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close">Cancel</button>
                                                     </div>
                                                 </form>
@@ -278,7 +278,7 @@ switch ($pagtype) {
                                     </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-primary delete_customer btn-sm" data-value="<?php echo $value->m_user_id; ?>"><i class="fa-solid fa-trash"></i></button>
+                                <button type="submit" class="btn btn-primary delete_customer btn-sm" data-value="<?php echo $value->m_acc_id; ?>"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
                 <?php $i++;

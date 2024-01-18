@@ -277,10 +277,10 @@
 
                                 <?php foreach ($all_review as  $value) :
 
-                                    $average_rating1 = $this->Main_model->getAverageRatinguser($value->m_user_id);
+                                    $average_rating1 = $this->Main_model->getAverageRatinguser($value->m_acc_id);
 
-                                    if (!empty($value->m_user_image) && file_exists('admin/uploads/user/' . $value->m_user_image)) {
-                                        $user_img = base_url('admin/uploads/user/' . $value->m_user_image);
+                                    if (!empty($value->m_acc_image) && file_exists('admin/uploads/user/' . $value->m_acc_image)) {
+                                        $user_img = base_url('admin/uploads/user/' . $value->m_acc_image);
                                     } else {
                                         $user_img = base_url('admin/assets/imgs/user.png');
                                     }
@@ -289,7 +289,7 @@
                                     <div class="media mb-4">
                                         <img src="<?php echo $user_img ?>" alt="Image" class="img-fluid mr-3 mt-1" style="width: 45px;">
                                         <div class="media-body">
-                                            <h6><?= $value->m_user_name ?><small> - <i><?php echo date('d M Y', strtotime($value->m_review_added_on)); ?></i></small></h6>
+                                            <h6><?= $value->m_acc_name ?><small> - <i><?php echo date('d M Y', strtotime($value->m_review_added_on)); ?></i></small></h6>
                                             <div class="text-info mb-2">
 
                                                 <?php

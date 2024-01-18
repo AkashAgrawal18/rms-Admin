@@ -24,6 +24,8 @@
     .tox-notifications-container {
         visibility: hidden !important;
     }
+
+   
 </style>
 
 <!-- ========== Page Content ========== -->
@@ -52,9 +54,9 @@
             <!-- <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-import"></i> Import Products</button> -->
         </div>
         <div class="col-md-8">
-        <form method="get" action="<?php echo base_url('Main/products');  ?>">
+            <form method="get" action="<?php echo base_url('Main/products');  ?>">
                 <div class="row">
-                    
+
                     <div class="col-6">
                         <div class="form-group">
                             <input type="text" name="search" class="form-control" onchange="this.form.submit();" value="<?php echo $search; ?>" placeholder="Search..." />
@@ -417,26 +419,36 @@
                     </div>
                     <div class="col-md-4">
                         <label>Category<span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <select class="form-select" id="m_cat_id" name="m_product_cat_id" required aria-label="Example select with button addon">
+                                <option value="">Select Category</option>
+                                <?php if (!empty($categories)) {
+                                    foreach ($categories as $category) { ?>
 
-                        <select class="form-control" id="m_product_cat_id" name="m_product_cat_id" required>
-                            <option value="">Select Category</option>
-                            <?php foreach ($categories as $category) : ?>
+                                        <option value="<?= $category->m_category_id  ?>"><?= $category->m_category_name ?></option>
 
-                                <option value="<?= $category->m_category_id  ?>"><?= $category->m_category_name ?></option>
+                                <?php }
+                                } ?>
+                            </select>
+                            <button class="btn btn-outline-secondary" onclick="openmodalfun('#categoriesadd','Add New Category','1','1')" type="button"><i class="fa-solid fa-plus"></i></button>
+                        </div>
 
-                            <?php endforeach; ?>
-                        </select>
                     </div>
 
                     <div class="col-md-4">
                         <label>Unit <span class="text-danger">*</span></label>
-                        <select class="form-control" id="product_unit" name="m_product_unit" required>
-                            <option value="">Select Unit</option>
-                            <?php if (!empty($unit)) {
-                                foreach ($unit as $val) {  ?> <option value="<?php echo $val->m_group_id;  ?>"><?php echo $val->m_group_name;  ?></option>
-                            <?php }
-                            } ?>
-                        </select>
+
+                        <div class="input-group">
+                            <select class="form-select" id="m_unit" name="m_product_unit" required aria-label="Example select with button addon">
+                                <option value="">Select Unit</option>
+                                <?php if (!empty($unit)) {
+                                    foreach ($unit as $val) {  ?> <option value="<?php echo $val->m_group_id;  ?>"><?php echo $val->m_group_name;  ?></option>
+                                <?php }
+                                } ?>
+                            </select>
+                            <button class="btn btn-outline-secondary" onclick="openmodalfun('#groupadd','Add New Unit','1','1')" type="button"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+
                     </div>
 
                     <div class="col-md-4">
@@ -448,17 +460,22 @@
 
                     <div class="col-md-4">
                         <label>Fabric <span class="text-danger">*</span></label>
-                        <select name="m_product_fabric" id="m_product_fabric" class="form-control" required>
-                            <option value="">Select Fabric</option>
-                            <?php
-                            if (!empty($fabric_list)) {
-                                foreach ($fabric_list as $fabric) {
 
-                                    echo '<option value="' . $fabric->m_group_id . '" >' . $fabric->m_group_name . '</option>';
+                        <div class="input-group">
+                            <select class="form-select" id="m_fabric" name="m_product_fabric" required aria-label="Example select with button addon">
+                                <option value="">Select Fabric</option>
+
+                                <?php
+                                if (!empty($fabric_list)) {
+                                    foreach ($fabric_list as $fabric) {
+
+                                        echo '<option value="' . $fabric->m_group_id . '" >' . $fabric->m_group_name . '</option>';
+                                    }
                                 }
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                            <button class="btn btn-outline-secondary" onclick="openmodalfun('#groupadd','Add New Fabric','5','1')" type="button"><i class="fa-solid fa-plus"></i></button>
+                        </div>
 
                     </div>
 
@@ -506,14 +523,19 @@
 
                     <div class="col-md-4">
                         <label>Tax</label>
-                        <select class="form-control" id="exampleFormControlSelect1" name="m_product_taxgst">
-                            <option value="">Select Tax</option>
-                            <?php if (!empty($taxgst)) {
-                                foreach ($taxgst as $val) {  ?>
-                                    <option value="<?php echo $val->m_group_id;  ?>"><?php echo $val->m_group_name;  ?></option>
-                            <?php }
-                            } ?>
-                        </select>
+                        <div class="input-group">
+                            <select class="form-select" id="m_taxgst" name="m_product_taxgst" aria-label="Example select with button addon">
+                                <option value="">Select Tax</option>
+
+                                <?php if (!empty($taxgst)) {
+                                    foreach ($taxgst as $val) {  ?>
+                                        <option value="<?php echo $val->m_group_id;  ?>"><?php echo $val->m_group_name;  ?></option>
+                                <?php }
+                                } ?>
+                            </select>
+                            <button class="btn btn-outline-secondary" onclick="openmodalfun('#groupadd','Add Tax','4','1')" type="button"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+
                     </div>
 
                     <div class="col-md-4">
@@ -557,31 +579,10 @@
 
 <!-- ========== Page Content ========== -->
 <?php include("footer.php"); ?>
+<?php $this->view('custom_page'); ?>
 <?php $this->view('js/main_js');  ?>
 <?php $this->view('js/custom_js'); ?>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function() {
-
-        // Listen for the input event on the category_name field
-        $('#product_name').on('input', function() {
-            // alert('hello');
-            generateSlugadd();
-        });
-    });
-
-    function generateSlugadd() {
-        var categoryName = $('#product_name').val().trim();
-        var slug = categoryName.toLowerCase().replace(/[^a-z0-9-]+/g, '-');
-        var code = categoryName.toLowerCase().replace(/[^a-z0-9-]+/g, '-');
-        var barcode = categoryName.toLowerCase().replace(/[^a-z0-9-]+/g, '-');
-
-        $('#product_code').val(code);
-
-        $('#product_barcode').val(barcode);
-        $('#product_slug').val(slug);
-    }
-</script>
 
 <script>
     $(document).ready(function() {

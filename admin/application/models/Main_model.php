@@ -62,10 +62,14 @@ class Main_model extends CI_model
       $data['m_category_status'] = 1;
       $data['m_category_added_on'] = date('Y-m-d H:i');
      $this->db->insert('master_categories', $data);
+     $cat_id = $this->db->insert_id();
      $res = 1 ;
     }
-
-    return $res;
+    if($this->input->post('m_addon') == 1){
+      return $cat_id;
+     }else {
+      return $res;
+     }
   }
 
   public function delete_categories()
@@ -344,13 +348,18 @@ class Main_model extends CI_model
 
     if (!empty($m_group_id)) {
       $data['m_group_updatedon'] = date('Y-m-d H:i');
-      $res = $this->db->where('m_group_id', $m_group_id)->update('master_goups_tbl', $data);
+      $this->db->where('m_group_id', $m_group_id)->update('master_goups_tbl', $data);
+      $res = 2;
     } else {
       $data['m_group_added_on'] = date('Y-m-d H:i');
       $res = $this->db->insert('master_goups_tbl', $data);
+      $group_id = $this->db->insert_id();
     }
-
-    return $res;
+    if($this->input->post('m_addon') == 1){
+      return $group_id;
+     }else {
+      return $res;
+     }
   }
 
   public function delete_group()
@@ -426,7 +435,7 @@ class Main_model extends CI_model
       $this->db->where('m_expense_user_id', $user_exp);
     }
     $this->db->join('master_expense_category', 'master_expense_category.m_expcat_id = master_expense.m_expense_cat_id', 'left');
-    $this->db->join('master_users_tbl', 'master_users_tbl.m_user_id = master_expense.m_expense_user_id', 'left');
+    $this->db->join('master_accounts_tbl', 'master_accounts_tbl.m_acc_id = master_expense.m_expense_user_id', 'left');
     $res = $this->db->get('master_expense')->result();
     return $res;
   }
@@ -973,7 +982,7 @@ class Main_model extends CI_model
   public function get_all_review()
   {
     $this->db->select('*');
-    $this->db->join('master_users_tbl', 'master_users_tbl.m_user_id  = master_review_tbl.m_review_user_id');
+    $this->db->join('master_accounts_tbl', 'master_accounts_tbl.m_acc_id  = master_review_tbl.m_review_user_id');
     $this->db->join('master_product', 'master_product.m_product_id   = master_review_tbl.m_review_produ_id');
     $res = $this->db->get('master_review_tbl')->result();
     return $res;

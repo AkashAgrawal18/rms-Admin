@@ -135,11 +135,11 @@
 
             $user_img = base_url('uploads/default-user0.png');
 
-            if (!empty($log_user_dtl[0]->m_user_image)) {
+            if (!empty($log_user_dtl[0]->m_admin_img)) {
 
-                if (file_exists('uploads/user/' . $log_user_dtl[0]->m_user_image)) {
+                if (file_exists('uploads/user/' . $log_user_dtl[0]->m_admin_img)) {
 
-                    $user_img = base_url('uploads/user/') . $log_user_dtl[0]->m_user_image;
+                    $user_img = base_url('uploads/user/') . $log_user_dtl[0]->m_admin_img;
                 }
             }
 
@@ -147,7 +147,7 @@
             <div class="d-inline-flex justify-content-start p-1 gap-2 align-items-center rounded-pill" style="align-self: center;background:#f4f4f4;">
                 <img src="<?php echo $user_img; ?>" alt="" class="rounded-circle" style="aspect-ratio: 1/1;height:20px;">
                 <div>
-                    <h6 class="m-0 text-dark pe-3"><?php echo $log_user_dtl[0]->m_user_name; ?></h6>
+                    <h6 class="m-0 text-dark pe-3"><?php echo $log_user_dtl[0]->m_admin_name; ?></h6>
                 </div>
             </div>
         </div>

@@ -30,7 +30,7 @@
 <!-- Import Modal -->
 
 <!-- Add Category Modal -->
-<div class="modal fade" id="categoriesadd" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="categoriesadd" style="background: rgb(63 63 63 / 75%);" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form method="POST" id="cat_add_form">
@@ -43,6 +43,7 @@
                     <label for="Name">Name<span class="text-danger">*</span></label>
                     <input type="text" class="form-control  mb-3" id="cat_name" name="m_category_name" required placeholder="Please Enter Name">
                     <input type="hidden" class="clspagetype" name="m_cat_type" value="">
+                    <input type="hidden" class="addoncls" name="m_addon" id="cataddon" value="">
 
                     <label for="slug">Slug<span class="text-danger">*</span></label>
                     <input type="text" class="form-control  mb-3" id="slug" name="m_category_slug" placeholder="Please Enter Slug">
@@ -53,7 +54,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="cat_add_btn" class="btn btn-primary btn-sm"><i class="fa-regular fa-pen-to-square"></i> Add</button>
-                    <button aria-label="Close" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button aria-label="Close" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </form><!---------------/form----------->
         </div>
@@ -62,7 +63,7 @@
 <!-- Add Category Modal -->
 
 <!-- Add Group Modal -->
-<div class="modal fade" id="groupadd" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="groupadd" style="background: rgb(63 63 63 / 75%);" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <form class="modal-content" method="post" id="form_group_add">
             <div class="modal-header">
@@ -73,9 +74,10 @@
                 <div class="row g-3">
                     <div class="col-md-12">
                         <label for="Name">Name<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="m_group_name" required placeholder="Enter Name">
+                        <input type="text" class="form-control" name="m_group_name" id="group_name" required placeholder="Enter Name">
                         <input type="hidden" name="m_group_id" value="">
-                        <input type="hidden" class="clspagetype" name="m_group_type" value="">
+                        <input type="hidden" class="clspagetype" id="grouptype" name="m_group_type" value="">
+                        <input type="hidden" class="addoncls" name="m_addon" id="gropaddon" value="">
                     </div>
 
                 </div>
@@ -105,7 +107,7 @@
 
                     <div class="col-md-6">
                         <label for="Name">Name<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="cust_name" required placeholder="Please Enter Name">
+                        <input type="text" class="form-control" id="m_cust_name" name="cust_name" required placeholder="Please Enter Name">
                     </div>
                     <div class="col-md-6">
                         <label for="cmobile">Phone Number<span class="text-danger">*</span></label>
@@ -113,7 +115,8 @@
                     </div>
                     <div class="col-md-6">
                         <label for="Name">Email</label>
-                        <input type="hidden" class="clspagetype" name="m_user_type" id="user_type" value="">
+                        <input type="hidden" class="clspagetype" name="m_acc_type" id="user_type" value="">
+                        <input type="hidden" class="addoncls" name="m_addon" id="custaddon" value="">
                         <input type="email" class="form-control" name="cust_email" placeholder="Please Enter Email">
                     </div>
                     <!-- <div class="col-md-6">
@@ -162,7 +165,7 @@
 
                     <div class="canvas-footer justify-content-end d-flex">
                         <button type="submit" class="btn btn-primary me-2 btn-customer-add" data-frmid="#form-customer-add"><i class="fa-regular fa-pen-to-square"></i> Create</button>
-                        <button type="button" class="btn btn-secondary" class="btn-close" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -180,9 +183,10 @@
         $(id).modal('show');
         $(id).find('.modal-title').text(modaltitle)
         $(id).find('.clspagetype').val(pagetype)
+        $(id).find('.addoncls').val(addon)
 
         if (id == '#addcustomermodal') {
-            if(pagetype == 1){
+            if(pagetype == 3){
                 $('.suppfiled').addClass('d-none');
             }else {
                 $('.suppfiled').removeClass('d-none');

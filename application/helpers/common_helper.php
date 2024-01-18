@@ -54,31 +54,31 @@ if (! function_exists('has_perm')) {
   function has_perm($userid,$module='',$submodule='',$field ='')
  { $CI	=&	get_instance();
    if (!empty($module)){
-    $CI->db->where('m_userperm_module',$module);
-    $CI->db->where('m_userperm_list',1);
+    $CI->db->where('m_accperm_module',$module);
+    $CI->db->where('m_accperm_list',1);
    }
    if (!empty($submodule)){
-    $CI->db->where('m_userperm_submodule',$submodule);
+    $CI->db->where('m_accperm_submodule',$submodule);
    }
    if (!empty($field)){
      if($field == 'Edit'){
-       $CI->db->where('m_userperm_edit',1);
+       $CI->db->where('m_accperm_edit',1);
      }
      if($field == 'Delete'){
-       $CI->db->where('m_userperm_delete',1);
+       $CI->db->where('m_accperm_delete',1);
      }
      if($field == 'Add'){
-       $CI->db->where('m_userperm_add',1);
+       $CI->db->where('m_accperm_add',1);
      }
      if($field == 'Filter'){
-       $CI->db->where('m_userperm_filter',1);
+       $CI->db->where('m_accperm_filter',1);
      }
      if($field == 'Export'){
-       $CI->db->where('m_userperm_export',1);
+       $CI->db->where('m_accperm_export',1);
      }
    
    }
-   return $CI->db->select('m_userperm_id')->where('m_userperm_userId',$userid)->get('master_user_permission_tbl')->row();
+   return $CI->db->select('m_accperm_id')->where('m_accperm_accId',$userid)->get('master_user_permission_tbl')->row();
    
  }
  

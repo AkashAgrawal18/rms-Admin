@@ -100,16 +100,17 @@ class Main extends CI_Controller
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $data = $this->Main_model->insert_categories();
-      if ($data == 1) {
+      if ($data == 2) {
+        $info = array(
+          'status' => 'success',
+          'message' => 'Data has been Updated successfully!'
+        );
+      } else if ($data != '') {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Category has been Added Successfully!'
-        );
-      } else if($data == 2) {
-        $info = array(
-          'status' => 'success',
-          'message' => 'Category has been Updated Successfully!'
+          'message' => 'Data has been Added successfully!',
+          'cat_id' => $data,
         );
       } else {
         $info = array(
@@ -184,7 +185,7 @@ class Main extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Products';
-   
+
     $data['search'] =  $this->input->get('search');
     $data['cat'] =  $this->input->get('category');
     $data['fabric'] =  $this->input->get('fabric');
@@ -194,7 +195,7 @@ class Main extends CI_Controller
     $data['size_list'] = $this->Main_model->get_active_group(3);
     $data['unit'] = $this->Main_model->get_active_group(1);
     $data['taxgst'] = $this->Main_model->get_active_group(4);
-    $data['all_value'] = $this->Main_model->get_active_products($data['cat'],$data['fabric'],$data['search']);
+    $data['all_value'] = $this->Main_model->get_active_products($data['cat'], $data['fabric'], $data['search']);
     // echo "<pre>";print_r($data['all_value']);die();
     $this->load->view('product_list', $data);
   }
@@ -208,7 +209,7 @@ class Main extends CI_Controller
           'status' => 'success',
           'message' => 'Product has been Added Successfully!'
         );
-      } else if($data == 2) {
+      } else if ($data == 2) {
         $info = array(
           'status' => 'success',
           'message' => 'Product has been Updated Successfully!'
@@ -243,7 +244,7 @@ class Main extends CI_Controller
   }
 
   //-------------------------------------/products--------------------------------//
-   //-------------------pos ----------------------------------------------//
+  //-------------------pos ----------------------------------------------//
 
   public function pos()
   {
@@ -255,8 +256,8 @@ class Main extends CI_Controller
     $data['search'] =  $this->input->get('search');
     $data['paymode_list'] = $this->Main_model->get_active_group(6);
     $data['category'] = $this->Main_model->get_active_category();
-    $data['customer'] = $this->User_model->get_customer(1,1);
-   
+    $data['customer'] = $this->User_model->get_customer(3, 1);
+
     $this->load->view('pos', $data);
   }
 
@@ -445,7 +446,7 @@ class Main extends CI_Controller
   public function group_list($type = 1)
   {
     $data = $this->login_details();
-    
+
     switch ($type) {
       case 1: {
           $data['pagetitle'] = 'Unit';
@@ -482,11 +483,19 @@ class Main extends CI_Controller
   public function insert_group()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_group()) {
+      $data = $this->Main_model->insert_group();
+
+      if ($data == 2) {
+        $info = array(
+          'status' => 'success',
+          'message' => 'Data has been Updated successfully!'
+        );
+      } else if ($data != '') {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Data has been Added successfully!'
+          'message' => 'Data has been Added successfully!',
+          'group_id' => $data,
         );
       } else {
         $info = array(
@@ -499,7 +508,7 @@ class Main extends CI_Controller
   }
 
 
-public function delete_group()
+  public function delete_group()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       if ($data = $this->Main_model->delete_group()) {
@@ -518,7 +527,7 @@ public function delete_group()
     }
   }
   //-------------------------------------/master Group--------------------------------//
-  
+
   public function products_image()
   {
     $data = $this->login_details();

@@ -71,7 +71,7 @@ class Setting extends CI_Controller {
 	{   
 		$data = $this->login_details();
 		$data['pagename'] = 'Profile';
-		$data['user_dtl'] = $this->Login_model->get_user_profile_details();
+		$data['user_dtl'] = $this->Login_model->user_details();
 		$this->load->view('profile',$data);
 	}
 

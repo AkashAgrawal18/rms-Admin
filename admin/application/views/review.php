@@ -86,7 +86,7 @@
             foreach ($all_value as $value) {?>
         <tr>
             <td><?php echo $i; ?></td>
-            <td><?php echo $value->m_user_name; ?> </td>
+            <td><?php echo $value->m_acc_name; ?> </td>
             <td><?php echo $value->m_product_name; ?> </td>
             <td><?php echo  date('d-m-Y',strtotime($value->m_review_added_on)); ?></td>
             <td><?php echo $value->m_review_rating; ?></td>

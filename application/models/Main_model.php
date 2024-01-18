@@ -234,7 +234,7 @@ class Main_model extends CI_model
   	$this->db->select('*');
   	$this->db->group_by('m_sale_spo');
   	$this->db->where('m_sale_customer',$this->session->userdata('m_customer_id'));
-     $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
+     $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
       
     $this->db->order_by('m_sale_id', 'desc');
 
@@ -249,7 +249,7 @@ class Main_model extends CI_model
 		//  $this->db->select('*');
 		//  $this->db->group_by('m_sale_spo');
 		//  $this->db->where('m_sale_spo', $orderid);
-		//  $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left')->join('master_product product' , 'product.m_product_id = master_sales_tbl.m_sale_product', 'left')->join('master_image_tbl', 'master_image_tbl.m_image_product_id = product.m_product_id', 'left');
+		//  $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_sales_tbl.m_sale_customer', 'left')->join('master_product product' , 'product.m_product_id = master_sales_tbl.m_sale_product', 'left')->join('master_image_tbl', 'master_image_tbl.m_image_product_id = product.m_product_id', 'left');
 		// $res = $this->db->get('master_sales_tbl')->result();
 
 		// return $res;
@@ -266,8 +266,8 @@ class Main_model extends CI_model
     }
     
 
-    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_saddress,pmode1.m_pmode_name as pmodename1,pmode2.m_pmode_name as pmodename2');
-    $this->db->join(' master_users_tbl mct', 'mct.m_user_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_acc_name,m_acc_mobile,m_acc_address,m_acc_saddress,pmode1.m_pmode_name as pmodename1,pmode2.m_pmode_name as pmodename2');
+    $this->db->join(' master_accounts_tbl mct', 'mct.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
     $this->db->join('master_paymode_tbl pmode1', 'pmode1.m_pmode_id = master_sales_tbl.m_sale_pmode', 'left');
     $this->db->join('master_paymode_tbl pmode2', 'pmode2.m_pmode_id = master_sales_tbl.m_sale_pmode2', 'left');
     $this->db->group_by('m_sale_spo');
@@ -296,11 +296,11 @@ class Main_model extends CI_model
           "m_sale_added_on" => $skey->m_sale_added_on,
           "m_sale_user" => $skey->m_sale_user,
           "m_sale_customer" => $skey->m_sale_customer,
-          "m_user_name" => $skey->m_user_name,
-          "m_user_mobile" => $skey->m_user_mobile,
-          "m_user_address" => $skey->m_user_address,
-          "m_user_saddress" => $skey->m_user_saddress,
-          // "m_user_email" => $skey->m_user_email,
+          "m_acc_name" => $skey->m_acc_name,
+          "m_acc_mobile" => $skey->m_acc_mobile,
+          "m_acc_address" => $skey->m_acc_address,
+          "m_acc_saddress" => $skey->m_acc_saddress,
+          // "m_acc_email" => $skey->m_acc_email,
           "pmodename1" => $skey->pmodename1,
           "pmodename2" => $skey->pmodename2,
           "m_sale_items" => $this->get_sale_items($skey->m_sale_spo, $skey->m_sale_customer),
@@ -364,7 +364,7 @@ class Main_model extends CI_model
 	 {
 	 	  $this->db->select('*');
 		  $this->db->where('m_wishlist_user_id', $this->session->userdata('m_customer_id'));
-		  $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_wishlist.m_wishlist_user_id', 'left')->join('master_product product' , 'product.m_product_id = master_wishlist.m_wishlist_product_id', 'left');
+		  $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_wishlist.m_wishlist_user_id', 'left')->join('master_product product' , 'product.m_product_id = master_wishlist.m_wishlist_product_id', 'left');
 		  $res = $this->db->get('master_wishlist')->result();
 
 		  return $res;
@@ -429,7 +429,7 @@ class Main_model extends CI_model
 	 	  if(!empty($user)){
       $this->db->where('m_review_user_id',$user);
 	 	  }
-		  $this->db->where('m_review_produ_id',$id)->join('master_users_tbl', 'master_users_tbl.m_user_id = master_review_tbl.m_review_user_id', 'left')->join('master_product', 'master_product.m_product_id  = master_review_tbl.m_review_produ_id', 'left');
+		  $this->db->where('m_review_produ_id',$id)->join('master_accounts_tbl', 'master_accounts_tbl.m_acc_id = master_review_tbl.m_review_user_id', 'left')->join('master_product', 'master_product.m_product_id  = master_review_tbl.m_review_produ_id', 'left');
                    
 		  $res = $this->db->get('master_review_tbl')->result();
 
@@ -613,22 +613,22 @@ class Main_model extends CI_model
           
        	$updatedata = array(
 
-	      "m_user_address" => $this->input->post('m_user_address'),
-				"m_user_country" => $this->input->post('m_user_country'),
-				"m_user_state" => $this->input->post('m_user_state'),
-			   "m_user_city" => $this->input->post('m_user_city'),
-				"m_user_pincode" => $this->input->post('m_user_pincode'),
+	      "m_acc_address" => $this->input->post('m_acc_address'),
+				"m_acc_country" => $this->input->post('m_acc_country'),
+				"m_acc_state" => $this->input->post('m_acc_state'),
+			   "m_acc_city" => $this->input->post('m_acc_city'),
+				"m_acc_pincode" => $this->input->post('m_acc_pincode'),
 				
 			 );
 
 
-	      $updatedata['m_user_updated_on'] = date('Y-m-d h:i:s');
-	      $this->db->where('m_user_id',$this->session->userdata('m_customer_id'))->update('master_users_tbl', $updatedata);
+	      $updatedata['m_acc_updated_on'] = date('Y-m-d h:i:s');
+	      $this->db->where('m_acc_id',$this->session->userdata('m_customer_id'))->update('master_accounts_tbl', $updatedata);
  
       
 			 	 $email = $this->input->post('user_email');
 			 	 $name = $this->input->post('user_name');
-			 	 $address = $this->input->post('m_user_address');
+			 	 $address = $this->input->post('m_acc_address');
 	       $subject = "Order has been successfully";
 	       // $purchasedate = date('Y-m-d');
 	       $msg = "Order has been successfully";

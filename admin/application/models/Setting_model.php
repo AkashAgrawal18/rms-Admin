@@ -5,13 +5,11 @@ class Setting_model extends CI_model {
 //===========================Profile==========================//
 public function update_profile(){
   $update_data = array(
-    "m_user_name"    => $this->input->post('m_user_name'),
-    
-    "m_user_email"   => $this->input->post('m_user_email'),
-    "m_user_loginid"=> $this->input->post('m_user_email'),
-    "m_user_password"    => $this->input->post('m_user_pass'),
-    "m_user_mobile" => $this->input->post('m_user_mobile'),
-    "m_user_image"     => $this->input->post('pre_m_admin_img'),
+    "m_admin_name"    => $this->input->post('m_admin_name'),
+    "m_admin_email"   => $this->input->post('m_admin_email'),
+    "m_admin_pass"    => $this->input->post('m_admin_pass'),
+    "m_admin_contact" => $this->input->post('m_admin_mobile'),
+    "m_admin_img"     => $this->input->post('pre_m_admin_img'),
 
     // "m_admin_address"     => $this->input->post('m_admin_address'),
     // "m_admin_state"     => $this->input->post('m_admin_state'),
@@ -19,9 +17,9 @@ public function update_profile(){
     // "m_admin_pincode"     => $this->input->post('m_admin_pincode'),
   );
 
-    if(!empty($_FILES['m_user_image']['name'])){
+    if(!empty($_FILES['m_admin_img']['name'])){
 
-       $name1 = $_FILES['m_user_image']['name'];
+       $name1 = $_FILES['m_admin_img']['name'];
         $fileNameParts = explode(".", $name1); // explode file name to two part
         $fileExtension = end($fileNameParts); // give extension
         $fileExtension = strtolower($fileExtension);
@@ -30,26 +28,26 @@ public function update_profile(){
         $config['upload_path'] = 'uploads/user';
         $config['allowed_types'] = 'jpg|jpeg|png';
         $config['remove_spaces'] = TRUE;
-        $config['file_name'] = $_FILES['m_user_image']['name'];
+        $config['file_name'] = $_FILES['m_admin_img']['name'];
         //Load upload library and initialize configuration
         $this->load->library('upload',$config);
         $this->upload->initialize($config);
 
-        if($this->upload->do_upload('m_user_image')){
+        if($this->upload->do_upload('m_admin_img')){
           $uploadData = $this->upload->data();
           
-          if (!empty($update_data['m_user_image'])) { 
-            if(file_exists($config['upload_path'].$update_data['m_user_image'])){
-            unlink($config['upload_path'].$update_data['m_user_image']); /* deleting Image */
+          if (!empty($update_data['m_admin_img'])) { 
+            if(file_exists($config['upload_path'].$update_data['m_admin_img'])){
+            unlink($config['upload_path'].$update_data['m_admin_img']); /* deleting Image */
           } }
 
-          $update_data['m_user_image'] = $uploadData['file_name'];
+          $update_data['m_admin_img'] = $uploadData['file_name'];
 
         }
       }
 
-      $this->db->where('m_user_id', $this->session->userdata('user_id'));
-      return $this->db->update('master_users_tbl',$update_data);
+      $this->db->where('m_admin_id', $this->session->userdata('user_id'));
+      return $this->db->update('master_admin_tbl',$update_data);
     }
 
 

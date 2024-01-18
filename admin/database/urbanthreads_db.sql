@@ -117,17 +117,17 @@ INSERT INTO `master_admin_tbl` (`m_admin_id`, `m_admin_login_id`, `m_admin_pass`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `master_users_tbl`
+-- Table structure for table `master_accounts_tbl`
 --
 
-CREATE TABLE `master_users_tbl` (
+CREATE TABLE `master_accounts_tbl` (
   `m_user_id` bigint(20) NOT NULL,
   `m_user_name` varchar(200) NOT NULL,
   `m_user_mobile` varchar(200) NOT NULL,
   `m_user_type` tinyint(1) NOT NULL COMMENT '1-admin, 2-User , 3- customer , 4-supplier',
   `m_user_image` text NOT NULL,
   `m_user_email` varchar(200) NOT NULL,
-  `m_user_parent_id` bigint(20) NOT NULL COMMENT 'master_users_tbl se',
+  `m_user_parent_id` bigint(20) NOT NULL COMMENT 'master_accounts_tbl se',
   `m_user_parent_name` varchar(50) NOT NULL,
   `m_user_gst_no` varchar(50) NOT NULL,
   `m_user_design` int(11) NOT NULL COMMENT 'master_designation_tbl se',
@@ -158,10 +158,10 @@ CREATE TABLE `master_users_tbl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `master_users_tbl`
+-- Dumping data for table `master_accounts_tbl`
 --
 
-INSERT INTO `master_users_tbl` (`m_user_id`, `m_user_name`, `m_user_mobile`, `m_user_type`, `m_user_image`, `m_user_email`, `m_user_parent_id`, `m_user_parent_name`, `m_user_gst_no`, `m_user_design`, `m_user_state`, `m_user_city`, `m_user_address`, `m_user_loginid`, `m_user_password`, `m_user_added_by`, `m_user_updated_by`, `m_user_updated_on`, `m_user_login_allow`, `m_user_added_on`, `m_user_status`, `m_user_text_num`, `m_user_open_balance`, `m_user_credit_period`, `m_user_credit_limit`, `m_user_saddress`, `m_user_department`, `m_user_hodName`, `m_user_hodContact`, `m_user_hiName`, `m_user_hiContact`, `m_user_companyName`, `m_user_contractPerd`, `m_user_siContact`) VALUES
+INSERT INTO `master_accounts_tbl` (`m_user_id`, `m_user_name`, `m_user_mobile`, `m_user_type`, `m_user_image`, `m_user_email`, `m_user_parent_id`, `m_user_parent_name`, `m_user_gst_no`, `m_user_design`, `m_user_state`, `m_user_city`, `m_user_address`, `m_user_loginid`, `m_user_password`, `m_user_added_by`, `m_user_updated_by`, `m_user_updated_on`, `m_user_login_allow`, `m_user_added_on`, `m_user_status`, `m_user_text_num`, `m_user_open_balance`, `m_user_credit_period`, `m_user_credit_limit`, `m_user_saddress`, `m_user_department`, `m_user_hodName`, `m_user_hodContact`, `m_user_hiName`, `m_user_hiContact`, `m_user_companyName`, `m_user_contractPerd`, `m_user_siContact`) VALUES
 (1, 'Admin', '9608451051', 1, 'user2.png', 'admin@gmail.com', 0, 'admin', '', 1, 0, 0, 'Bhilai', 'admin@gmail.com', '12345', 1, 1, '2023-03-16 15:58:18', 1, '2023-03-16 15:49:19', 1, '', 0, 0, 0, '', '', '', 0, '', 0, '', '', 0),
 (3, 'saman rajak1', '5345312345', 4, '2.jpg', 'sman1@gmail.com', 0, '', '', 4, 0, 0, 'raipur', 'sman1@gmail.com', '12345', 0, 0, '2023-12-01 03:51:01', 1, '2023-12-01 03:44:57', 1, '12', 100, 10, 0, '  raipur', '', '', 0, '', 0, '', '', 0),
 (4, 'daman rajak', '3243242343', 3, '21.jpg', 'daman@gmail.com', 0, '', '', 3, 0, 0, 'raipur', 'daman@gmail.com', '12345', 0, 0, '0000-00-00 00:00:00', 1, '2023-12-01 03:55:47', 1, '12', 100, 10, 100, 'raipur', '', '', 0, '', 0, '', '', 0),
@@ -184,9 +184,9 @@ ALTER TABLE `master_admin_tbl`
   ADD PRIMARY KEY (`m_admin_id`);
 
 --
--- Indexes for table `master_users_tbl`
+-- Indexes for table `master_accounts_tbl`
 --
-ALTER TABLE `master_users_tbl`
+ALTER TABLE `master_accounts_tbl`
   ADD PRIMARY KEY (`m_user_id`);
 
 --
@@ -206,9 +206,9 @@ ALTER TABLE `master_admin_tbl`
   MODIFY `m_admin_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `master_users_tbl`
+-- AUTO_INCREMENT for table `master_accounts_tbl`
 --
-ALTER TABLE `master_users_tbl`
+ALTER TABLE `master_accounts_tbl`
   MODIFY `m_user_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 

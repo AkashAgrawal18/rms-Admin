@@ -73,7 +73,7 @@
                                       
                     foreach ($all_user as $value):
                     ?>
-                        <option value="<?php echo $value->m_user_id; ?>" <?php if($user ==$value->m_user_id) echo 'selected'; ?>><?php echo $value->m_user_name; ?></option>
+                        <option value="<?php echo $value->m_acc_id; ?>" <?php if($user ==$value->m_acc_id) echo 'selected'; ?>><?php echo $value->m_acc_name; ?></option>
                     <?php endforeach; ?>
                 </select>
                 </form>
@@ -106,7 +106,7 @@
             <td><?php echo $i; ?></td>
             <td><?php echo date('d-m-Y',strtotime($value->m_payment_date)); ?></td>
             <td><?php echo $value->m_payment_transno; ?></td>
-            <td><?php echo $value->m_user_name; ?></td>
+            <td><?php echo $value->m_acc_name; ?></td>
             <td>₹<?php echo $value->m_payment_amount; ?></td>
             <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop<?php echo $value->m_payment_id; ?>" aria-controls="staticBackdrop"><i class="fa-solid fa-pen-to-square"></i></button>
 
@@ -130,7 +130,7 @@
                                       
                                         foreach ($all_user as $user):
                                         ?>
-                                            <option value="<?php echo $user->m_user_id; ?>" <?php if($value->m_payment_user ==$user->m_user_id) echo 'selected'; ?>><?php echo $user->m_user_name; ?></option>
+                                            <option value="<?php echo $user->m_acc_id; ?>" <?php if($value->m_payment_user ==$user->m_acc_id) echo 'selected'; ?>><?php echo $user->m_acc_name; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -206,7 +206,7 @@
                                       
                                         foreach ($all_user as $user):
                                         ?>
-                                            <option value="<?php echo $user->m_user_id; ?>" ><?php echo $user->m_user_name; ?></option>
+                                            <option value="<?php echo $user->m_acc_id; ?>" ><?php echo $user->m_acc_name; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>

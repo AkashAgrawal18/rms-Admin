@@ -92,7 +92,7 @@
                     <select class="form-select" name="user" onchange="this.form.submit();" aria-label="Default select example">
                         <option selected>Select Supplier</option>
                         <?php foreach ($all_user as $value) { ?>
-                            <option value="<?php echo $value->m_user_id; ?>" <?php if ($user == $value->m_user_id) echo "selected"; ?>><?php echo $value->m_user_name; ?></option>
+                            <option value="<?php echo $value->m_acc_id; ?>" <?php if ($user == $value->m_acc_id) echo "selected"; ?>><?php echo $value->m_acc_name; ?></option>
                         <?php } ?>
                     </select>
                 </form>
@@ -130,7 +130,7 @@
                         <td><?php echo $value->m_purchase_spo; ?></td>
                         <td><?php echo $value->m_purchase_invoiceno; ?></td>
                         <td><?php echo date('d-m-Y', strtotime($value->m_purchase_date)); ?></td>
-                        <td><?php echo $value->m_user_name; ?></td>
+                        <td><?php echo $value->m_acc_name; ?></td>
 
                         <td><?php echo $value->total_qty; ?></td>
                         <td>₹<?php echo $value->m_purchase_nettotal; ?></td>
@@ -164,16 +164,16 @@
                                                         Invoice Number :<br> <?php echo $value->m_purchase_invoiceno; ?>
                                                     </div>
                                                     <div class="col-4">
-                                                        Supplier :<br> <?php echo $value->m_user_name; ?>
+                                                        Supplier :<br> <?php echo $value->m_acc_name; ?>
                                                     </div>
                                                     <div class="col-4">
-                                                        Mobile :<br> <?php echo $value->m_user_mobile; ?>
+                                                        Mobile :<br> <?php echo $value->m_acc_mobile; ?>
                                                     </div>
                                                     <div class="col-4">
-                                                        Email :<br> <?php echo $value->m_user_email; ?>
+                                                        Email :<br> <?php echo $value->m_acc_email; ?>
                                                     </div>
                                                     <div class="col-4">
-                                                        Address :<br> <?php echo $value->m_user_address; ?>
+                                                        Address :<br> <?php echo $value->m_acc_address; ?>
                                                     </div>
 
 

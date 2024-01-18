@@ -51,16 +51,17 @@ class User extends CI_Controller
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $data = $this->User_model->insert_customer();
-      if ($data == 1) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Data has been Added successfully!'
-        );
-      } else if ($data == 2) {
+       if ($data == 2) {
         $info = array(
           'status' => 'success',
           'message' => 'Data has been Updated successfully!'
+        );
+      } else if ($data != '') {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Data has been Added successfully!',
+          'cust_id' => $data,
         );
       } else {
         $info = array(
@@ -133,24 +134,24 @@ class User extends CI_Controller
           // }
 
           $s_data = array(
-            "m_user_name" => $row[1],
-            "m_user_mobile" => $row[2],
-            "m_user_email" => $row[3],
-            "m_user_status" => 1,
-            // "m_user_city" => $city_id,
-            // "m_user_state" => $state_id,
-            "m_user_address" => $row[4],
-            "m_user_type" => 3,
-            "m_user_login_allow" => 1,
-            // "m_user_loginid" => $row[3],
-            // "m_user_password" => $row[9],
-            "m_user_added_by" => $this->session->userdata('user_id'),
-            "m_user_added_on" => date('Y-m-d H:i'),
+            "m_acc_name" => $row[1],
+            "m_acc_mobile" => $row[2],
+            "m_acc_email" => $row[3],
+            "m_acc_status" => 1,
+            // "m_acc_city" => $city_id,
+            // "m_acc_state" => $state_id,
+            "m_acc_address" => $row[4],
+            "m_acc_type" => 3,
+            "m_acc_login_allow" => 1,
+            // "m_acc_loginid" => $row[3],
+            // "m_acc_password" => $row[9],
+            "m_acc_added_by" => $this->session->userdata('user_id'),
+            "m_acc_added_on" => date('Y-m-d H:i'),
 
           );
 
           $redirt = 'User/customer';
-          $this->db->insert('master_users_tbl', $s_data);
+          $this->db->insert('master_accounts_tbl', $s_data);
         }
       }
       echo "<script> alert('import Successfull'); </script>";

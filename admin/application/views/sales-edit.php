@@ -104,7 +104,7 @@
             <select class="form-select" name="m_sale_customer"  required >
                     <option selected >Select Customer</option>
                     <?php foreach($all_user as $value){ ?>
-                    <option value="<?php echo $value->m_user_id; ?>" <?php if($customer == $value->m_user_id)echo 'selected'; ?> ><?php echo $value->m_user_name; ?></option>
+                    <option value="<?php echo $value->m_acc_id; ?>" <?php if($customer == $value->m_acc_id)echo 'selected'; ?> ><?php echo $value->m_acc_name; ?></option>
                    <?php } ?>
                    
                 </select>

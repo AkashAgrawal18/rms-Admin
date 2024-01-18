@@ -6,10 +6,10 @@ class User_model extends CI_model
   public function get_active_user()
   {
     $this->db->select('*');
-    $this->db->order_by('m_user_id');
-    $this->db->where('m_user_type', 1);
-    $this->db->where('m_user_status', 1);
-    $res = $this->db->get('master_users_tbl')->result();
+    $this->db->order_by('m_acc_id');
+    $this->db->where('m_acc_type', 1);
+    $this->db->where('m_acc_status', 1);
+    $res = $this->db->get('master_accounts_tbl')->result();
     return $res;
   }
   //-------------------user-----------------------------------//
@@ -19,8 +19,8 @@ class User_model extends CI_model
   {
 
     //print_r($id);die();
-    $user_mobile = $this->db->select('m_user_mobile,m_user_id,m_user_type')
-      ->where('m_user_mobile', $mobile_id)->where('m_user_type', $type)->get('master_users_tbl')->result();
+    $user_mobile = $this->db->select('m_acc_mobile,m_acc_id,m_acc_type')
+      ->where('m_acc_mobile', $mobile_id)->where('m_acc_type', $type)->get('master_accounts_tbl')->result();
 
     // print_r($user_mobile); die(); 
     return $user_mobile;
@@ -31,17 +31,17 @@ class User_model extends CI_model
   {
     $this->db->select('*');
 
-    $this->db->where('m_user_type', $type);
+    $this->db->where('m_acc_type', $type);
 
     if (!empty($status)) {
-      $this->db->where('m_user_status', $status);
+      $this->db->where('m_acc_status', $status);
     }
     if (!empty($search)) {
-      $this->db->where("(m_user_name LIKE '%$search%' OR m_user_mobile LIKE '%$search%' OR m_user_email LIKE '%$search%')");
+      $this->db->where("(m_acc_name LIKE '%$search%' OR m_acc_mobile LIKE '%$search%' OR m_acc_email LIKE '%$search%')");
         
     }
-    $this->db->order_by('m_user_id', 'desc');
-    $res = $this->db->get('master_users_tbl')->result();
+    $this->db->order_by('m_acc_id', 'desc');
+    $res = $this->db->get('master_accounts_tbl')->result();
     return $res;
   }
 
@@ -72,44 +72,49 @@ class User_model extends CI_model
 
     $data = array(
 
-      "m_user_name" => $this->input->post('cust_name'),
-      "m_user_mobile" => $this->input->post('cust_mobile'),
-      "m_user_email" => $this->input->post('cust_email'),
-      // "m_user_city" => $this->input->post('m_user_city'),
-      // "m_user_state" => $this->input->post('m_user_state'),
-      "m_user_address" => $this->input->post('Billing_address') ?: '',
-      "m_user_credit_limit" => $this->input->post('credit_limit') ?: '',
-      "m_user_credit_period" => $this->input->post('cust_credit_period') ?: '',
-      "m_user_open_balance" => $this->input->post('cust_open_balance'),
-      "m_user_type" => $this->input->post('m_user_type'),
-      // "m_user_design" => 3,  //customer design
-      // "m_user_login_allow" => 1,
-      // "m_user_loginid" => $this->input->post('cust_email'),
-      // "m_user_password" => $this->input->post('cust_pass'),
-      "m_user_image" => $cust_image,
+      "m_acc_name" => $this->input->post('cust_name'),
+      "m_acc_mobile" => $this->input->post('cust_mobile'),
+      "m_acc_email" => $this->input->post('cust_email'),
+      // "m_acc_city" => $this->input->post('m_acc_city'),
+      // "m_acc_state" => $this->input->post('m_acc_state'),
+      "m_acc_address" => $this->input->post('Billing_address') ?: '',
+      "m_acc_credit_limit" => $this->input->post('credit_limit') ?: '',
+      "m_acc_credit_period" => $this->input->post('cust_credit_period') ?: '',
+      "m_acc_open_balance" => $this->input->post('cust_open_balance'),
+      "m_acc_type" => $this->input->post('m_acc_type'),
+      // "m_acc_design" => 3,  //customer design
+      // "m_acc_login_allow" => 1,
+      // "m_acc_loginid" => $this->input->post('cust_email'),
+      // "m_acc_password" => $this->input->post('cust_pass'),
+      "m_acc_image" => $cust_image,
     );
     $cust_id = $this->input->post('cust_id');
     if (!empty($cust_id)) {
-      $data['m_user_updated_by'] = $this->session->userdata('user_id');
-      $data['m_user_status'] = $this->input->post('cust_status');
-      $data['m_user_updated_on'] = date('Y-m-d H:i');
-      $this->db->where('m_user_id', $cust_id)->update('master_users_tbl', $data);
+      $data['m_acc_updated_by'] = $this->session->userdata('user_id');
+      $data['m_acc_status'] = $this->input->post('cust_status');
+      $data['m_acc_updated_on'] = date('Y-m-d H:i');
+      $this->db->where('m_acc_id', $cust_id)->update('master_accounts_tbl', $data);
       $res = 2;
     } else {
-      $data['m_user_status'] = 1;
-      $data['m_user_added_on'] = date('Y-m-d H:i');
-      $data['m_user_added_by'] = $this->session->userdata('user_id');
-      $this->db->insert('master_users_tbl', $data);
+      $data['m_acc_status'] = 1;
+      $data['m_acc_added_on'] = date('Y-m-d H:i');
+      $data['m_acc_added_by'] = $this->session->userdata('user_id');
+      $this->db->insert('master_accounts_tbl', $data);
+      $cust_id = $this->db->insert_id();
       $res = 1;
     }
-
+   if($this->input->post('m_addon') == 1){
+    return $cust_id;
+   }else {
     return $res;
+   }
+    
   }
 
   public function delete_customer()
   {
-    $this->db->where('m_user_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_users_tbl');
+    $this->db->where('m_acc_id', $this->input->post('delete_id'));
+    return $this->db->delete('master_accounts_tbl');
   }
 
   //--------------------------------/customer-----------------------//
@@ -126,7 +131,7 @@ class User_model extends CI_model
     }
     if ($search != NULL) {
 
-      // $this->db->like('m_user_name',$search,'both');
+      // $this->db->like('m_acc_name',$search,'both');
       $this->db->or_like('m_sale_spo', $search, 'both');
       // $this->db->or_like('m_sale_invoiceno', $search, 'both');
     }
@@ -137,8 +142,8 @@ class User_model extends CI_model
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")<=', $to_date);
     }
 
-    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_user_name,m_user_mobile,m_user_address,m_user_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
-    $this->db->join(' master_users_tbl mct', 'mct.m_user_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_acc_name,m_acc_mobile,m_acc_address,m_acc_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
+    $this->db->join(' master_accounts_tbl mct', 'mct.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
     $this->db->join('master_goups_tbl pmode1', 'pmode1.m_group_id = master_sales_tbl.m_sale_pmode', 'left');
     $this->db->join('master_goups_tbl pmode2', 'pmode2.m_group_id = master_sales_tbl.m_sale_pmode2', 'left');
     $this->db->group_by('m_sale_spo');
@@ -167,10 +172,10 @@ class User_model extends CI_model
           "m_sale_added_on" => $skey->m_sale_added_on,
           "m_sale_user" => $skey->m_sale_user,
           "m_sale_customer" => $skey->m_sale_customer,
-          "m_user_name" => $skey->m_user_name,
-          "m_user_mobile" => $skey->m_user_mobile,
-          "m_user_address" => $skey->m_user_address,
-          "m_user_email" => $skey->m_user_email,
+          "m_acc_name" => $skey->m_acc_name,
+          "m_acc_mobile" => $skey->m_acc_mobile,
+          "m_acc_address" => $skey->m_acc_address,
+          "m_acc_email" => $skey->m_acc_email,
           "pmodename1" => $skey->pmodename1,
           "pmodename2" => $skey->pmodename2,
           "m_sale_items" => $this->get_sale_items($skey->m_sale_spo, $skey->m_sale_customer),
@@ -214,9 +219,9 @@ class User_model extends CI_model
   {
     $this->db->select('m_sale_spo,m_sale_invoiceno,m_sale_date,m_sale_customer');
 
-    $this->db->join('master_users_tbl added_by', 'added_by.m_user_id = master_sales_tbl.m_sale_added_by', 'left');
-    $this->db->join('master_users_tbl updated_by', 'updated_by.m_user_id = master_sales_tbl.m_sale_updaded_by', 'left');
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->join('master_accounts_tbl added_by', 'added_by.m_acc_id = master_sales_tbl.m_sale_added_by', 'left');
+    $this->db->join('master_accounts_tbl updated_by', 'updated_by.m_acc_id = master_sales_tbl.m_sale_updaded_by', 'left');
+    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
 
     // $this->db->where('m_purchase_supplier', $uid);
     $this->db->where('m_sale_spo', $salesid);
@@ -328,7 +333,7 @@ class User_model extends CI_model
       $this->db->where('m_purchase_supplier', $user);
     }
     if ($search != NULL) {
-      // $this->db->like('m_user_name',$search,'both');
+      // $this->db->like('m_acc_name',$search,'both');
       $this->db->like('m_purchase_spo', $search, 'both');
       $this->db->or_like('m_purchase_invoiceno', $search, 'both');
     }
@@ -343,8 +348,8 @@ class User_model extends CI_model
       $this->db->where('m_purchase_type', $pur_type);
     }
 
-    $this->db->select('m_purchase_spo,sum(m_purchase_qty) as total_qty,sum(m_purchase_total) as item_sub_total,sum(m_purchase_netamt) as item_net_total,m_purchase_type,m_purchase_invoiceno,m_purchase_date,sum(m_purchase_gstamt) as total_tax,sum(m_purchase_disamt) as total_disc,m_purchase_shipping,m_purchase_status,m_purchase_added_on,m_purchase_user,m_purchase_supplier,m_purchase_note,m_purchase_terms,m_user_name,m_user_mobile,m_user_email,m_user_address');
-    $this->db->join('master_users_tbl mct', 'mct.m_user_id = master_purchase_tbl.m_purchase_supplier', 'left');
+    $this->db->select('m_purchase_spo,sum(m_purchase_qty) as total_qty,sum(m_purchase_total) as item_sub_total,sum(m_purchase_netamt) as item_net_total,m_purchase_type,m_purchase_invoiceno,m_purchase_date,sum(m_purchase_gstamt) as total_tax,sum(m_purchase_disamt) as total_disc,m_purchase_shipping,m_purchase_status,m_purchase_added_on,m_purchase_user,m_purchase_supplier,m_purchase_note,m_purchase_terms,m_acc_name,m_acc_mobile,m_acc_email,m_acc_address');
+    $this->db->join('master_accounts_tbl mct', 'mct.m_acc_id = master_purchase_tbl.m_purchase_supplier', 'left');
 
     $this->db->group_by('m_purchase_spo');
     $purchase_list = $this->db->get('master_purchase_tbl')->result();
@@ -370,10 +375,10 @@ class User_model extends CI_model
           "m_purchase_supplier" => $skey->m_purchase_supplier,
           "m_purchase_terms" => $skey->m_purchase_terms,
           "m_purchase_note" => $skey->m_purchase_note,
-          "m_user_name" => $skey->m_user_name,
-          "m_user_mobile" => $skey->m_user_mobile,
-          "m_user_email" => $skey->m_user_email,
-          "m_user_address" => $skey->m_user_address,
+          "m_acc_name" => $skey->m_acc_name,
+          "m_acc_mobile" => $skey->m_acc_mobile,
+          "m_acc_email" => $skey->m_acc_email,
+          "m_acc_address" => $skey->m_acc_address,
          
           "m_purchase_items" => $this->get_purchase_item($skey->m_purchase_spo, $skey->m_purchase_supplier),
 
@@ -510,14 +515,14 @@ class User_model extends CI_model
     $this->db->select('*');
     if ($search != NULL) {
       $this->db->like('m_pmode_name', $search, 'both');
-      $this->db->like('m_user_name', $search, 'both');
+      $this->db->like('m_acc_name', $search, 'both');
     }
     if (!empty($user)) {
       $this->db->where('m_payment_user', $user);
     }
     $this->db->join('master_paymode_tbl', 'master_paymode_tbl.m_pmode_id = master_payment_tbl.m_payment_pmode', 'left');
-    $this->db->join('master_users_tbl customer', 'customer.m_user_id = master_payment_tbl.m_payment_user', 'left');
-    // $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_payment_tbl.m_payment_user', 'left');
+    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_payment_tbl.m_payment_user', 'left');
+    // $this->db->join('master_accounts_tbl supplier', 'supplier.m_acc_id = master_payment_tbl.m_payment_user', 'left');
 
     $this->db->where('m_payment_type', 1);
     $res = $this->db->get('master_payment_tbl')->result();
@@ -573,14 +578,14 @@ class User_model extends CI_model
     $this->db->select('*');
     if ($search != NULL) {
       $this->db->like('m_pmode_name', $search, 'both');
-      $this->db->like('m_user_name', $search, 'both');
+      $this->db->like('m_acc_name', $search, 'both');
     }
     if (!empty($user)) {
       $this->db->where('m_payment_user', $user);
     }
     $this->db->join('master_paymode_tbl', 'master_paymode_tbl.m_pmode_id = master_payment_tbl.m_payment_pmode', 'left');
 
-    $this->db->join('master_users_tbl supplier', 'supplier.m_user_id = master_payment_tbl.m_payment_user', 'left');
+    $this->db->join('master_accounts_tbl supplier', 'supplier.m_acc_id = master_payment_tbl.m_payment_user', 'left');
 
     $this->db->where('m_payment_type', 2);
     $res = $this->db->get('master_payment_tbl')->result();
