@@ -23,7 +23,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('User/payment_in');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Payment In</span></a>
+                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('Mainpayment_in');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Payment In</span></a>
                 </p>
             </div>
             <!-- <div class="col-lg-1 text-end">
@@ -54,7 +54,7 @@
         </div>
          <div class="col-md-5">
             <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('User/payment_in');  ?>">
+                <form method="get" action="<?php echo base_url('Mainpayment_in');  ?>">
                     <div class="form-outline" data-mdb-input-init>
                     <input type="text" name="search" class="form-control" value="<?php echo $search; ?>" />
                     <!-- <label class="form-label" for="form1">Search</label> -->
@@ -62,11 +62,11 @@
                 <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
                     <i class="fas fa-search"></i>
                 </button>
-                <a type="submit" href="<?php echo base_url('User/payment_in');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                <a type="submit" href="<?php echo base_url('Mainpayment_in');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                    <i class="fa-solid fa-rotate"></i>
                 </a>
                 </form>
-                <form action="<?php echo base_url('User/payment_in');?>"  method="get" >
+                <form action="<?php echo base_url('Mainpayment_in');?>"  method="get" >
                     <select class="form-select" name="user" onchange="this.form.submit();" aria-label="Default select example" >
                     <option selected >Select Status</option>
                     <?php

@@ -13,7 +13,7 @@
         <div class="row align-items-center">
             <div class="col-xl-10 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Product Manager >> <a href="<?php echo base_url('Main/brands');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Brands</span></a>
+                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Product Manager >> <a href="<?php echo base_url('Master/brands');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Brands</span></a>
                 </p>
             </div>
             <div class="col-lg-1 text-end">

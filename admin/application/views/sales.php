@@ -28,7 +28,7 @@
 
 
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('User/sales'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Sales</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('Mainsales'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Sales</span></a>
                 </p>
             </div>
 
@@ -58,11 +58,11 @@
     <div class="row pt-3">
         <div class="col-md-2">
 
-            <a href="<?php echo base_url('Main/pos');  ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New Sales</a>
+            <a href="<?php echo base_url('Master/pos');  ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New Sales</a>
         </div>
         <div class="col-md-10">
             <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('User/sales');  ?>">
+                <form method="get" action="<?php echo base_url('Mainsales');  ?>">
 
                     <div class="form-outline me-1" data-mdb-input-init>
                         <label class="form-label p-1" for="form1"> From Date </label>
@@ -88,11 +88,11 @@
                     <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
                         <i class="fas fa-search"></i>
                     </button>
-                    <a type="submit" href="<?php echo base_url('User/sales');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                    <a type="submit" href="<?php echo base_url('Mainsales');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                         <i class="fa-solid fa-rotate"></i>
                     </a>
                 </form>
-                <form action="<?php echo base_url('User/sales'); ?>" method="get">
+                <form action="<?php echo base_url('Mainsales'); ?>" method="get">
                     <select class="form-select" name="user" onchange="this.form.submit();" aria-label="Default select example">
                         <option selected>Select customer</option>
                         <?php foreach ($all_user as $value) { ?>
@@ -333,7 +333,7 @@
                                 </div>
                             </div>
                             <!-- order detail modal -->
-                            <!-- <a href="<?php // echo base_url('User/edit_sales?id=') . $value->m_sale_spo;  
+                            <!-- <a href="<?php // echo base_url('Mainedit_sales?id=') . $value->m_sale_spo;  
                                             ?>"><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></button></a> -->
                             <button type="button" data-value="<?php echo $value->m_sale_spo; ?>" class="btn btn-primary btn-sm sales-delete"><i class="fa-solid fa-trash"></i></button>
                             <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></button>

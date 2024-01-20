@@ -23,7 +23,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Coupons >> <a href="<?php echo base_url('Main/coupons'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Coupons</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Coupons >> <a href="<?php echo base_url('Master/coupons'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Coupons</span></a>
                 </p>
             </div>
             <!-- <div class="col-lg-1 text-end">
@@ -111,7 +111,7 @@
         </div>
         <div class="col-md-5">
             <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('Main/coupons');  ?>">
+                <form method="get" action="<?php echo base_url('Master/coupons');  ?>">
                     <div class="form-outline" data-mdb-input-init>
                     <input type="text" name="search" class="form-control" value="<?php echo $search; ?>" />
                     <!-- <label class="form-label" for="form1">Search</label> -->
@@ -119,11 +119,11 @@
                 <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
                     <i class="fas fa-search"></i>
                 </button>
-                <a type="submit" href="<?php echo base_url('Main/coupons');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                <a type="submit" href="<?php echo base_url('Master/coupons');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                    <i class="fa-solid fa-rotate"></i>
                 </a>
                 </form>
-               <form action="<?php echo base_url('User/expenses');?>"  method="get" >
+               <form action="<?php echo base_url('Mainexpenses');?>"  method="get" >
                     
                 </form>
                 <!-- <input type="date" id="date" name="date" class="form-control"> -->

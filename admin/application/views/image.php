@@ -23,7 +23,7 @@
         <div class="row align-items-center">
             <div class="col-xl-10 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Product Images >> <a href="<?php echo base_url('Main/product_image/'.$pid); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Product Images</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Product Images >> <a href="<?php echo base_url('Master/product_image/'.$pid); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Product Images</span></a>
                 </p>
             </div>
            <!--  <div class="col-lg-1 text-end">

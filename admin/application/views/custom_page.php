@@ -15,7 +15,7 @@
                 </ol>
                 </p>
                 <hr>
-                <form method="POST" action="<?php echo site_url('Main/import_categories') ?>" enctype="multipart/form-data">
+                <form method="POST" action="<?php echo site_url('Master/import_categories') ?>" enctype="multipart/form-data">
                     <input class="form-control" type="file" id="formFile" name="import_file" required>
 
             </div>
@@ -107,56 +107,57 @@
 
                     <div class="col-md-6">
                         <label for="Name">Name<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="m_cust_name" name="cust_name" required placeholder="Please Enter Name">
+                        <input type="text" class="form-control" id="m_cust_name" name="m_acc_name" required placeholder="Please Enter Name">
                     </div>
                     <div class="col-md-6">
                         <label for="cmobile">Phone Number<span class="text-danger">*</span></label>
-                        <input type="tel" class="form-control" name="cust_mobile" id="cmobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" required>
+                        <input type="tel" class="form-control" name="m_acc_mobile" id="cmobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" required>
                     </div>
                     <div class="col-md-6">
                         <label for="Name">Email</label>
                         <input type="hidden" class="clspagetype" name="m_acc_type" id="user_type" value="">
                         <input type="hidden" class="addoncls" name="m_addon" id="custaddon" value="">
-                        <input type="email" class="form-control" name="cust_email" placeholder="Please Enter Email">
-                    </div>
-                    <!-- <div class="col-md-6">
-                            <label for="order">Status </label>
-                            <select class="form-control" name="cust_status" >
-                                <option value="1" selected>Active</option>
-                                <option value="2">In-Active</option>
-                            </select>
-                        </div> -->
-                    <!-- <div class="col-md-6">
-                            <label for="Name">Password</label>
-                            <input type="text" class="form-control" name="cust_pass" placeholder="Please Enter Password">
-                        </div> -->
-                    <div class="col-md-6 ">
-                        <label for="image">Profile Image</label>
-                        <input type="file" class="form-control-file" name="cust_image">
-                    </div>
-                    <!-- <div class="col-md-6">
-                            <label for="Name">Tax Number</label>
-                            <input type="text" class="form-control" name="cust_text_num"  placeholder="Please Enter Tax Number"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"  value="0" >
-                        </div> -->
-                    <div class="col-md-6">
-                        <label for="Name">Opening Balance</label>
-                        <input type="text" class="form-control" name="cust_open_balance" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="0">
+                        <input type="email" class="form-control" name="m_acc_email" placeholder="Please Enter Email">
                     </div>
 
-                    <div class="col-md-6 suppfiled">
+                    <div class="col-md-6 ">
+                        <label for="image">Profile Image</label>
+                        <input type="hidden" name="m_acc_image1">
+                        <input type="file" class="form-control-file" name="m_acc_image">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="Name">GST No</label>
+                        <input type="text" class="form-control" name="m_acc_gst_no" placeholder="Please Enter gst Number" value="">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Name">Bank Name</label>
+                        <input type="text" class="form-control" name="m_acc_bankname" placeholder="Please Enter Bank Name" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Name">Bank Account No</label>
+                        <input type="text" class="form-control" name="m_acc_bankacc" placeholder="Please Enter Account" >
+                    </div>
+                    <div class="col-md-6">
+                        <label for="Name">Opening Balance</label>
+                        <input type="text" class="form-control" name="m_acc_open_balance" placeholder="Please Enter Balance" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="">
+                    </div>
+
+                    <div class="col-md-6">
                         <label for="Name">Credit Period</label>
                         <div class="input-group">
-                            <input type="text" class="form-control" name="cust_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="0">
+                            <input type="text" class="form-control" name="m_acc_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="">
                             <span class="input-group-text">Day(s)</span>
                         </div>
                     </div>
-                    <div class="col-md-6 suppfiled">
+                    <div class="col-md-6">
                         <label for="Name">Credit Limit</label>
                         <div class="input-group">
                             <span class="input-group-text">₹</span>
-                            <input type="text" class="form-control" name="credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="0">
+                            <input type="text" class="form-control" name="m_acc_credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="">
                         </div>
                     </div>
+
 
                     <div class="col-md-12">
                         <label for="Name">Billing Address</label>
@@ -184,15 +185,6 @@
         $(id).find('.modal-title').text(modaltitle)
         $(id).find('.clspagetype').val(pagetype)
         $(id).find('.addoncls').val(addon)
-
-        if (id == '#addcustomermodal') {
-            if(pagetype == 3){
-                $('.suppfiled').addClass('d-none');
-            }else {
-                $('.suppfiled').removeClass('d-none');
-            }
-          
-        }
 
     }
 </script>

@@ -27,7 +27,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Main/offer'); ?>" class="text-decoration-none fw-bold"><span class="text-warning">
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Master/offer'); ?>" class="text-decoration-none fw-bold"><span class="text-warning">
                             Offers</span></a>
                 </p>
             </div>

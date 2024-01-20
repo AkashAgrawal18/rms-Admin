@@ -7,7 +7,7 @@ class Query extends CI_Controller {
 	{  
 	  $data = $this->login_details(); 
 		$data['pagename'] ="Queries";
-    $data['all_value'] = $this->Main_model->get_contactus();
+    $data['all_value'] = $this->Master_model->get_contactus();
 		$this->load->view('queries',$data);
 	}
 
@@ -15,7 +15,7 @@ class Query extends CI_Controller {
      public function update_query_status()
     {
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if ($data = $this->Main_model->update_query_status()) {
+        if ($data = $this->Master_model->update_query_status()) {
 
           $info = array(
             'status' => 'success',
@@ -35,7 +35,7 @@ class Query extends CI_Controller {
          public function delete_query()
         {
           if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if ($data = $this->Main_model->delete_query()) {
+            if ($data = $this->Master_model->delete_query()) {
 
               $info = array(
                 'status' => 'success',
@@ -55,7 +55,7 @@ class Query extends CI_Controller {
 	{   
 		$data = $this->login_details();
 		$data['pagename'] ="review";
-     $data['all_value'] = $this->Main_model->get_all_review();
+     $data['all_value'] = $this->Master_model->get_all_review();
      // echo "<pre>";print_r($data['all_value']);die();
 		$this->load->view('review',$data);
 	}
@@ -63,7 +63,7 @@ class Query extends CI_Controller {
   public function delete_review()
         {
           if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            if ($data = $this->Main_model->delete_review()) {
+            if ($data = $this->Master_model->delete_review()) {
 
               $info = array(
                 'status' => 'success',

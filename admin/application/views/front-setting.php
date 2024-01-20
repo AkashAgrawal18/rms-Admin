@@ -51,7 +51,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Website Setup >> <a href="<?php echo base_url('Setting/front_setting'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Front Setting</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Website Setup >> <a href="<?php echo base_url('Account/front_setting'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Front Setting</span></a>
                 </p>
             </div>
             <!-- <div class="col-lg-1 text-end">
@@ -293,4 +293,4 @@
 
 <!-- ========== Page Content ========== -->
 <?php include("footer.php"); ?>
-<?php  $this->view('js/main_js');  ?>
+<?php  $this->view('js/account_js');  ?>

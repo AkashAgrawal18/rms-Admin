@@ -23,12 +23,11 @@
                         Parties
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/customer'); ?>">Customers</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/supplier'); ?>">Suppliers</a></li>
-                        <!-- <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Account/customer'); ?>">Customers</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Account/supplier'); ?>">Suppliers</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Account/expense_acc'); ?>">Expense</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Account/cash_bank_acc'); ?>">Cash Bank</a></li>
+                       
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -36,17 +35,17 @@
                         Product Manager
                     </a>
                     <ul class="dropdown-menu">
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Main/brands'); ?>">Brands</a></li> -->
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/categories'); ?>">Categories</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Main/variations'); ?>">Variations</a></li> -->
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/products'); ?>">Products</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Master/brands'); ?>">Brands</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/categories'); ?>">Categories</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Master/variations'); ?>">Variations</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/products'); ?>">Products</a></li>
                         <?php
                         $offer_type = $this->db->where('m_offer_status', 1)->get('master_offers')->result();
 
                         if (!empty($offer_type)) {
                             foreach ($offer_type as $otype) {  ?>
 
-                                <li><a class="dropdown-item" href="<?php echo base_url('Main/product_offers/') . $otype->m_offer_id; ?>"><?php echo $otype->m_offer_title; ?>(<?php echo $otype->m_offer_maintitle; ?>)</a></li>
+                                <li><a class="dropdown-item" href="<?php echo base_url('Master/product_offers/') . $otype->m_offer_id; ?>"><?php echo $otype->m_offer_title; ?>(<?php echo $otype->m_offer_maintitle; ?>)</a></li>
                         <?php  }
                         }
                         ?>
@@ -60,10 +59,10 @@
                         Sales
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/sales'); ?>">Sales</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('User/sales_return'); ?>">Sales Return</a></li> -->
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/payment_in'); ?>">Payment In</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('User/quotation'); ?>">Quotation / Estimate</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainsales'); ?>">Sales</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Mainsales_return'); ?>">Sales Return</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpayment_in'); ?>">Payment In</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Mainquotation'); ?>">Quotation / Estimate</a></li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -71,9 +70,9 @@
                         Purchases
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/purchase'); ?>">Purchases</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/purchase_return'); ?>">Purchases Return</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/payment_out'); ?>">Payment Out</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpurchase'); ?>">Purchases</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpurchase_return'); ?>">Purchases Return</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpayment_out'); ?>">Payment Out</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -82,7 +81,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?php echo base_url('Report/stock_ledger'); ?>">Stock Ledger</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('User/stock_transfer'); ?>">Stocks Transfer</a></li> -->
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Mainstock_transfer'); ?>">Stocks Transfer</a></li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -90,8 +89,8 @@
                         Expenses
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/expense_categories'); ?>">Expenses Categories</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('User/expenses'); ?>">Expenses</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainexpense_categories'); ?>">Expenses Categories</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Mainexpenses'); ?>">Expenses</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -99,8 +98,8 @@
                         Website Setup
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('Setting/product_card'); ?>">Product Cards</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Setting/front_setting'); ?>">Front Setting</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Account/product_card'); ?>">Product Cards</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Account/front_setting'); ?>">Front Setting</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-3">
@@ -108,12 +107,12 @@
                        Master
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/1'); ?>">Units</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/4'); ?>">Taxgsts</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/2'); ?>">Colors</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/3'); ?>">Sizes</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/5'); ?>">Fabrics</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Main/group_list/6'); ?>">Pay Mode</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/1'); ?>">Units</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/4'); ?>">Taxgsts</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/2'); ?>">Colors</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/3'); ?>">Sizes</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/5'); ?>">Fabrics</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/6'); ?>">Pay Mode</a></li>
                     </ul>
                 </li>
                 <!-- <li class="nav-item dropdown me-xl-3 me-1">
@@ -175,25 +174,25 @@
                     Dashboard
                 </p>
             </a>
-            <a href="<?php echo base_url('Main/pos'); ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Master/pos'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/order.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     POS
                 </p>
             </a>
-            <a href="<?php echo base_url('Main/cash_bank');  ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Master/cash_bank');  ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/product.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Cash & Bank
                 </p>
             </a>
-            <a href="<?php echo base_url('Main/offer'); ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Master/offer'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/gift.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Offers
                 </p>
             </a>
-            <a href="<?php echo base_url('Main/coupons'); ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Master/coupons'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/coupon.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Coupons
@@ -206,7 +205,7 @@
         <!--line -->
 
         <div class="d-inline-flex justify-content-start px-2 gap-1">
-            <a href="<?php echo base_url('Main/banner'); ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Master/banner'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/banner.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Banners
@@ -268,13 +267,13 @@
         <!--line -->
 
         <div class="d-inline-flex justify-content-start px-2 gap-1">
-            <a href="<?php echo base_url('Setting/profile'); ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Account/profile'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/profile.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Profile
                 </p>
             </a>
-            <a href="<?php echo base_url('Logout') ?>" class="d-block text-dark py-1 main-link">
+            <a href="<?php echo base_url('Login/logout') ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/logout.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Logout

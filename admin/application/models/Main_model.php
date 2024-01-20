@@ -1,999 +1,632 @@
 <?php date_default_timezone_set('Asia/Kolkata');
 class Main_model extends CI_model
 {
-  //----------active category-----------//
-  public function get_active_category()
+
+  //-------------------user-----------------------------------//
+  public function get_active_user()
   {
     $this->db->select('*');
-    $this->db->where('m_category_status', 1);
-    $res = $this->db->get('master_categories')->result();
+    $this->db->order_by('m_acc_id');
+    $this->db->where('m_acc_type', 1);
+    $this->db->where('m_acc_status', 1);
+    $res = $this->db->get('master_accounts_tbl')->result();
+    return $res;
+  }
+  //-------------------user-----------------------------------//
+
+  //--------------------------------customer-----------------------//
+  public function check_accnt($mobile_id, $type, $addby)
+  {
+    return $this->db->select('m_acc_mobile,m_acc_id,m_acc_type')
+      ->where('m_acc_mobile', $mobile_id)->where('m_acc_type', $type)->where('m_acc_added_by', $addby)->get('master_accounts_tbl')->row();
+  }
+
+
+  public function get_customer($type, $status = '', $search = '')
+  {
+    $this->db->select('*');
+
+    $this->db->where('m_acc_type', $type);
+
+    if (!empty($status)) {
+      $this->db->where('m_acc_status', $status);
+    }
+    if (!empty($search)) {
+      $this->db->where("(m_acc_name LIKE '%$search%' OR m_acc_mobile LIKE '%$search%' OR m_acc_email LIKE '%$search%')");
+    }
+    $this->db->order_by('m_acc_id', 'desc');
+    $res = $this->db->get('master_accounts_tbl')->result();
     return $res;
   }
 
-  public function get_categories($search, $cat_id = '')
-  {
-    if (!empty($cat_id)) {
-      $this->db->where('main_cat.m_category_id', $cat_id);
-    }
-    if ($search != NULL) {
-      $this->db->like('main_cat.m_category_name', $search, 'both');
-    }
-    return $this->db->get('master_categories main_cat')->result();
-  }
-
-  public function insert_categories()
+  public function insert_customer()
   {
 
-    if (!empty($_FILES['m_category_image']['name'])) {
-      $config['file_name'] = $_FILES['m_category_image']['name'];
-      $config['upload_path'] = 'uploads/categories';
+    if (!empty($_FILES['m_acc_image']['name'])) {
+      $config['file_name'] = $_FILES['m_acc_image']['name'];
+      $config['upload_path'] = 'uploads/user';
       $config['allowed_types'] = 'jpg|jpeg|png';
       $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_category_image']['name'];
+      $config['file_name'] = $_FILES['m_acc_image']['name'];
       //Load upload library and initialize configuration
       $this->load->library('upload', $config);
       $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_category_image')) {
+      if ($this->upload->do_upload('m_acc_image')) {
         $uploadData = $this->upload->data();
-        if (!empty($update_data['m_category_image'])) {
-          if (file_exists($config['m_category_image'] . $update_data['m_category_image'])) {
-            unlink($config['upload_path'] . $update_data['m_category_image']); /* deleting Image */
+        if (!empty($update_data['m_acc_image'])) {
+          if (file_exists($config['m_acc_image'] . $update_data['m_acc_image'])) {
+            unlink($config['upload_path'] . $update_data['m_acc_image']); /* deleting Image */
           }
         }
-        $m_category_image = $uploadData['file_name'];
+        $m_acc_image = $uploadData['file_name'];
       }
     } else {
-      $m_category_image = $this->input->post('m_category_image1');
+      $m_acc_image = '';
     }
-    $m_category_id = $this->input->post('m_category_id');
+    $check = $this->check_accnt($this->input->post('m_acc_mobile'), $this->input->post('m_acc_type'), $this->session->userdata('user_id'));
+    if (empty($check)) {
+      $data = array(
 
-    $data = array(
-      // "m_pcategory_id" => $this->input->post('parent_cat'),
-      "m_category_name" => $this->input->post('m_category_name'),
-      "m_category_slug" => $this->input->post('m_category_slug'),
-      "m_category_image" => $m_category_image,
-    );
-    if (!empty($m_category_id)) {
-      $data['m_category_status'] = $this->input->post('m_category_status');
-      $data['m_category_updated_on'] = date('Y-m-d H:i');
-       $this->db->where('m_category_id', $m_category_id)->update('master_categories', $data);
-       $res = 2;
-    } else {
-      $data['m_category_status'] = 1;
-      $data['m_category_added_on'] = date('Y-m-d H:i');
-     $this->db->insert('master_categories', $data);
-     $cat_id = $this->db->insert_id();
-     $res = 1 ;
+        "m_acc_name" => $this->input->post('m_acc_name'),
+        "m_acc_mobile" => $this->input->post('m_acc_mobile'),
+        "m_acc_email" => $this->input->post('m_acc_email'),
+        "m_acc_address" => $this->input->post('m_acc_address') ?: '',
+        "m_acc_credit_limit" => $this->input->post('m_acc_credit_limit') ?: '',
+        "m_acc_credit_period" => $this->input->post('m_acc_credit_period') ?: '',
+        "m_acc_open_balance" => $this->input->post('m_acc_open_balance'),
+        "m_acc_type" => $this->input->post('m_acc_type'),
+        "m_acc_bankacc" => $this->input->post('m_acc_bankacc'),
+        "m_acc_bankname" => $this->input->post('m_acc_bankname'),
+        "m_acc_gst_no" => $this->input->post('m_acc_gst_no'),
+        "m_acc_image" => $m_acc_image,
+      );
+      $cust_id = $this->input->post('m_acc_id');
+      if (!empty($cust_id)) {
+        $data['m_acc_updated_by'] = $this->session->userdata('user_id');
+        $data['m_acc_status'] = $this->input->post('m_acc_status');
+        $data['m_acc_updated_on'] = date('Y-m-d H:i');
+        $this->db->where('m_acc_id', $cust_id)->update('master_accounts_tbl', $data);
+        $res = 2;
+      } else {
+        $data['m_acc_status'] = 1;
+        $data['m_acc_added_on'] = date('Y-m-d H:i');
+        $data['m_acc_added_by'] = $this->session->userdata('user_id');
+        $this->db->insert('master_accounts_tbl', $data);
+        $cust_id = $this->db->insert_id();
+        $res = 1;
+      }
+      if ($this->input->post('m_addon') == 1) {
+        return $cust_id;
+      } else {
+        return $res;
+      }
     }
-    if($this->input->post('m_addon') == 1){
-      return $cat_id;
-     }else {
-      return $res;
-     }
+    return 'multi';
   }
 
-  public function delete_categories()
+  public function delete_customer()
   {
-    $this->db->where('m_category_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_categories');
+    $this->db->where('m_acc_id', $this->input->post('delete_id'));
+    return $this->db->delete('master_accounts_tbl');
   }
-  //===================category ==============================//
 
+  //--------------------------------/customer-----------------------//
 
-  public function get_coupons($search)
+  //--------------------------------sales-----------------------//
+
+  public function get_all_sales($order_id = '', $user = '', $search = '', $from_date = '', $to_date = '')
   {
-    $this->db->select('*');
+    if (!empty($order_id)) {
+      $this->db->where('m_sale_spo', $order_id);
+    }
+    if (!empty($user)) {
+      $this->db->where('m_sale_customer', $user);
+    }
     if ($search != NULL) {
 
-      $this->db->like('m_coupon_title', $search, 'both');
+      // $this->db->like('m_acc_name',$search,'both');
+      $this->db->or_like('m_sale_spo', $search, 'both');
+      // $this->db->or_like('m_sale_invoiceno', $search, 'both');
+    }
+    if (!empty($from_date)) {
+      $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")>=', $from_date);
+    }
+    if (!empty($to_date)) {
+      $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")<=', $to_date);
     }
 
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_acc_name,m_acc_mobile,m_acc_address,m_acc_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
+    $this->db->join(' master_accounts_tbl mct', 'mct.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->join('master_goups_tbl pmode1', 'pmode1.m_group_id = master_sales_tbl.m_sale_pmode', 'left');
+    $this->db->join('master_goups_tbl pmode2', 'pmode2.m_group_id = master_sales_tbl.m_sale_pmode2', 'left');
+    $this->db->group_by('m_sale_spo');
+    $sale_list = $this->db->get('master_sales_tbl')->result();
 
-    $res = $this->db->get('master_coupon_tbl')->result();
-    return $res;
-  }
+    if (!empty($sale_list)) {
+      foreach ($sale_list as $skey) {
 
-  public function insert_coupons()
-  {
+        $res = (object)array(
+          "m_sale_spo" => $skey->m_sale_spo,
+          "total_qty" => $skey->total_qty,
+          "sub_total" => $skey->sub_total,
+          "m_sale_date" => $skey->m_sale_date,
+          "total_tax" => $skey->total_tax,
+          "m_sale_discount" => $skey->m_sale_discount,
+          "m_sale_shipping" => $skey->m_sale_shipping,
+          "m_sale_nettotal" => ($skey->sub_total + $skey->total_tax + $skey->m_sale_shipping -  $skey->m_sale_discount),
+          "m_sale_coupon" => $skey->m_sale_coupon,
+          "m_sale_ispartial" => $skey->m_sale_ispartial,
+          "m_sale_pstatus" => $skey->m_sale_pstatus,
+          "m_sale_pmode" => $skey->m_sale_pmode,
+          "m_sale_payamt" => $skey->m_sale_payamt,
+          "m_sale_pmode2" => $skey->m_sale_pmode2,
+          "m_sale_payamt2" => $skey->m_sale_payamt2,
+          "m_sale_status" => $skey->m_sale_status,
+          "m_sale_added_on" => $skey->m_sale_added_on,
+          "m_sale_user" => $skey->m_sale_user,
+          "m_sale_customer" => $skey->m_sale_customer,
+          "m_acc_name" => $skey->m_acc_name,
+          "m_acc_mobile" => $skey->m_acc_mobile,
+          "m_acc_address" => $skey->m_acc_address,
+          "m_acc_email" => $skey->m_acc_email,
+          "pmodename1" => $skey->pmodename1,
+          "pmodename2" => $skey->pmodename2,
+          "m_sale_items" => $this->get_sale_items($skey->m_sale_spo, $skey->m_sale_customer),
 
-
-
-    $data = array(
-
-      "m_coupon_title" => $this->input->post('coupon_title'),
-      "m_coupon_code" => $this->input->post('coupon_code'),
-      "m_coupon_discount_type" => $this->input->post('dis_type'),
-      "m_coupon_discount" => $this->input->post('dis_percentage'),
-      "m_coupon_min_amount" => $this->input->post('min_amount'),
-      "m_coupon_detail" => $this->input->post('coupon_details'),
-      "m_coupon_start" => $this->input->post('start_date'),
-      "m_coupon_end" => $this->input->post('end_date'),
-      "m_coupon_status" => 1,
-
-    );
-
-    $data['m_coupon_added_on'] = date('Y-m-d h:i:s');
-    $res = $this->db->insert('master_coupon_tbl', $data);
-    return $res;
-  }
-
-  public function update_coupons()
-  {
-
-
-    $coupon_id = $this->input->post('coupon_id');
-
-    $data = array(
-
-      "m_coupon_title" => $this->input->post('coupon_title'),
-      "m_coupon_code" => $this->input->post('coupon_code'),
-      "m_coupon_discount_type" => $this->input->post('dis_type'),
-      "m_coupon_discount" => $this->input->post('dis_percentage'),
-      "m_coupon_min_amount" => $this->input->post('min_amount'),
-      "m_coupon_detail" => $this->input->post('coupon_details'),
-      "m_coupon_start" => $this->input->post('start_date'),
-      "m_coupon_end" => $this->input->post('end_date'),
-      "m_coupon_status" => $this->input->post('coupon_status'),
-
-    );
-
-
-
-    $res = $this->db->where('m_coupon_id', $coupon_id)->update('master_coupon_tbl', $data);
-    return $res;
-  }
-
-  public function delete_coupons()
-  {
-    $this->db->where('m_coupon_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_coupon_tbl');
-  }
-
-  //===================/coupons ==============================//
-
-  //===================product ==============================//
-
-  public function all_product($category = '')
-  {
-    $this->db->select('master_product.*,m_category_name,fabric.m_group_name as m_fabric_name');
-    $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
-    $this->db->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left');
-    if ($category != '') {
-      $query = $this->db->where("m_product_cat_id", $category);
-    }
-    $this->db->where("m_product_status", 1);
-    return $this->db->get('master_product')->result();
-  }
-
-
-  public function get_active_products($cat = '', $fabric = '', $search = '', $status = '', $item = '')
-  {
-    $result = array();
-
-    if (!empty($item)) {
-      $this->db->where('m_product_id', $item);
-    }
-    if (!empty($status)) {
-      $this->db->where('m_product_status', $status);
-    }
-    if (!empty($cat)) {
-      $this->db->where('m_product_cat_id', $cat);
-    }
-    if (!empty($fabric)) {
-      $this->db->where('m_product_fabric', $fabric);
-    }
-    if (!empty($search)) {
-
-      $this->db->like('m_product_name', $search, 'both');
-      $this->db->or_like('m_product_slug', $search, 'both');
-      $this->db->or_like('m_product_barscode', $search, 'both');
-    }
-    $sql = $this->db->select('master_product.*,m_category_name,taxgst.m_group_name as m_tax_value,taxgst.m_group_name as m_tax_value,unit.m_group_name as m_unit_title,fabric.m_group_name as m_fabric_name')
-      ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
-      ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
-      ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
-      ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
-      ->get('master_product')->result();
-
-    if (!empty($sql)) {
-      foreach ($sql as $key => $value) {
-        $product_colors = $this->db->select('m_group_id as m_color_id,m_group_name as m_color_name')->where_in('m_group_id', explode(',', $value->m_product_color))->get('master_goups_tbl')->result();
-
-        $product_size = $this->db->select('m_group_id as m_size_id,m_group_name as m_size_name')->where_in('m_group_id', explode(',', $value->m_product_size))->get('master_goups_tbl')->result();
-
-        $product_images = $this->db->select('m_image_id,m_image_product_img')->where('m_image_product_id', $value->m_product_id)->get('master_image_tbl')->result();
-
-        $res = (object) array(
-          "m_product_id" => $value->m_product_id,
-          "m_product_name" => $value->m_product_name,
-          "m_product_slug" => $value->m_product_slug,
-          "m_product_cat_id" => $value->m_product_cat_id,
-          "m_category_name" => $value->m_category_name,
-          "m_product_taxgst" => $value->m_product_taxgst,
-          "m_tax_value" => $value->m_tax_value,
-          "m_product_unit" => $value->m_product_unit,
-          "m_unit_title" => $value->m_unit_title,
-          "m_product_barscode" => $value->m_product_barscode,
-          "m_product_purche_price" => $value->m_product_purche_price,
-          "m_product_seles_price" => $value->m_product_seles_price,
-          "m_product_mrp" => $value->m_product_mrp,
-          "m_product_details" => $value->m_product_details,
-          "m_product_information" => $value->m_product_information,
-
-          "m_product_status" => $value->m_product_status,
-          'm_product_fabric' => $value->m_product_fabric,
-          'm_fabric_name' => $value->m_fabric_name ?: '',
-          'product_color' => $value->m_product_color,
-          'm_product_color' => $product_colors,
-          'product_size' => $value->m_product_size,
-          'm_product_size' => $product_size,
-          'm_product_image' => $product_images,
         );
 
         $result[] = $res;
       }
     }
-
     return $result;
   }
 
-
-  public function insert_product()
+  public function get_sale_items($order_id, $uid = '')
   {
-    // Extract the selected colors, sizes, and fabrics
+    $this->db->select('m_sale_spo,m_sale_qty,m_sale_price,m_sale_total,m_sale_date,m_sale_product,m_sale_size,m_sale_price,m_sale_gst,m_sale_color,m_product_name,color.m_group_name as m_color_name,size.m_group_name as m_size_name,unit.m_group_name as m_unit_title,m_category_name,fabric.m_group_name as m_fabric_name');
+    $this->db->join('master_product mit', 'mit.m_product_id = master_sales_tbl.m_sale_product', 'left')
+      ->join('master_goups_tbl as color', 'color.m_group_id  = master_sales_tbl.m_sale_color', 'left')
+      ->join('master_goups_tbl as size', 'size.m_group_id  = master_sales_tbl.m_sale_size', 'left')
+      ->join('master_categories as cate', 'cate.m_category_id  = mit.m_product_cat_id', 'left')
+      ->join('master_goups_tbl unit', 'unit.m_group_id = mit.m_product_unit', 'left')
+      ->join('master_goups_tbl fabric', 'fabric.m_group_id = mit.m_product_fabric', 'left');
 
-    if (!empty($this->input->post('m_product_color'))) {
-      $selectedColors = implode(',', $this->input->post('m_product_color'));
-    } else {
-      $selectedColors = '';
-    }
-    if (!empty($this->input->post('m_product_size'))) {
-      $selectedSizes = implode(',', $this->input->post('m_product_size'));
-    } else {
-      $selectedSizes = '';
-    }
-    // Prepare the data array
-    $data = array(
-      "m_product_cat_id" => $this->input->post('m_product_cat_id'),
-      "m_product_name" => $this->input->post('m_product_name'),
-      "m_product_slug" => $this->input->post('m_product_slug'),
-      "m_product_unit" => $this->input->post('m_product_unit'),
-
-      "m_product_barscode" => $this->input->post('m_product_barscode'),
-      // "m_product_code" => $this->input->post('product_code'),
-      // "m_product_purche_price" => $this->input->post('product_purchese'),
-      "m_product_seles_price" => $this->input->post('m_product_seles_price'),
-      "m_product_mrp" => $this->input->post('m_product_mrp'),
-      "m_product_taxgst" => $this->input->post('m_product_taxgst'),
-      "m_product_details" => $this->input->post('m_product_details'),
-      "m_product_information" => $this->input->post('m_product_information'),
-      "m_product_status" => 1,
-      'm_product_color' => $selectedColors,
-      'm_product_size' => $selectedSizes,
-      'm_product_fabric' => $this->input->post('m_product_fabric'),
-    );
-
-    if (!empty($this->input->post('m_product_id'))) {
-      $data['m_product_updated_on'] = date('Y-m-d H:i');
-       $this->db->where('m_product_id', $this->input->post('m_product_id'))->update('master_product', $data);
-       $res = 2;
-    } else {
-      // Add the timestamp
-      $data['m_product_added_on'] = date('Y-m-d H:i');
-      // Insert data into the 'master_product' table
-     $this->db->insert('master_product', $data);
-      $res = 1;
-    }
-    return $res;
-  }
-
-  public function delete_product()
-  {
-
-    $this->db->where('m_purchase_product', $this->input->post('delete_id'));
-    return $this->db->delete('master_purchase_tbl');
-
-    $this->db->where('m_wishlist_product_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_wishlist');
-
-    $this->db->where('m_sale_product', $this->input->post('delete_id'));
-    return $this->db->delete('master_sales_tbl');
-
-    $this->db->where('o_product_id', $this->input->post('delete_id'));
-    return $this->db->delete('product_offers');
-
-    $this->db->where('m_product_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_product');
-  }
-
-  //===================/product ==============================//
-
-  //=================== master group ==============================//
-  public function get_group_list($type, $search)
-  {
-    $this->db->select('*');
-    if ($search != NULL) {
-      $this->db->like('m_group_name', $search, 'both');
-    }
-    $this->db->where('m_group_type', $type);
-    return $this->db->get('master_goups_tbl')->result();
-  }
-
-
-  public function get_active_group($type)
-  {
-    $this->db->select('*');
-    $this->db->where('m_group_type', $type);
-    $this->db->where('m_group_status', 1);
-    return $this->db->get('master_goups_tbl')->result();
-  }
-
-  public function get_group_dtl($group_id)
-  {
-    $this->db->select('*');
-    $this->db->where('m_group_id', $group_id);
-    return $this->db->get('master_goups_tbl')->result();
-  }
-
-
-  public function insert_group()
-  {
-    $m_group_id = $this->input->post('m_group_id');
-
-    $data = array(
-      "m_group_name" => $this->input->post('m_group_name'),
-      "m_group_type" => $this->input->post('m_group_type'),
-      "m_group_status" => $this->input->post('m_group_status') ?: 1,
-    );
-
-    if (!empty($m_group_id)) {
-      $data['m_group_updatedon'] = date('Y-m-d H:i');
-      $this->db->where('m_group_id', $m_group_id)->update('master_goups_tbl', $data);
-      $res = 2;
-    } else {
-      $data['m_group_added_on'] = date('Y-m-d H:i');
-      $res = $this->db->insert('master_goups_tbl', $data);
-      $group_id = $this->db->insert_id();
-    }
-    if($this->input->post('m_addon') == 1){
-      return $group_id;
-     }else {
-      return $res;
-     }
-  }
-
-  public function delete_group()
-  {
-    $this->db->where('m_group_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_goups_tbl');
-  }
-
-  //===================/ master group ==============================//
-
-  //===================Expense Categories ==============================//
-  public function get_expense_categories($search)
-  {
-    $this->db->select('*');
-    if ($search != NULL) {
-      $this->db->like('m_expcat_title', $search, 'both');
-    }
-    $res = $this->db->get('master_expense_category')->result();
-    return $res;
-  }
-
-
-  public function get_active_expcat()
-  {
-    $this->db->select('*');
-    $this->db->where('m_expcat_status', 1);
-    $res = $this->db->get('master_expense_category')->result();
-    return $res;
-  }
-
-
-  public function insert_expense_categories()
-  {
-    $data = array(
-      "m_expcat_title" => $this->input->post('m_expcat_title'),
-      "m_expcat_des" => $this->input->post('m_expcat_des'),
-      "m_expcat_status" => $this->input->post('m_expcat_status'),
-    );
-
-    $data['m_expcat_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_expense_category', $data);
-    return $res;
-  }
-
-  public function update_expense_categories()
-  {
-    $data = array(
-      "m_expcat_title" => $this->input->post('m_expcat_title'),
-      "m_expcat_des" => $this->input->post('m_expcat_des'),
-      "m_expcat_status" => $this->input->post('m_expcat_status'),
-    );
-
-    $res = $this->db->where('m_expcat_id', $this->input->post('m_expcat_id'))->update('master_expense_category', $data);
-    return $res;
-  }
-
-  public function delete_expense_categories()
-  {
-    $this->db->where('m_expcat_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_expense_category');
-  }
-
-  //===================/Expense Categories ==============================//
-  //===================/Expense  ==============================//
-
-  public function get_expense($search, $user_exp)
-  {
-    $this->db->select('*');
-    if ($search != NULL) {
-      $this->db->like('m_expcat_title', $search, 'both');
-    }
-    if ($user_exp) {
-      $this->db->where('m_expense_user_id', $user_exp);
-    }
-    $this->db->join('master_expense_category', 'master_expense_category.m_expcat_id = master_expense.m_expense_cat_id', 'left');
-    $this->db->join('master_accounts_tbl', 'master_accounts_tbl.m_acc_id = master_expense.m_expense_user_id', 'left');
-    $res = $this->db->get('master_expense')->result();
-    return $res;
-  }
-
-
-
-
-  public function insert_expense()
-  {
-
-    if (!empty($_FILES['m_expense_image']['name'])) {
-      $config['file_name'] = $_FILES['m_expense_image']['name'];
-      $config['upload_path'] = 'uploads/expense_doc';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_expense_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_expense_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_expense_image'])) {
-          if (file_exists($config['m_expense_image'] . $update_data['m_expense_image'])) {
-            unlink($config['upload_path'] . $update_data['m_expense_image']); /* deleting Image */
-          }
-        }
-        $m_expense_image = $uploadData['file_name'];
-      }
-    } else {
-      $m_expense_image = '';
-    }
-    $data = array(
-      "m_expense_cat_id" => $this->input->post('m_expense_cat_id'),
-      "m_expense_user_id" => $this->input->post('m_expense_user_id'),
-      "m_expense_amount" => $this->input->post('m_expense_amount'),
-      "m_expense_note " => $this->input->post('m_expense_note'),
-      "m_expense_date" => $this->input->post('m_expense_date'),
-      "m_expense_image" => $m_expense_image,
-
-    );
-
-    $data['m_expense_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_expense', $data);
-    return $res;
-  }
-
-  public function update_expense()
-  {
-
-    if (!empty($_FILES['m_expense_image']['name'])) {
-      $config['file_name'] = $_FILES['m_expense_image']['name'];
-      $config['upload_path'] = 'uploads/expense_doc';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_expense_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_expense_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_expense_image'])) {
-          if (file_exists($config['m_expense_image'] . $update_data['m_expense_image'])) {
-            unlink($config['upload_path'] . $update_data['m_expense_image']); /* deleting Image */
-          }
-        }
-        $m_expense_image = $uploadData['file_name'];
-      }
-    } else {
-      $m_expense_image = $this->input->post('m_expense_image1');
+    if (!empty($uid)) {
+      $this->db->where('m_sale_customer', $uid);
     }
 
+    $this->db->where('m_sale_spo', $order_id);
 
-
-    $data = array(
-      "m_expense_cat_id" => $this->input->post('m_expense_cat_id'),
-      "m_expense_user_id" => $this->input->post('m_expense_user_id'),
-      "m_expense_amount" => $this->input->post('m_expense_amount'),
-      "m_expense_note " => $this->input->post('m_expense_note'),
-      "m_expense_date" => $this->input->post('m_expense_date'),
-      "m_expense_image" => $m_expense_image,
-
-    );
-
-    $res = $this->db->where('m_expense_id', $this->input->post('m_expense_id'))->update('master_expense', $data);
-    return $res;
-  }
-
-  public function delete_expense()
-  {
-    $this->db->where('m_expense_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_expense');
+    return $this->db->get('master_sales_tbl')->result();
   }
 
 
-  //===================/expense ==============================//
-
-
-  //===================product image ==============================//
-  public function get_image($pid)
+  public function delete_sales()
   {
-    $this->db->select('*');
-    $this->db->where('m_image_product_id', $pid);
-    $res = $this->db->get('master_image_tbl')->result();
-    return $res;
+    $this->db->where('m_sale_spo', $this->input->post('delete_id'));
+    $this->db->delete('master_sales_tbl');
+    return true;
   }
 
-
-
-
-  public function insert_image()
+  public function get_edit_sales($salesid)
   {
+    $this->db->select('m_sale_spo,m_sale_invoiceno,m_sale_date,m_sale_customer');
 
-    if (!empty($_FILES['m_pimage']['name'])) {
-      $config['file_name'] = $_FILES['m_pimage']['name'];
-      $config['upload_path'] = 'uploads/product';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_pimage']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_pimage')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_pimage'])) {
-          if (file_exists($config['m_pimage'] . $update_data['m_pimage'])) {
-            unlink($config['upload_path'] . $update_data['m_pimage']); /* deleting Image */
-          }
-        }
-        $product_img = $uploadData['file_name'];
-      }
-    } else {
-      $product_img = '';
-    }
+    $this->db->join('master_accounts_tbl added_by', 'added_by.m_acc_id = master_sales_tbl.m_sale_added_by', 'left');
+    $this->db->join('master_accounts_tbl updated_by', 'updated_by.m_acc_id = master_sales_tbl.m_sale_updaded_by', 'left');
+    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
 
-
-
-
-    $data = array(
-      "m_image_product_id" => $this->input->post('product_id'),
-      "m_image_status" => $this->input->post('image_status'),
-      "m_image_product_img" => $product_img,
-    );
-
-    //print_r($data);
-
-    $data['m_image_product_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_image_tbl', $data);
-    return $res;
+    // $this->db->where('m_purchase_supplier', $uid);
+    $this->db->where('m_sale_spo', $salesid);
+    $this->db->group_by('m_sale_spo');
+    return $this->db->get('master_sales_tbl')->row();
   }
 
-  public function update_image()
+  public function delete_sale_item()
   {
-    if (!empty($_FILES['m_pimage']['name'])) {
-      $config['file_name'] = $_FILES['m_pimage']['name'];
-      $config['upload_path'] = 'uploads/product';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_pimage']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_pimage')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_pimage'])) {
-          if (file_exists($config['m_pimage'] . $update_data['m_pimage'])) {
-            unlink($config['upload_path'] . $update_data['m_pimage']); /* deleting Image */
-          }
-        }
-        $product_img = $uploadData['file_name'];
-      }
-    } else {
-      $product_img = $this->input->post('pimage');
-    }
-
-    $data = array(
-      "m_image_product_id" => $this->input->post('product_id'),
-      "m_image_status" => $this->input->post('image_status'),
-      "m_image_product_img" => $product_img,
-    );
-
-    $res = $this->db->where('m_image_id', $this->input->post('image_id'))->update('master_image_tbl', $data);
-    return $res;
-  }
-
-  public function delete_image()
-  {
-    $this->db->where('m_image_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_image_tbl');
-  }
-
-  //===================/product image ==============================//
-  //===================offer==============================//
-
-  //************************** offers **************************//
-
-
-
-
-  public function offer_list()
-  {
-    $this->db->select('*');
-    // if (!empty($from_date)) {
-    //   $this->db->where('DATE_FORMAT(m_offer_added_on,"%Y-%m-%d")>=', $from_date);
-    // }
-    // if (!empty($to_date)) {
-    //   $this->db->where('DATE_FORMAT(m_offer_added_on,"%Y-%m-%d")<=', $to_date);
-    // }
-
-    $sql = $this->db->get('master_offers')->result();
-    return $sql;
-  }
-
-  // public function offers_edit($id1)
-  // {
-  //   // $sql = $this->db->join('master_categories_tbl', 'master_categories_tbl.m_category_id = coupon_tbl.m_coupon_category');
-  //   $sql = $this->db->where('m_offer_id', $id1)->get('master_offers');
-  //   $result = $sql->result();
-  //   return $result;
-  // }
-
-  public function insert_offer()
-  {
-    if (!empty($_FILES['m_offer_image']['name'])) {
-      $name1 = $_FILES['m_offer_image']['name'];
-      $fileNameParts = explode(".", $name1); // explode file name to two part
-      $fileExtension = end($fileNameParts); // give extension
-      $fileExtension = strtolower($fileExtension);
-      $encripted_pic_name = md5(microtime() . $name1) . '.' . $fileExtension;
-      $config['file_name'] = $encripted_pic_name;
-      $config['upload_path'] = 'uploads/offer';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = false;
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_offer_image')) {
-        $m_offer_image = $config['file_name'];
-      } else {
-        $m_offer_image = '';
-      }
-    } else {
-      $m_offer_image = '';
-    }
-
-    $titleURL = strtolower(url_title(strip_tags($this->input->post('m_offer_title'))));
-    if (isUrlExists('master_offers', 'm_offer_slug', $titleURL)) {
-      $titleURL = $titleURL . '-' . time();
-    }
-
-    $data = array(
-
-      'm_offer_maintitle' => $this->input->post('m_offer_maintitle'),
-      'm_offer_title' => $this->input->post('m_offer_title'),
-      'm_offer_status' => $this->input->post('m_offer_status'),
-      'm_offer_priority' => $this->input->post('m_offer_priority'),
-      'm_offer_type' => $this->input->post('m_offer_type'),
-      'm_offer_image' => $m_offer_image,
-      'm_offer_vendor' => $this->session->userdata('user_id'),
-      'm_offer_slug' => $titleURL
-
-    );
-
-
-
-    $data['m_offer_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_offers',  $data);
-
-
-
-    return $res;
-  }
-
-
-  public function update_offer()
-  {
-    if (!empty($_FILES['m_offer_image']['name'])) {
-      $name1 = $_FILES['m_offer_image']['name'];
-      $fileNameParts = explode(".", $name1); // explode file name to two part
-      $fileExtension = end($fileNameParts); // give extension
-      $fileExtension = strtolower($fileExtension);
-      $encripted_pic_name = md5(microtime() . $name1) . '.' . $fileExtension;
-      $config['file_name'] = $encripted_pic_name;
-      $config['upload_path'] = 'uploads/offer';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = false;
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_offer_image')) {
-        $m_offer_image = $config['file_name'];
-      } else {
-        $m_offer_image = $this->input->post('m_offer_images');
-      }
-    } else {
-      $m_offer_image = $this->input->post('m_offer_images');
-    }
-
-    $titleURL = strtolower(url_title(strip_tags($this->input->post('m_offer_title'))));
-    if (isUrlExists('master_offers', 'm_offer_slug', $titleURL)) {
-      $titleURL = $titleURL . '-' . time();
-    }
-
-    $data = array(
-
-      'm_offer_maintitle' => $this->input->post('m_offer_maintitle'),
-      'm_offer_title' => $this->input->post('m_offer_title'),
-      'm_offer_status' => $this->input->post('m_offer_status'),
-      'm_offer_priority' => $this->input->post('m_offer_priority'),
-      'm_offer_type' => $this->input->post('m_offer_type'),
-      'm_offer_image' => $m_offer_image,
-      'm_offer_vendor' => $this->session->userdata('user_id'),
-      'm_offer_slug' => $titleURL
-
-    );
-
-
-
-    $res = $this->db->where('m_offer_id', $this->input->post('m_offer_id'))->update('master_offers', $data);
-
-
-
-    return $res;
-  }
-
-
-
-
-
-
-  public function delete_offer()
-  {
-    $this->db->where('m_offer_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_offers');
-  }
-
-  public function get_typename($typeid)
-  {
-
-    $sql = $this->db->where("m_offer_id", $typeid)->get('master_offers');
-    $result = $sql->result();
-    return $result;
-  }
-
-  public function all_product_offer($typeid)
-  {
-
-    $this->db->select('*');
-    $this->db->from('product_offers');
-    $this->db->join('master_product', 'master_product.m_product_id   = product_offers.o_product_id');
-    $query = $this->db->where("o_offer_type", $typeid);
-
-    //  $user_type=$this->session->userdata('user_type');
-    // $user=$this->session->userdata('user_id');
-    //  if($user_type == 2)
-    // {
-
-    //     $sql=$this->db->where('p_vendor_id',$user);
-    // }
-    // $this->db->join('sub_category', 'sub_category.s_category_id  = product_tbl.p_category_id');
-    $query = $this->db->get();
-    $result = $query->result();
-    return $result;
-  }
-
-  function make_offer($type)
-  {
-
-    $offer = $this->input->post('offers');
-    $o_offer_slug = $this->input->post('o_offer_slug');
-
-    for ($i = 0; $i < sizeof($offer); $i++) {
-      $data[$i] = array('o_product_id' => $offer[$i], 'o_offer_type' => $type, 'o_offer_slug' => $o_offer_slug);
-    }
-
-
-    $insert = $this->db->insert_batch('product_offers', $data);
-
-    $this->db->set('m_offer_hasproduct', 1);
-    $this->db->where('m_offer_id', $type);
-    $this->db->update('master_offers');
-    return $insert;
-  }
-
-  public function delete_product_offers($remove)
-  {
-    $sql = $this->db->where('offer_id', $remove)->delete('product_offers');
-  }
-
-
-
-  //===================/offer ==============================//
-  //===================banners ==============================//
-
-  public function get_banners()
-  {
-    $this->db->select('*');
-    $res = $this->db->get('master_slider')->result();
-    return $res;
-  }
-
-
-
-
-  public function insert_banner()
-  {
-
-    if (!empty($_FILES['m_slider_image']['name'])) {
-      $config['file_name'] = $_FILES['m_slider_image']['name'];
-      $config['upload_path'] = 'uploads/slider';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_slider_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_slider_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_slider_image'])) {
-          if (file_exists($config['m_slider_image'] . $update_data['m_slider_image'])) {
-            unlink($config['upload_path'] . $update_data['m_slider_image']); /* deleting Image */
-          }
-        }
-        $slider_img = $uploadData['file_name'];
-      }
-    } else {
-      $slider_img = '';
-    }
-
-
-    if ($this->input->post('m_slider_type') == 1) {
-
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    } else {
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_des" => $this->input->post('m_slider_des'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    }
-
-
-    // print_r($data);
-
-    $data['m_slider_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_slider', $data);
-    return $res;
-  }
-
-  public function update_banner()
-  {
-    if (!empty($_FILES['m_slider_image']['name'])) {
-      $config['file_name'] = $_FILES['m_slider_image']['name'];
-      $config['upload_path'] = 'uploads/slider';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_slider_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_slider_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_slider_image'])) {
-          if (file_exists($config['m_slider_image'] . $update_data['m_slider_image'])) {
-            unlink($config['upload_path'] . $update_data['m_slider_image']); /* deleting Image */
-          }
-        }
-        $slider_img = $uploadData['file_name'];
-      }
-    } else {
-      $slider_img = $this->input->post('m_slider_image1');
-    }
-
-
-    if ($this->input->post('m_slider_type') == 1) {
-
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    } else {
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_des" => $this->input->post('m_slider_des'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    }
-
-    // print_r($data);
-
-    $res = $this->db->where('m_slider_id', $this->input->post('m_slider_id'))->update('master_slider', $data);
-    return $res;
-  }
-
-  public function delete_banner()
-  {
-    $this->db->where('m_slider_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_slider');
-  }
-
-
-
-  //===================/banners ==============================//
-  //===================queries ==============================//
-
-
-  public function get_contactus()
-  {
-    $this->db->select('*');
-    $res = $this->db->get('master_contact_tbl')->result();
-    return $res;
-  }
-
-
-  public function update_query_status()
-  {
-    $data = array(
-      "m_contact_status" => $this->input->post('feed_status'),
-    );
-
-    $this->db->where('m_contact_id', $this->input->post('feed_id'))->update('master_contact_tbl', $data);
+    $this->db->where('m_sale_id', $this->input->post('delete_id'));
+    $this->db->delete('master_sales_tbl');
     return true;
   }
 
 
-  public function delete_query()
+
+  public function insert_sales()
   {
-    $this->db->where('m_contact_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_contact_tbl');
+
+    $res = $this->db->select('m_sale_spo')->order_by('m_sale_id', 'desc')->get('master_sales_tbl')->row();
+    // $res ='UT/2023/0100';
+
+    if (!empty($res)) {
+      $part = explode('/', $res->m_sale_spo);
+      $spo = 'ORD/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
+    } else {
+      $spo = 'ORD/' . date('dmy') . '/0001';
+    }
+
+
+    // $spo  = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+    $m_sale_id = $this->input->post('m_sale_id');
+
+    $m_sale_product = $this->input->post('m_sale_product');
+    $m_sale_price = $this->input->post('m_sale_price');
+    $m_sale_qty = $this->input->post('m_sale_qty');
+
+    $m_sale_total = $this->input->post('m_sale_total');
+    $m_sale_gst = $this->input->post('m_sale_gst');
+
+    $m_sale_color = $this->input->post('m_sale_color');
+    $m_sale_size = $this->input->post('m_sale_size');
+
+    $m_sale_nettotal = $this->input->post('m_sale_nettotal');
+    $m_sale_payamt = $this->input->post('m_sale_payamt');
+    $m_sale_payamt2 = $this->input->post('m_sale_payamt2');
+
+    $baldif = ($m_sale_nettotal - $m_sale_payamt - $m_sale_payamt2);
+    //  echo $m_sale_nettotal .'-' ;
+    //  echo $m_sale_payamt .'-' ;
+    //  echo $m_sale_payamt .'-' ;
+    //  echo $baldif ; die ;
+    if ($baldif >= 1) {
+      return 2;
+    }
+
+    foreach ($m_sale_product as $cua => $key) {
+      if (!empty($key)) {
+        $insert_data = array(
+          "m_sale_date"    => date('Y-m-d'),
+          // "m_sale_invoiceno" => $this->input->post('m_sale_invoice'),
+          "m_sale_customer" => $this->input->post('m_sale_customer'),
+          "m_sale_spo" => $spo,
+          "m_sale_product" => $key,
+          "m_sale_price" => $m_sale_price[$cua],
+          "m_sale_qty" => $m_sale_qty[$cua],
+          "m_sale_total" => $m_sale_total[$cua],
+          "m_sale_gst" => $m_sale_gst[$cua],
+          "m_sale_color" => $m_sale_color[$cua],
+          "m_sale_size" => $m_sale_size[$cua],
+          "m_sale_discount" => $this->input->post('m_sale_discount'),
+          "m_sale_shipping" => $this->input->post('m_sale_shipping'),
+          "m_sale_ispartial" => $this->input->post('m_sale_ispartial') ?: 0,
+          "m_sale_pmode" => $this->input->post('m_sale_pmode'),
+          "m_sale_payamt" => $m_sale_payamt,
+          "m_sale_pmode2" => $this->input->post('m_sale_pmode2') ?: 0,
+          "m_sale_payamt2" => $m_sale_payamt2 ?: 0,
+          "m_sale_pstatus" => 1,
+
+        );
+
+        $insert_data['m_sale_status'] = 1;
+        $insert_data['m_sale_user'] = $this->session->userdata('user_id');
+        $insert_data['m_sale_added_by'] = $this->session->userdata('user_id');
+        $insert_data['m_sale_added_on'] = date('Y-m-d H:i');
+
+        // echo '<pre>'; print_r($insert_data); 
+
+        $res = $this->db->insert('master_sales_tbl', $insert_data);
+        // echo $res;
+      }
+    }
+    // die ;
+    return 1;
   }
 
-  //===================/queries ==============================//
-  //===================review ==============================//
-  public function get_all_review()
+  //--------------------------------/sales-----------------------//
+
+
+  //-----------------------------purchese----------------------------//
+
+
+  public function get_all_purchase($pur_id = '', $user = '', $search = '', $from_date = '', $to_date = '', $pur_type = '')
   {
-    $this->db->select('*');
-    $this->db->join('master_accounts_tbl', 'master_accounts_tbl.m_acc_id  = master_review_tbl.m_review_user_id');
-    $this->db->join('master_product', 'master_product.m_product_id   = master_review_tbl.m_review_produ_id');
-    $res = $this->db->get('master_review_tbl')->result();
+    if (!empty($pur_id)) {
+      $this->db->where('m_purchase_spo', $pur_id);
+    }
+    if (!empty($user)) {
+      $this->db->where('m_purchase_supplier', $user);
+    }
+    if ($search != NULL) {
+      // $this->db->like('m_acc_name',$search,'both');
+      $this->db->like('m_purchase_spo', $search, 'both');
+      $this->db->or_like('m_purchase_invoiceno', $search, 'both');
+    }
+
+    if (!empty($from_date)) {
+      $this->db->where('DATE_FORMAT(m_purchase_added_on,"%Y-%m-%d")>=', $from_date);
+    }
+    if (!empty($to_date)) {
+      $this->db->where('DATE_FORMAT(m_purchase_added_on,"%Y-%m-%d")<=', $to_date);
+    }
+    if (!empty($pur_type)) {
+      $this->db->where('m_purchase_type', $pur_type);
+    }
+
+    $this->db->select('m_purchase_spo,sum(m_purchase_qty) as total_qty,sum(m_purchase_total) as item_sub_total,sum(m_purchase_netamt) as item_net_total,m_purchase_type,m_purchase_invoiceno,m_purchase_date,sum(m_purchase_gstamt) as total_tax,sum(m_purchase_disamt) as total_disc,m_purchase_shipping,m_purchase_status,m_purchase_added_on,m_purchase_user,m_purchase_supplier,m_purchase_note,m_purchase_terms,m_acc_name,m_acc_mobile,m_acc_email,m_acc_address');
+    $this->db->join('master_accounts_tbl mct', 'mct.m_acc_id = master_purchase_tbl.m_purchase_supplier', 'left');
+
+    $this->db->group_by('m_purchase_spo');
+    $purchase_list = $this->db->get('master_purchase_tbl')->result();
+
+    if (!empty($purchase_list)) {
+      foreach ($purchase_list as $skey) {
+
+        $res = (object) array(
+          "m_purchase_spo" => $skey->m_purchase_spo,
+          "total_qty" => $skey->total_qty,
+          "item_sub_total" => $skey->item_sub_total,
+          "item_net_total" => $skey->item_net_total,
+          "m_purchase_type" => $skey->m_purchase_type,
+          "m_purchase_invoiceno" => $skey->m_purchase_invoiceno,
+          "m_purchase_date" => $skey->m_purchase_date,
+          "total_tax" => $skey->total_tax,
+          "total_disc" => $skey->total_disc,
+          "m_purchase_shipping" => $skey->m_purchase_shipping,
+          "m_purchase_nettotal" => ($skey->item_sub_total + $skey->total_tax + $skey->m_purchase_shipping - $skey->total_disc),
+          "m_purchase_status" => $skey->m_purchase_status,
+          "m_purchase_added_on" => $skey->m_purchase_added_on,
+          "m_purchase_user" => $skey->m_purchase_user,
+          "m_purchase_supplier" => $skey->m_purchase_supplier,
+          "m_purchase_terms" => $skey->m_purchase_terms,
+          "m_purchase_note" => $skey->m_purchase_note,
+          "m_acc_name" => $skey->m_acc_name,
+          "m_acc_mobile" => $skey->m_acc_mobile,
+          "m_acc_email" => $skey->m_acc_email,
+          "m_acc_address" => $skey->m_acc_address,
+
+          "m_purchase_items" => $this->get_purchase_item($skey->m_purchase_spo, $skey->m_purchase_supplier),
+
+        );
+
+        $result[] = $res;
+      }
+    }
+    return $result;
+  }
+
+  public function get_purchase_item($pur_id, $supplier)
+  {
+    $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,fabric.m_group_name as m_fabric_name,m_product_id,m_product_name,m_product_cat_id,m_category_name,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt')
+      ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
+      ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
+      ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
+      ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
+      ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+      ->join('master_goups_tbl size', 'size.m_group_id = master_purchase_tbl.m_purchase_size', 'left')
+      ->join('master_goups_tbl colour', 'colour.m_group_id = master_purchase_tbl.m_purchase_color', 'left');
+
+    if (!empty($pur_id)) {
+      $this->db->where('m_purchase_spo', $pur_id);
+    }
+    if (!empty($supplier)) {
+      $this->db->where('m_purchase_supplier', $supplier);
+    }
+
+    return $this->db->get('master_purchase_tbl')->result();
+  }
+
+
+
+  public function insert_purchase()
+  {
+
+    $res = $this->db->select('m_purchase_spo')->order_by('m_purchase_id', 'desc')->where('m_purchase_type', 1)->get('master_purchase_tbl')->row();
+    // $res ='UTP/201223/0001';
+
+    if (!empty($res)) {
+      $part = explode('/', $res->m_purchase_spo);
+      $spo = 'UTP/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
+    } else {
+      $spo = 'UTP/' . date('dmy') . '/0001';
+    }
+
+    // $spo  = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
+    $pur_item_id = $this->input->post('pur_item_id');
+    $pur_item_itemid = $this->input->post('pur_item_itemid');
+    $pur_item_rate = $this->input->post('pur_item_rate');
+    $pur_item_qty = $this->input->post('pur_item_qty');
+    $m_purchase_size = $this->input->post('m_purchase_size');
+    $m_purchase_color = $this->input->post('m_purchase_color');
+
+    $pur_item_total = $this->input->post('pur_item_total');
+    $pur_item_gst = $this->input->post('pur_item_gst');
+    $pur_item_gstamt = $this->input->post('pur_item_gstamt');
+    $pur_item_disc = $this->input->post('pur_item_disc');
+    $pur_item_discamt = $this->input->post('pur_item_discamt');
+    $pur_item_nettotal = $this->input->post('pur_item_nettotal');
+
+    for ($i = 0; $i < count($pur_item_itemid); $i++) {
+      if (!empty($pur_item_itemid[$i])) {
+        $insert_data = array(
+          "m_purchase_date"    => $this->input->post('m_purchase_date'),
+          "m_purchase_invoiceno" => $this->input->post('m_purchase_invoice'),
+          "m_purchase_supplier" => $this->input->post('m_purchase_supplier'),
+          "m_purchase_shipping" => $this->input->post('m_purchase_shipping'),
+          "m_purchase_terms" => $this->input->post('m_purchase_terms'),
+          "m_purchase_note" => $this->input->post('m_purchase_note'),
+          "m_purchase_type" => $this->input->post('m_purchase_type'),
+          "m_purchase_product" => $pur_item_itemid[$i],
+          "m_purchase_price" => $pur_item_rate[$i],
+          "m_purchase_qty" => $pur_item_qty[$i],
+          "m_purchase_size" => $m_purchase_size[$i],
+          "m_purchase_color" => $m_purchase_color[$i],
+          "m_purchase_total" => $pur_item_total[$i],
+          "m_purchase_gst" => $pur_item_gst[$i],
+          "m_purchase_dis" => $pur_item_disc[$i],
+          "m_purchase_gstamt" => $pur_item_gstamt[$i],
+          "m_purchase_disamt" => $pur_item_discamt[$i],
+          "m_purchase_netamt" => $pur_item_nettotal[$i],
+
+        );
+
+        if (!empty($pur_item_id[$i])) {
+          $insert_data['m_purchase_updaded_by'] = $this->session->userdata('user_id');
+          $insert_data['m_purchase_updaded_on'] = date('Y-m-d H:i');
+
+          $this->db->where('m_purchase_id', $pur_item_id[$i])->update('master_purchase_tbl', $insert_data);
+          $res = 2;
+        } else {
+          $insert_data['m_purchase_spo'] = $spo;
+          $insert_data['m_purchase_status'] = 1;
+          $insert_data['m_purchase_user'] = $this->session->userdata('user_id');
+          $insert_data['m_purchase_added_by'] = $this->session->userdata('user_id');
+          $insert_data['m_purchase_added_on'] = date('Y-m-d H:i');
+          $res = $this->db->insert('master_purchase_tbl', $insert_data);
+        }
+
+
+        // echo '<pre>'; print_r($insert_data); 
+
+
+        //  echo '<pre>'; print_r($res); 
+      }
+    }
+    // die;
     return $res;
   }
 
-  public function delete_review()
+
+  public function delete_purchase_item()
   {
-    $this->db->where('m_review_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_review_tbl');
+    $this->db->where('m_purchase_id', $this->input->post('delete_id'));
+    $this->db->delete('master_purchase_tbl');
+    return true;
   }
 
-  //===================/review ==============================//
+  public function delete_purchase()
+  {
+    $this->db->where('m_purchase_spo', $this->input->post('delete_id'));
+    $this->db->delete('master_purchase_tbl');
+    return true;
+  }
+
+
+  //-----------------------------/purchese----------------------------//
+
+  //------------------------------payment in---------------------------//
+  public function get_payment_in($search, $user)
+  {
+    $this->db->select('*');
+    if ($search != NULL) {
+      $this->db->like('m_pmode_name', $search, 'both');
+      $this->db->like('m_acc_name', $search, 'both');
+    }
+    if (!empty($user)) {
+      $this->db->where('m_payment_user', $user);
+    }
+    $this->db->join('master_paymode_tbl', 'master_paymode_tbl.m_pmode_id = master_payment_tbl.m_payment_pmode', 'left');
+    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_payment_tbl.m_payment_user', 'left');
+    // $this->db->join('master_accounts_tbl supplier', 'supplier.m_acc_id = master_payment_tbl.m_payment_user', 'left');
+
+    $this->db->where('m_payment_type', 1);
+    $res = $this->db->get('master_payment_tbl')->result();
+    return $res;
+  }
+
+
+
+
+
+  public function insert_payment_in()
+  {
+    $data = array(
+      "m_payment_type" => 1,
+      "m_payment_user" => $this->input->post('m_payment_user'),
+      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
+      "m_payment_transno" => $this->input->post('m_payment_transno'),
+      "m_payment_amount" => $this->input->post('m_payment_amount'),
+      "m_payment_date" => $this->input->post('m_payment_date'),
+    );
+
+    $data['m_payment_added_on'] = date('Y-m-d H:i');
+    $res = $this->db->insert('master_payment_tbl', $data);
+    return $res;
+  }
+
+  public function update_payment_in()
+  {
+    $data = array(
+      "m_payment_type" => 1,
+      "m_payment_user" => $this->input->post('m_payment_user'),
+      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
+      "m_payment_transno" => $this->input->post('m_payment_transno'),
+      "m_payment_amount" => $this->input->post('m_payment_amount'),
+      "m_payment_date" => $this->input->post('m_payment_date'),
+    );
+
+    $data['m_payment_updated_on'] = date('Y-m-d H:i');
+    $res = $this->db->where('m_payment_id', $this->input->post('m_payment_id'))->update('master_payment_tbl', $data);
+    return $res;
+  }
+
+  public function delete_payment_in()
+  {
+    $this->db->where('m_payment_id', $this->input->post('delete_id'));
+    return $this->db->delete('master_payment_tbl');
+  }
+  //-----------------------------/payment in----------------------------//
+
+  //------------------------------payment out---------------------------//
+  public function get_payment_out($search, $user)
+  {
+    $this->db->select('*');
+    if ($search != NULL) {
+      $this->db->like('m_pmode_name', $search, 'both');
+      $this->db->like('m_acc_name', $search, 'both');
+    }
+    if (!empty($user)) {
+      $this->db->where('m_payment_user', $user);
+    }
+    $this->db->join('master_paymode_tbl', 'master_paymode_tbl.m_pmode_id = master_payment_tbl.m_payment_pmode', 'left');
+
+    $this->db->join('master_accounts_tbl supplier', 'supplier.m_acc_id = master_payment_tbl.m_payment_user', 'left');
+
+    $this->db->where('m_payment_type', 2);
+    $res = $this->db->get('master_payment_tbl')->result();
+    return $res;
+  }
+
+
+
+
+
+  public function insert_payment_out()
+  {
+    $data = array(
+      "m_payment_type" => 2,
+      "m_payment_user" => $this->input->post('m_payment_user'),
+      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
+      "m_payment_transno" => $this->input->post('m_payment_transno'),
+      "m_payment_amount" => $this->input->post('m_payment_amount'),
+      "m_payment_date" => $this->input->post('m_payment_date'),
+    );
+
+    $data['m_payment_added_on'] = date('Y-m-d H:i');
+    $res = $this->db->insert('master_payment_tbl', $data);
+    return $res;
+  }
+
+  public function update_payment_out()
+  {
+    $data = array(
+      "m_payment_type" => 2,
+      "m_payment_user" => $this->input->post('m_payment_user'),
+      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
+      "m_payment_transno" => $this->input->post('m_payment_transno'),
+      "m_payment_amount" => $this->input->post('m_payment_amount'),
+      "m_payment_date" => $this->input->post('m_payment_date'),
+    );
+
+    $data['m_payment_updated_on'] = date('Y-m-d H:i');
+    $res = $this->db->where('m_payment_id', $this->input->post('m_payment_id'))->update('master_payment_tbl', $data);
+    return $res;
+  }
+
+  public function delete_payment_out()
+  {
+    $this->db->where('m_payment_id', $this->input->post('delete_id'));
+    return $this->db->delete('master_payment_tbl');
+  }
+  //-----------------------------/payment in----------------------------//
+
 
 }

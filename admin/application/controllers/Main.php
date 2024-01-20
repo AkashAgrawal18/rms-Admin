@@ -4,34 +4,35 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Main extends CI_Controller
 {
 
+ 
+  //--------------------------------sales-----------------------//
 
-  public function brands()
+
+  public function sales()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'Brands';
-    $this->load->view('brands', $data);
-  }
-  //-----------------------------------categories----------------------------------//
+    $data['pagename'] = 'Sales ';
 
-  public function coupons()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Coupons';
-    $data['search'] = '';
-    $data['search'] =  $this->input->get('search');
-    $data['all_value'] = $this->Main_model->get_coupons($data['search']);
-    $this->load->view('coupons', $data);
+    $data['from_date'] = $this->input->get('from_date');
+    $data['to_date'] = $this->input->get('to_date');
+    $data['search'] = $this->input->get('search');
+    $data['user'] = $this->input->get('user');
+    $data['all_value'] = $this->Main_model->get_all_sales(null, $data['user'], $data['search'], $data['from_date'], $data['to_date']);
+    $data['all_user'] = $this->Main_model->get_customer(3,1);
+
+    // echo "<pre>"; print_r($data['all_value']);die();
+    $this->load->view('sales', $data);
   }
 
 
-  public function insert_coupons()
+  public function delete_sales()
   {
+
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_coupons()) {
-
+      if ($data = $this->Main_model->delete_sales()) {
         $info = array(
           'status' => 'success',
-          'message' => 'Coupons has been Added successfully!'
+          'message' => 'Data has been Deleted successfully!'
         );
       } else {
         $info = array(
@@ -43,14 +44,33 @@ class Main extends CI_Controller
     }
   }
 
-  public function update_coupons()
+  // public function edit_sales()
+  // {
+  //   $data = $this->login_details();
+  //   $data['id'] = $this->input->get('id');
+  //   if (!empty($data['id'])) {
+  //     $data['pagename'] = 'Edit Sales';
+  //     $data['product_list1'] = $this->Main_model->get_sale_items($data['id']);
+  //     $data['edit_value'] = $this->Main_model->get_edit_sales($data['id']);
+  //   } else {
+  //     $data['pagename'] = 'Add Sales';
+  //   }
+  //   $data['product_list'] = $this->Master_model->get_active_products();
+  //   $data['texgst'] = $this->Master_model->get_active_taxgst();
+  //   $data['all_user'] = $this->Main_model->get_active_customer();
+  //   // echo "<pre>";print_r($data['texgst']); die();
+  //   $this->load->view('sales-edit', $data);
+  // }
+
+
+
+  public function delete_sale_item()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_coupons()) {
-
+      if ($data = $this->Main_model->delete_sale_item()) {
         $info = array(
           'status' => 'success',
-          'message' => 'Coupons has been Updated successfully!'
+          'message' => 'Data has been Deleted successfully!'
         );
       } else {
         $info = array(
@@ -62,158 +82,29 @@ class Main extends CI_Controller
     }
   }
 
-
-  public function delete_coupons()
+  public function insert_sales()
   {
+    //     echo 'customer=' . $this->input->post('m_sale_customer');
+    // die ;
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_coupons()) {
+      if ($data = $this->Main_model->insert_sales()) {
 
-        $info = array(
-          'status' => 'success',
-          'message' => 'Coupons has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  //-----------------------------------categories----------------------------------//
-  public function categories()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Categories';
-    $data['search'] =  $this->input->get('search');
-    // $data['category'] = $this->Main_model->get_category();
-    $data['all_value'] = $this->Main_model->get_categories($data['search']);
-    // echo "<pre>";print_r($data['all_value']);die();
-    $this->load->view('categories', $data);
-  }
-
-
-  public function insert_categories()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $data = $this->Main_model->insert_categories();
-      if ($data == 2) {
-        $info = array(
-          'status' => 'success',
-          'message' => 'Data has been Updated successfully!'
-        );
-      } else if ($data != '') {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Data has been Added successfully!',
-          'cat_id' => $data,
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_categories()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_categories()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Categories has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function import_categories()
-  {
-    //$salon_id = $this->session->userdata('s_id');
-    if (isset($_FILES['import_file'])) {
-      require_once "Simplexlsx.class.php";
-      $xlsx = new SimpleXLSX($_FILES['import_file']['tmp_name']);
-      list($cols, $rows) = $xlsx->dimension();
-      $i = 0;
-      foreach ($xlsx->rows() as $row) {
-        $i++;
-        if ($i != 1) {
-
-          $s_data = array(
-            "m_category_name" => $row[1],
-            "m_category_slug" => $row[2],
-            "m_category_status" => 1,
-            "m_pcategory_id" => 1,
-            "m_category_added_on" => date('Y-m-d H:i'),
-
+        if ($data == 1) {
+          $info = array(
+            'status' => 'success',
+            'message' => 'Data has been Added successfully!'
           );
-
-          $redirt = 'Main/categories';
-          $this->db->insert('master_categories', $s_data);
+        } else if ($data == 2) {
+          $info = array(
+            'status' => 'error',
+            'message' => 'Paid Amount Should be equal to Net Amount'
+          );
+        } else {
+          $info = array(
+            'status' => 'error',
+            'message' => $data,
+          );
         }
-      }
-      echo "<script> alert('import Successfull'); </script>";
-      redirect($redirt);
-    } else {
-      echo "<script> alert('Import is wrong'); </script>";
-    }
-  }
-
-
-
-
-  //-----------------------------------categories----------------------------------//
-  //-------------------------------------products--------------------------------//
-
-  public function products()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'Products';
-
-    $data['search'] =  $this->input->get('search');
-    $data['cat'] =  $this->input->get('category');
-    $data['fabric'] =  $this->input->get('fabric');
-    $data['categories'] = $this->Main_model->get_active_category();
-    $data['fabric_list'] = $this->Main_model->get_active_group(5);
-    $data['color_list'] = $this->Main_model->get_active_group(2);
-    $data['size_list'] = $this->Main_model->get_active_group(3);
-    $data['unit'] = $this->Main_model->get_active_group(1);
-    $data['taxgst'] = $this->Main_model->get_active_group(4);
-    $data['all_value'] = $this->Main_model->get_active_products($data['cat'], $data['fabric'], $data['search']);
-    // echo "<pre>";print_r($data['all_value']);die();
-    $this->load->view('product_list', $data);
-  }
-
-  public function insert_product()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $data = $this->Main_model->insert_product();
-      if ($data == 1) {
-        $info = array(
-          'status' => 'success',
-          'message' => 'Product has been Added Successfully!'
-        );
-      } else if ($data == 2) {
-        $info = array(
-          'status' => 'success',
-          'message' => 'Product has been Updated Successfully!'
-        );
       } else {
         $info = array(
           'status' => 'error',
@@ -224,278 +115,329 @@ class Main extends CI_Controller
     }
   }
 
-  public function delete_product()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_product()) {
+  // public function update_sales()
+  // {
 
-        $info = array(
-          'status' => 'success',
-          'message' => 'Product has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
+  //   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  //     if ($data = $this->Main_model->insert_sales()) {
 
-  //-------------------------------------/products--------------------------------//
-  //-------------------pos ----------------------------------------------//
+  //       if ($data == 1) {
+  //         $info = array(
+  //           'status' => 'success',
+  //           'message' => 'Data has been Added successfully!'
+  //         );
+  //       } else if ($data == 2) {
+  //         $info = array(
+  //           'status' => 'success',
+  //           'message' => 'Data Updated Successfully'
+  //         );
+  //       } else {
+  //         $info = array(
+  //           'status' => 'error',
+  //           'message' => $data,
+  //         );
+  //       }
+  //     } else {
+  //       $info = array(
+  //         'status' => 'error',
+  //         'message' => 'Some problem Occurred!! please try again'
+  //       );
+  //     }
+  //     echo json_encode($info);
+  //   }
+  // }
 
-  public function pos()
+
+
+
+  // public function sales_return()
+  // {
+  //   $data = $this->login_details();
+  //   $data['pagename'] = 'Sales Return';
+  //   $this->load->view('sales-return', $data);
+  // }
+
+  //--------------------------------sales-----------------------//
+
+
+  public function payment_in()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'POS';
-    $data['slug'] = '';
+    $data['pagename'] = 'Payment-In';
     $data['search'] = '';
-    $data['slug'] = $this->uri->segment(3);
+    $data['user'] = '';
     $data['search'] =  $this->input->get('search');
-    $data['paymode_list'] = $this->Main_model->get_active_group(6);
-    $data['category'] = $this->Main_model->get_active_category();
-    $data['customer'] = $this->User_model->get_customer(3, 1);
-
-    $this->load->view('pos', $data);
+    $data['user'] =  $this->input->get('user');
+    $data['all_value'] = $this->Main_model->get_payment_in($data['search'], $data['user']);
+    $data['all_user'] = $this->Main_model->get_customer(3,1);
+    $data['all_pmode'] = $this->Master_model->get_active_paymode();
+    // print_r($data['all_pmode']);die();
+    $this->load->view('payment-in', $data);
   }
 
-  //-------------------/pos ----------------------------------------------//
-  public function cash_bank()
+  public function insert_payment_in()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->insert_payment_in()) {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Payment-In has been Added successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+  public function update_payment_in()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->update_payment_in()) {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Payment-In  has been Updated successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+
+  public function delete_payment_in()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->delete_payment_in()) {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Payment-In  has been Delete successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+  //-----------------------------------payment in -------------------------\\
+
+  public function quotation()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'cash & bank';
-    $this->load->view('cash-bank', $data);
+    $data['pagename'] = 'Quotation';
+    $this->load->view('quotation', $data);
   }
 
-  //-------------------banner ----------------------------------------------//
+  public function edit_quotation()
+  {
 
-  public function banner()
+    $data = $this->login_details();
+    $data['pagename'] = 'Edit Quotation';
+    $this->load->view('quotation-edit', $data);
+  }
+  //-----------------------------purchese----------------------------//
+
+  public function purchase()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'banners';
-    $data['all_value'] = $this->Main_model->get_banners();
-    $this->load->view('banner', $data);
+    $data['pagename'] = 'Purchase';
+
+    $data['purtype'] = 1;
+    $data['from_date'] = $this->input->get('from_date');
+    $data['to_date'] = $this->input->get('to_date');
+    $data['search'] = $this->input->get('search');
+    $data['user'] = $this->input->get('user');
+    $data['all_value'] = $this->Main_model->get_all_purchase(null, $data['user'], $data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
+    $data['all_user'] = $this->Main_model->get_customer(4,1);
+    // echo "<pre>";print_r($data['all_value']); die();
+    $this->load->view('purchase', $data);
   }
 
-  public function insert_banner()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_banner()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Banner has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_banner()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_banner()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Banner has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  public function delete_banner()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_banner()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Banner has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-  //-------------------banner ----------------------------------------------//
-
-  //-------------------offer ----------------------------------------------//
-
-  public function offer()
+  public function purchase_return()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'offer';
-    $data['all_value'] = $this->Main_model->offer_list();
-    $this->load->view('offer', $data);
+    $data['pagename'] = 'Purchase Return';
+    $data['purtype'] = 2;
+    $data['from_date'] = $this->input->get('from_date');
+    $data['to_date'] = $this->input->get('to_date');
+    $data['search'] = $this->input->get('search');
+    $data['user'] = $this->input->get('user');
+    $data['all_value'] = $this->Main_model->get_all_purchase(null, $data['user'], $data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
+    $data['all_user'] = $this->Main_model->get_customer(4,1);
+    $this->load->view('purchase', $data);
   }
 
-  public function insert_offer()
+  public function get_product_dtl()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_offer()) {
+      $data = $this->Master_model->get_active_products(null, null, null, null, $this->input->post('itemid'));
 
-        $info = array(
-          'status' => 'success',
-          'message' => 'Offer has been Added successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
+      echo json_encode($data);
     }
   }
 
-  public function update_offer()
+  public function get_avil_products()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_offer()) {
+      $item = $this->input->post('item') ?: '';
+      $cat = $this->input->post('cat') ?: '';
+      $group = $this->input->post('group') ?: '';
+      $search = $this->input->post('search') ?: '';
+      $data = $this->Report_model->get_stock_list(null, date('Y-m-d'), $item, $cat, $search, $group);
 
-        $info = array(
-          'status' => 'success',
-          'message' => 'Offer has been Updated successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
+      echo json_encode($data);
     }
   }
 
-
-  public function delete_offer()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_offer()) {
-
-        $info = array(
-          'status' => 'success',
-          'message' => 'Offer has been Delete successfully!'
-        );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-
-
-  //-------------------/offer ----------------------------------------------//
-
-  public function product_offers()
+  public function edit_purchase($type = 1)
   {
     $data = $this->login_details();
-    $data['pagename'] = 'product-offers';
-    $typeid = $this->uri->segment(3);
-    $data['typeid'] = $typeid;
-    $data['product'] = $this->Main_model->all_product('');
-    $data['typename'] = $this->Main_model->get_typename($typeid);
-    $data['slugname'] = $data['typename'][0]->m_offer_slug;
-    $data['product_o_w'] = $this->Main_model->all_product_offer($typeid);
+    $data['id'] = $this->input->get('id');
+    $data['purtype'] = $type;
 
-    $this->load->view('product-offers', $data);
+    if (!empty($data['id'])) {
+      $data['pagename'] = $type == 1 ? 'Edit Purchase' : 'Edit Return';
+      $data['edit_value'] = $this->Main_model->get_all_purchase($data['id']);
+    } else {
+      $data['pagename'] = $type == 1 ? 'Add Purchase' : 'Add Return';
+    }
+    $data['product_list'] = $this->Master_model->get_active_products();
+    $data['texgst'] = $this->Master_model->get_active_group(4);
+    $data['all_user'] = $this->Main_model->get_customer(4,1);
+
+    // echo "<pre>"; print_r($data['edit_value']); die();
+    $this->load->view('purchase-edit', $data);
   }
 
-  public function offer_add()
+
+  public function insert_purchase()
   {
-    $type = $this->input->post('o_offer_type');
-    $data['dashboard'] = $this->Main_model->make_offer($type);
-    redirect('Main/product_offers/' . $type);
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->insert_purchase()) {
+
+        if ($data == 1) {
+          $info = array(
+            'status' => 'success',
+            'message' => 'Data has been Added successfully!'
+          );
+        } else if ($data == 2) {
+          $info = array(
+            'status' => 'success',
+            'message' => 'Data Updated Successfully'
+          );
+        } else {
+          $info = array(
+            'status' => 'error',
+            'message' => $data,
+          );
+        }
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
   }
 
-  public function remove_offer()
+
+  public function delete_purchase_item()
   {
-    $remove = $this->uri->segment(3);
-    $type = $this->uri->segment(4);
-    $data['category'] = $this->Main_model->delete_product_offers($remove);
-    redirect('Main/product_offers/' . $type);
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->delete_purchase_item()) {
+        $info = array(
+          'status' => 'success',
+          'message' => 'Data has been Deleted successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
   }
 
-  //------------------------------------- master Group --------------------------------//
+  public function delete_purchase()
+  {
 
-  public function group_list($type = 1)
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->delete_purchase()) {
+        $info = array(
+          'status' => 'success',
+          'message' => 'Data has been Deleted successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+  //----------------------------------------payment_out---------------------------//
+
+  public function payment_out()
   {
     $data = $this->login_details();
-
-    switch ($type) {
-      case 1: {
-          $data['pagetitle'] = 'Unit';
-        }
-        break;
-      case 2: {
-          $data['pagetitle'] = 'Color';
-        }
-        break;
-      case 3: {
-          $data['pagetitle'] = 'Size';
-        }
-        break;
-      case 4: {
-          $data['pagetitle'] = 'Tax';
-        }
-        break;
-      case 5: {
-          $data['pagetitle'] = 'Fabric';
-        }
-        break;
-      case 6: {
-          $data['pagetitle'] = 'Payment Mathod';
-        }
-        break;
-    }
-
-    $data['type'] = $type;
-    $data['search'] =  $this->input->post('search');
-    $data['all_value'] = $this->Main_model->get_group_list($data['type'], $data['search']);
-    $this->load->view('group_list', $data);
+    $data['pagename'] = 'Payment-Out';
+    $data['search'] = '';
+    $data['user'] = '';
+    $data['user'] =  $this->input->get('user');
+    $data['search'] =  $this->input->get('search');
+    $data['all_value'] = $this->Main_model->get_payment_out($data['search'], $data['user']);
+    $data['all_user'] = $this->Main_model->get_customer(4,1);
+    $data['all_pmode'] = $this->Master_model->get_active_paymode();
+    $this->load->view('payment-out', $data);
   }
 
-  public function insert_group()
+
+  public function insert_payment_out()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      $data = $this->Main_model->insert_group();
+      if ($data = $this->Main_model->insert_payment_out()) {
 
-      if ($data == 2) {
         $info = array(
           'status' => 'success',
-          'message' => 'Data has been Updated successfully!'
+          'message' => 'Payment-Out has been Added successfully!'
         );
-      } else if ($data != '') {
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+  public function update_payment_out()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Main_model->update_payment_out()) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Data has been Added successfully!',
-          'group_id' => $data,
+          'message' => 'Payment-Out  has been Updated successfully!'
         );
       } else {
         $info = array(
@@ -508,14 +450,14 @@ class Main extends CI_Controller
   }
 
 
-  public function delete_group()
+  public function delete_payment_out()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_group()) {
+      if ($data = $this->Main_model->delete_payment_out()) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Data has been Delete successfully!'
+          'message' => 'Payment-Out  has been Delete successfully!'
         );
       } else {
         $info = array(
@@ -526,26 +468,45 @@ class Main extends CI_Controller
       echo json_encode($info);
     }
   }
-  //-------------------------------------/master Group--------------------------------//
 
-  public function products_image()
+  //-----------------------------------payment out -------------------------\\
+
+
+
+  public function stock_transfer()
   {
     $data = $this->login_details();
-    $data['pagename'] = 'Product Image';
-    // $data['search'] = '';
-    $data['pid'] =  $this->uri->segment(3);
-    $data['all_value'] = $this->Main_model->get_image($data['pid']);
-    $this->load->view('image', $data);
+    $data['pagename'] = 'Stock-transfer';
+    $this->load->view('stock-transfer', $data);
+  }
+  public function stock_transfer_edit()
+  {
+    $data = $this->login_details();
+    $data['pagename'] = 'stock-transfer-edit';
+    $this->load->view('stock-transfer-edit', $data);
   }
 
-  public function insert_image()
+
+  //============================expense category=========================//
+  public function expense_categories()
+  {
+    $data = $this->login_details();
+    $data['pagename'] = 'Expense-categories';
+    $data['search'] = '';
+    $data['search'] = $this->input->get('search');
+    $data['all_value'] = $this->Master_model->get_expense_categories($data['search']);
+    $this->load->view('expense-categories', $data);
+  }
+
+
+  public function insert_expense_categories()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->insert_image()) {
+      if ($data = $this->Master_model->insert_expense_categories()) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Image has been Added successfully!'
+          'message' => 'Expense Categories has been Added successfully!'
         );
       } else {
         $info = array(
@@ -557,14 +518,14 @@ class Main extends CI_Controller
     }
   }
 
-  public function update_image()
+  public function update_expense_categories()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->update_image()) {
+      if ($data = $this->Master_model->update_expense_categories()) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Image has been Updated successfully!'
+          'message' => 'Expense Categories has been Updated successfully!'
         );
       } else {
         $info = array(
@@ -577,14 +538,14 @@ class Main extends CI_Controller
   }
 
 
-  public function delete_image()
+  public function delete_expense_categories()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Main_model->delete_image()) {
+      if ($data = $this->Master_model->delete_expense_categories()) {
 
         $info = array(
           'status' => 'success',
-          'message' => 'Image has been Delete successfully!'
+          'message' => 'Expense Categories has been Delete successfully!'
         );
       } else {
         $info = array(
@@ -595,7 +556,85 @@ class Main extends CI_Controller
       echo json_encode($info);
     }
   }
-  //-------------------------------------/unit--------------------------------//
+
+  //============================/expense category=========================//
+  //============================expense=========================//
+
+  public function expenses()
+  {
+    $data = $this->login_details();
+    $data['pagename'] = 'Expenses';
+    $data['user_exp'] = '';
+    $data['search'] = '';
+
+    $data['user_exp'] = $this->input->get('user');
+    $data['search'] = $this->input->get('search');
+    $data['expcat'] = $this->Master_model->get_active_expcat();
+    $data['user'] = $this->Main_model->get_active_user();
+    $data['all_value'] = $this->Master_model->get_expense($data['search'], $data['user_exp']);
+    $this->load->view('expenses', $data);
+  }
+
+  public function insert_expense()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Master_model->insert_expense()) {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Expense  has been Added successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+  public function update_expense()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Master_model->update_expense()) {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Expense  has been Updated successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+
+  public function delete_expense()
+  {
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if ($data = $this->Master_model->delete_expense()) {
+
+        $info = array(
+          'status' => 'success',
+          'message' => 'Expense  has been Delete successfully!'
+        );
+      } else {
+        $info = array(
+          'status' => 'error',
+          'message' => 'Some problem Occurred!! please try again'
+        );
+      }
+      echo json_encode($info);
+    }
+  }
+
+
+  //============================/expense=========================//
 
   //==========================Details===========================//
   protected function login_details()

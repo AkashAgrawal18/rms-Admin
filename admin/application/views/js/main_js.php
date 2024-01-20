@@ -4,238 +4,6 @@
   $(document).ready(function(e) {
 
 
-    //===========================customer ===========================//
-    $('#cmobile').change(function() {
-      let cust_mobile = this.value;
-      // console.log(contact_number);die();
-      $.post("<?= base_url('User/get_cust_mobile') ?>", {
-        cust_mobile
-      }, function(data) {
-
-        if (data.status) {
-
-          // alert('District already exist');
-          swal("Mobile already exist!!", {
-            icon: "error",
-            timer: 3000,
-          });
-          $('#cmobile').val('');
-        }
-
-        // $('#contact_number').html(text);
-      }, 'json');
-    })
-
-    // pos customer add
-    $(".btn-customer-add").click(function(e) {
-      var frmid = $(this).data('frmid');
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-
-      var formData = $(frmid).serialize();
-
-      var pagtype = $('#user_type').val();
-      var custaddon = $('#custaddon').val();
-      var custname = $('#m_cust_name').val();
-
-      if (pagtype == 3) {
-        var relink = "<?= base_url('User/customer') ?>";
-      } else if (pagtype == 4) {
-        var relink = "<?= base_url('User/suppiler') ?>";
-      }
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('User/insert_customer'); ?>",
-        data: formData,
-        // processData: false,
-        // contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            if (custaddon == 1 && pagtype == 3) {
-              $('#m_customer').append(`<option value="` + data.cust_id + `" selected>` + custname + `</option>`);
-              $('#addcustomermodal').modal('hide');
-              swal(data.message, {
-                icon: "success",
-                timer: 1000,
-              });
-            } else {
-              swal(data.message, {
-                icon: "success",
-                timer: 1000,
-              });
-
-              setTimeout(function() {
-                location.reload();
-              }, 1000);
-            }
-
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-    $("#customer_tbl").on("click", ".delete_customer", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('User/delete_customer'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-
-    //===========================/customer ===========================//
-
-    //===========================supplier ===========================//
-
-    $('#smobile').change(function() {
-      let supl_mobile = this.value;
-      // console.log(contact_number);die();
-      $.post("<?= base_url('User/get_suppl_mobile') ?>", {
-        supl_mobile
-      }, function(data) {
-
-        if (data.status) {
-
-          // alert('District already exist');
-          swal("Mobile already exist!!", {
-            icon: "error",
-            timer: 3000,
-          });
-          $('#smobile').val('');
-        }
-
-        // $('#contact_number').html(text);
-      }, 'json');
-    })
-
-
-    $("#supplier_tbl").on("click", ".delete_supplier", function() {
-      var clkbtn = $(this);
-      clkbtn.prop('disabled', true);
-      var dlt_id = $(this).data('value');
-
-      swal({
-        title: "Are you sure?",
-        text: "Once deleted, you will not be able to recover this data!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-
-          $.ajax({
-            type: "POST",
-            url: "<?php echo site_url('User/delete_supplier'); ?>",
-            data: {
-              delete_id: dlt_id
-            },
-            dataType: "JSON",
-            success: function(data) {
-              if (data.status == 'success') {
-                swal(data.message, {
-                  icon: "success",
-                  timer: 1000,
-                });
-                setTimeout(function() {
-                  location.reload();
-                }, 1000);
-              } else {
-                clkbtn.prop('disabled', false);
-                swal(data.message, {
-                  icon: "error",
-                  timer: 5000,
-                });
-              }
-            },
-            error: function(jqXHR, status, err) {
-              clkbtn.prop('disabled', false);
-              swal("Some Problem Occurred!! please try again", {
-                icon: "error",
-                timer: 2000,
-              });
-            }
-          });
-
-        } else {
-          clkbtn.prop('disabled', false);
-          swal("Your Data is safe!", {
-            icon: "info",
-            timer: 2000,
-          });
-        }
-      });
-    });
-
-
-
-    //===========================/supplier ===========================//
     //===========================category ===========================//
     $("form#cat_add_form").submit(function(e) {
       e.preventDefault();
@@ -248,7 +16,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_categories'); ?>",
+        url: "<?php echo site_url('Master/insert_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -301,7 +69,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_categories'); ?>",
+        url: "<?php echo site_url('Master/insert_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -352,7 +120,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_categories'); ?>",
+            url: "<?php echo site_url('Master/delete_categories'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -423,7 +191,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_group'); ?>",
+        url: "<?php echo site_url('Master/insert_group'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -478,7 +246,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_group'); ?>",
+        url: "<?php echo site_url('Master/insert_group'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -529,7 +297,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_group'); ?>",
+            url: "<?php echo site_url('Master/delete_group'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -583,7 +351,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_payment_in'); ?>",
+        url: "<?php echo site_url('Maininsert_payment_in'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -626,7 +394,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/update_payment_in'); ?>",
+        url: "<?php echo site_url('Mainupdate_payment_in'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -677,7 +445,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_payment_in'); ?>",
+            url: "<?php echo site_url('Maindelete_payment_in'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -729,7 +497,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_payment_out'); ?>",
+        url: "<?php echo site_url('Maininsert_payment_out'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -772,7 +540,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/update_payment_out'); ?>",
+        url: "<?php echo site_url('Mainupdate_payment_out'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -823,7 +591,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_payment_out'); ?>",
+            url: "<?php echo site_url('Maindelete_payment_out'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -875,7 +643,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_coupons'); ?>",
+        url: "<?php echo site_url('Master/insert_coupons'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -918,7 +686,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/update_coupons'); ?>",
+        url: "<?php echo site_url('Master/update_coupons'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -969,7 +737,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_coupons'); ?>",
+            url: "<?php echo site_url('Master/delete_coupons'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1022,7 +790,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_expense_categories'); ?>",
+        url: "<?php echo site_url('Maininsert_expense_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1065,7 +833,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/update_expense_categories'); ?>",
+        url: "<?php echo site_url('Mainupdate_expense_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1116,7 +884,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_expense_categories'); ?>",
+            url: "<?php echo site_url('Maindelete_expense_categories'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1169,7 +937,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_expense'); ?>",
+        url: "<?php echo site_url('Maininsert_expense'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1212,7 +980,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/update_expense'); ?>",
+        url: "<?php echo site_url('Mainupdate_expense'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1263,7 +1031,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_expense'); ?>",
+            url: "<?php echo site_url('Maindelete_expense'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1324,7 +1092,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_product'); ?>",
+        url: "<?php echo site_url('Master/insert_product'); ?>",
         data: formData,
         // processData: false,
         // contentType: false,
@@ -1376,7 +1144,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_product'); ?>",
+            url: "<?php echo site_url('Master/delete_product'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1429,7 +1197,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_image'); ?>",
+        url: "<?php echo site_url('Master/insert_image'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1472,7 +1240,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/update_image'); ?>",
+        url: "<?php echo site_url('Master/update_image'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1523,7 +1291,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_image'); ?>",
+            url: "<?php echo site_url('Master/delete_image'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1580,7 +1348,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_offer'); ?>",
+        url: "<?php echo site_url('Master/insert_offer'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1623,7 +1391,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/update_offer'); ?>",
+        url: "<?php echo site_url('Master/update_offer'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1673,7 +1441,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_offer'); ?>",
+            url: "<?php echo site_url('Master/delete_offer'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1727,7 +1495,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/insert_banner'); ?>",
+        url: "<?php echo site_url('Master/insert_banner'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1770,7 +1538,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Main/update_banner'); ?>",
+        url: "<?php echo site_url('Master/update_banner'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1820,7 +1588,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_banner'); ?>",
+            url: "<?php echo site_url('Master/delete_banner'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1878,7 +1646,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Main/delete_banner'); ?>",
+            url: "<?php echo site_url('Master/delete_banner'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1934,7 +1702,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_sales'); ?>",
+        url: "<?php echo site_url('Maininsert_sales'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1946,7 +1714,7 @@
               timer: 1000,
             });
             setTimeout(function() {
-              window.location = "<?php echo site_url('User/sales'); ?>";
+              window.location = "<?php echo site_url('Mainsales'); ?>";
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -1978,7 +1746,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/update_sales'); ?>",
+        url: "<?php echo site_url('Mainupdate_sales'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1990,7 +1758,7 @@
               timer: 1000,
             });
             setTimeout(function() {
-              window.location = "<?php echo site_url('User/sales'); ?>";
+              window.location = "<?php echo site_url('Mainsales'); ?>";
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -2027,7 +1795,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_sale_item'); ?>",
+            url: "<?php echo site_url('Maindelete_sale_item'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -2087,7 +1855,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_sales'); ?>",
+            url: "<?php echo site_url('Maindelete_sales'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -2143,7 +1911,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('User/insert_purchase'); ?>",
+        url: "<?php echo site_url('Maininsert_purchase'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -2155,7 +1923,7 @@
               timer: 1000,
             });
             setTimeout(function() {
-              window.location = "<?php echo site_url('User/purchase'); ?>";
+              window.location = "<?php echo site_url('Mainpurchase'); ?>";
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -2192,7 +1960,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_purchase_item'); ?>",
+            url: "<?php echo site_url('Maindelete_purchase_item'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -2252,7 +2020,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('User/delete_purchase'); ?>",
+            url: "<?php echo site_url('Maindelete_purchase'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -2420,220 +2188,6 @@
     ///====================== /review ============================================////
 
 
-
-
-
-    //===========================appliction setting  ===========================//
-
-    $("form#update_app_form").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#update_app_btn");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Setting/update_application'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-
-    $("form#update_social_form").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#update_social_btn");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Setting/update_social'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-    $("form#update_logo_form").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#update_logo_btn");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Setting/update_logo'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    //===========================/appliction setting  ===========================//
-
-    //===========================profile ===========================//
-
-    $("form#frm-update-profile").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-update-profile");
-      clkbtn.prop('disabled', true);
-
-      var adminname = $("#aname").val();
-      if (adminname == "") {
-        alert("Please Enter Admin Name");
-        $("#aname").focus();
-        $("#aname").addClass('input-error');
-
-        clkbtn.prop('disabled', false);
-        return false;
-      }
-
-      var adminemail = $("#aemail").val();
-      if (adminemail == "") {
-        alert("Please Entervalid Emailid");
-        $("#aemail").focus();
-        $("#aemail").addClass('input-error');
-
-        clkbtn.prop('disabled', false);
-        return false;
-      }
-
-      var adminpassword = $("#apass").val();
-      if (adminpassword == "") {
-        alert("Please Enter Password");
-        $("#apass").focus();
-        $("#apass").addClass('input-error');
-
-        clkbtn.prop('disabled', false);
-        return false;
-      }
-
-      var formData = new FormData(this);
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Setting/update_profile'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-    //===========================/profile ===========================//
-
-
-    //------------customer------------------\\
-
     tinymce.init({
       selector: '.editor',
       plugins: 'preview importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap quickbars emoticons',
@@ -2732,28 +2286,6 @@
 
 
   });
-</script>
-
-<script type="text/javascript">
-  $("#uploadImagebtn").click(function() {
-    $("#uploadImage").trigger('click');
-    return false;
-  });
-
-  function PreviewImage() {
-    var myadminimg = document.getElementById("myadminimg");
-    var myuploadimg = $('#uploadImage').val();
-    if (myuploadimg == '') {
-      document.getElementById("uploadPreview").src = myadminimg.src;
-    }
-
-    var oFReader = new FileReader();
-    oFReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
-
-    oFReader.onload = function(oFREvent) {
-      document.getElementById("uploadPreview").src = oFREvent.target.result;
-    };
-  };
 </script>
 
 <script>

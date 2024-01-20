@@ -34,7 +34,7 @@
         <div class="row align-items-center">
             <div class="col-xl-10 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Product Manager >> <a href="<?php echo base_url('Main/products'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Products</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Product Manager >> <a href="<?php echo base_url('Master/products'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Products</span></a>
                 </p>
             </div>
 
@@ -54,7 +54,7 @@
             <!-- <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-import"></i> Import Products</button> -->
         </div>
         <div class="col-md-8">
-            <form method="get" action="<?php echo base_url('Main/products');  ?>">
+            <form method="get" action="<?php echo base_url('Master/products');  ?>">
                 <div class="row">
 
                     <div class="col-6">
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                     <div class="col-2">
-                        <a href="<?php echo base_url('Main/products'); ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                        <a href="<?php echo base_url('Master/products'); ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                             <i class="fa-solid fa-rotate"></i>
                         </a>
                     </div>
@@ -117,7 +117,7 @@
                         <td>₹<?php echo round($value->m_product_purche_price, 3); ?></td>
                         <td>₹<?php echo round($value->m_product_mrp, 3); ?></td>
                         <td>₹<?php echo round($value->m_product_seles_price, 3); ?></td>
-                        <td><a href="<?php echo base_url('Main/products_image/' . $value->m_product_id);  ?>" class="btn btn-primary btn-sm">Add Image</a></td>
+                        <td><a href="<?php echo base_url('Master/products_image/' . $value->m_product_id);  ?>" class="btn btn-primary btn-sm">Add Image</a></td>
                         <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#viewproductdetail<?php echo $value->m_product_id  ?>" aria-controls="staticBackdrop"><i class="fas fa-eye"></i></button>
 
                             <!-- product view modal -->

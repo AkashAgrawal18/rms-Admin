@@ -28,14 +28,24 @@
 
 <?php
 switch ($pagtype) {
-    case 3: {
+    case 1: {
             $hedname = 'Customer';
-            $relink = "User/customer";
+            $relink = "Account/customer";
         }
         break;
-    case 4: {
+    case 2: {
             $hedname = 'Supplier';
-            $relink = "User/supplier";
+            $relink = "Account/supplier";
+        }
+        break;
+    case 3: {
+            $hedname = 'Expense';
+            $relink = "Account/expense_acc";
+        }
+        break;
+    case 5: {
+            $hedname = 'Bank Account';
+            $relink = "Account/cash_bank_acc";
         }
         break;
 }
@@ -63,7 +73,7 @@ switch ($pagtype) {
 <div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-6">
-            <button type="button" class="btn btn-primary btn-sm" onclick="openmodalfun('#addcustomermodal','Add New <?= $hedname ?>','<?=$pagtype?>','0')" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i> Add New <?= $hedname ?></button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="openmodalfun('#addcustomermodal','Add New <?= $hedname ?>','<?= $pagtype ?>','0')" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i> Add New <?= $hedname ?></button>
 
             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa-solid fa-file-import"></i> Import Customers</button>
         </div>
@@ -209,48 +219,45 @@ switch ($pagtype) {
 
                                                     <div class="col-md-6">
                                                         <label for="Name">Name<span class="text-danger">*</span></label>
-                                                        <input type="hidden" class="form-control-file" name="cust_id" value="<?php echo $value->m_acc_id;  ?>">
-                                                        <input type="hidden" class="form-control-file" name="m_acc_type" value="<?= $value->m_acc_type ?>">
-
-                                                        <input type="text" class="form-control" name="cust_name" required placeholder="Please Enter Name" value="<?php echo $value->m_acc_name;  ?>">
+                                                        <input type="hidden" name="m_acc_id" value="<?php echo $value->m_acc_id;  ?>">
+                                                        <input type="hidden" name="m_acc_type" value="<?= $value->m_acc_type ?>">
+                                                        <input type="text" class="form-control" name="m_acc_name" required placeholder="Please Enter Name" value="<?php echo $value->m_acc_name;  ?>">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="Name">Phone Number<span class="text-danger">*</span></label>
-                                                        <input type="text" class="form-control" name="cust_mobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" value="<?php echo $value->m_acc_mobile;  ?>" required>
+                                                        <input type="text" class="form-control" name="m_acc_mobile" maxlength="10" minlength="10" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" placeholder="Please Enter Number" value="<?php echo $value->m_acc_mobile;  ?>" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label for="Name">Email</label>
-                                                        <input type="email" class="form-control" name="cust_email" placeholder="Please Enter Email" value="<?php echo $value->m_acc_email;  ?>">
+                                                        <input type="email" class="form-control" name="m_acc_email" placeholder="Please Enter Email" value="<?php echo $value->m_acc_email;  ?>">
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label for="image">Profile Image</label>
+                                                        <input type="hidden" name="m_acc_image1" value="<?php echo $value->m_acc_image; ?>">
+                                                        <input type="file" class="form-control-file" name="m_acc_image">
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <label for="order">Status </label>
-                                                        <select class="form-control" name="cust_status">
-                                                            <option value="1" <?php if ($value->m_acc_status == 1) echo 'selected'; ?>>Active</option>
-                                                            <option value="2" <?php if ($value->m_acc_status == 2) echo 'selected'; ?>>In-Active</option>
-                                                        </select>
+                                                        <label for="Name">GST No</label>
+                                                        <input type="text" class="form-control" name="m_acc_gst_no" placeholder="Please Enter gst Number"  value="<?php echo $value->m_acc_gst_no;  ?>">
                                                     </div>
-                                                    <!-- <div class="col-md-6">
-<label for="Name">Password</label>
-<input type="text" class="form-control" name="cust_pass" placeholder="Please Enter Password" value="<?php echo $value->m_acc_password;  ?>">
- </div> -->
-                                                    <div class="col-md-6 ">
-                                                        <label for="image">Profile Image</label>
-                                                        <input type="hidden" class="form-control-file" name="cust_image1" value="<?php echo $value->m_acc_image;  ?>">
-                                                        <input type="file" class="form-control-file" name="cust_image">
+                                                    <div class="col-md-6">
+                                                        <label for="Name">Bank Name</label>
+                                                        <input type="text" class="form-control" name="m_acc_bankname" placeholder="Please Enter Bank Name" value="<?php echo $value->m_acc_bankname;  ?>">
                                                     </div>
-                                                    <!-- <div class="col-md-6">
-<label for="Name">Tax Number</label>
-<input type="text" class="form-control" name="cust_text_num" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_acc_text_num;  ?>">
- </div> -->
+                                                    <div class="col-md-6">
+                                                        <label for="Name">Bank Account No</label>
+                                                        <input type="text" class="form-control" name="m_acc_bankacc" placeholder="Please Enter Account"  value="<?php echo $value->m_acc_bankacc;  ?>">
+                                                    </div>
                                                     <div class="col-md-6">
                                                         <label for="Name">Opening Balance</label>
-                                                        <input type="text" class="form-control" name="cust_open_balance" placeholder="Please Enter Tax Number" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_acc_open_balance;  ?>">
+                                                        <input type="text" class="form-control" name="m_acc_open_balance" placeholder="Please Enter Balance" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" value="<?php echo $value->m_acc_open_balance;  ?>">
                                                     </div>
-                                                    <?php if ($pagtype == 4) { ?>
+                                                   
                                                         <div class="col-md-6">
                                                             <label for="Name">Credit Period</label>
                                                             <div class="input-group">
-                                                                <input type="text" class="form-control" name="cust_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_acc_credit_period;  ?>">
+                                                                <input type="text" class="form-control" name="m_acc_credit_period" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_acc_credit_period;  ?>">
                                                                 <span class="input-group-text">Day(s)</span>
                                                             </div>
                                                         </div>
@@ -258,13 +265,19 @@ switch ($pagtype) {
                                                             <label for="Name">Credit Limit</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-text">₹</span>
-                                                                <input type="text" class="form-control" name="credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_acc_credit_limit;  ?>">
+                                                                <input type="text" class="form-control" name="m_acc_credit_limit" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)" aria-label="Dollar amount (with dot and two decimal places)" value="<?php echo $value->m_acc_credit_limit;  ?>">
                                                             </div>
                                                         </div>
-                                                    <?php } ?>
+                                                        <div class="col-md-6">
+                                                        <label for="order">Status </label>
+                                                        <select class="form-control" name="m_acc_status">
+                                                            <option value="1" <?php if ($value->m_acc_status == 1) echo 'selected'; ?>>Active</option>
+                                                            <option value="2" <?php if ($value->m_acc_status == 2) echo 'selected'; ?>>In-Active</option>
+                                                        </select>
+                                                    </div>
                                                     <div class="col-md-12">
                                                         <label for="Name">Billing Address</label>
-                                                        <textarea class="form-control" name="Billing_address" rows="2"><?php echo $value->m_acc_address  ?></textarea>
+                                                        <textarea class="form-control" name="m_acc_address" rows="2"><?php echo $value->m_acc_address  ?></textarea>
                                                     </div>
 
                                                     <div class="canvas-footer justify-content-end d-flex">
@@ -295,5 +308,5 @@ switch ($pagtype) {
 <!-- ========== Page Content ========== -->
 <?php include("footer.php"); ?>
 <?php $this->view('custom_page'); ?>
-<?php $this->view('js/main_js');  ?>
+<?php $this->view('js/account_js');  ?>
 <?php $this->view('js/custom_js'); ?>

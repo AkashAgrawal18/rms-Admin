@@ -23,7 +23,7 @@
         <div class="row align-items-center">
             <div class="col-xl-10 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <?= $pagetitle ?> >> <a href="<?php echo base_url('Main/group_list/').$type; ?>" class="text-decoration-none fw-bold"><span class="text-warning"> <?= $pagetitle ?></span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <?= $pagetitle ?> >> <a href="<?php echo base_url('Master/group_list/').$type; ?>" class="text-decoration-none fw-bold"><span class="text-warning"> <?= $pagetitle ?></span></a>
                 </p>
             </div>
             <!--  <div class="col-lg-1 text-end">
@@ -53,7 +53,7 @@
             <button type="button" class="btn btn-primary btn-sm" onclick="openmodalfun('#groupadd','Add New <?= $pagetitle ?>','<?=$type?>','0')" ><i class="fa-solid fa-plus"></i> Add New <?= $pagetitle ?></button>
         </div>
         <div class="col-md-3">
-            <form class="input-group form-group" method="post" action="<?php echo base_url('Main/group_list/').$type;  ?>">
+            <form class="input-group form-group" method="post" action="<?php echo base_url('Master/group_list/').$type;  ?>">
                 <div class="form-outline" data-mdb-input-init>
                     <input type="text" name="search" value="<?php echo $search; ?>" class="form-control" />
                     <!-- <label class="form-label" for="form1">Search</label> -->
@@ -61,7 +61,7 @@
                 <button type="submit" class="btn btn-primary me-3" data-mdb-ripple-init>
                     <i class="fas fa-search"></i>
                 </button>
-                <a type="submit" href="<?php echo base_url('Main/group_list/').$type;  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                <a type="submit" href="<?php echo base_url('Master/group_list/').$type;  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                     <i class="fa-solid fa-rotate"></i>
                 </a>
             </form>

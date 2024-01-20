@@ -20,7 +20,7 @@
         <div class="row align-items-center">
             <div class="col-xl-10 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('Main/categories'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Categories</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('Master/categories'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Categories</span></a>
                 </p>
             </div>
             <!--  <div class="col-lg-1 text-end">
@@ -55,7 +55,7 @@
 
         </div>
         <div class="col-md-3">
-            <form class="input-group form-group" method="get" action="<?php echo base_url('Main/categories'); ?>">
+            <form class="input-group form-group" method="get" action="<?php echo base_url('Master/categories'); ?>">
                 <div class="form-outline" data-mdb-input-init>
                     <input type="search" name="search" value="<?php echo $search; ?>" class="form-control" />
                     <!-- <label class="form-label" for="form1">Search</label> -->
@@ -63,7 +63,7 @@
                 <button type="submit" class="btn btn-primary me-1" data-mdb-ripple-init>
                     <i class="fas fa-search"></i>
                 </button>
-                <a href="<?php echo base_url('Main/categories'); ?>" class="btn btn-primary me-1" data-mdb-ripple-init>
+                <a href="<?php echo base_url('Master/categories'); ?>" class="btn btn-primary me-1" data-mdb-ripple-init>
                     <i class="fa-solid fa-rotate"></i>
                 </a>
             </form>
@@ -151,7 +151,7 @@
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="submit" id="cat_edit_btn" class="btn btn-primary btn-sm"><i class="fa-regular fa-pen-to-square"></i> Update</button>
-                                                                <a href="<?php echo base_url('Main/categories'); ?>" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</a>
+                                                                <a href="<?php echo base_url('Master/categories'); ?>" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</a>
                                                             </div>
                                                         </form><!---------------/form----------->
                                                     </div>

@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-8">
                             <h2 class="m-0 text-white mb-2"><?= $countRow['order']; ?></h2>
-                            <a href="<?php echo base_url('User/sales'); ?>" class="text-decoration-none text-white">
+                            <a href="<?php echo base_url('Mainsales'); ?>" class="text-decoration-none text-white">
                                 <h5 class="m-0">Orders</h5>
                             </a>
                         </div>
@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-8">
                             <h2 class="m-0 text-white mb-2"><?= $countRow['pcategory']; ?></h2>
-                            <a href="<?php echo base_url('Main/categories'); ?>" class="text-decoration-none text-white">
+                            <a href="<?php echo base_url('Master/categories'); ?>" class="text-decoration-none text-white">
                                 <h5 class="m-0">Product Category</h5>
                             </a>
                         </div>
@@ -77,7 +77,7 @@
                         </div>
                         <div class="col-8">
                             <h2 class="m-0 text-white mb-2"><?= $countRow['product']; ?></h2>
-                            <a href="<?php echo base_url('Main/products'); ?>" class="text-decoration-none text-white">
+                            <a href="<?php echo base_url('Master/products'); ?>" class="text-decoration-none text-white">
                                 <h5 class="m-0">Products</h5>
                             </a>
                         </div>
@@ -99,7 +99,7 @@
 
                             <div class="col-8">
                                 <h2 class="m-0 text-white mb-2"><?= $poffer; ?><span style="font-size:20px;">(<?php echo $value->m_offer_title; ?>)</span></h2>
-                                <a href="<?php echo base_url('Main/product_offers/' . $value->m_offer_id); ?>" class="text-decoration-none text-white">
+                                <a href="<?php echo base_url('Master/product_offers/' . $value->m_offer_id); ?>" class="text-decoration-none text-white">
                                     <h5 class="m-0"><?php echo $value->m_offer_maintitle; ?></h5>
                                 </a>
                             </div>
@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-8">
                             <h2 class="m-0 text-white mb-2"><?= $countRow['customer']; ?></h2>
-                            <a href="<?php echo base_url('User/customer'); ?>" class="text-decoration-none text-white">
+                            <a href="<?php echo base_url('Account/customer'); ?>" class="text-decoration-none text-white">
                                 <h5 class="m-0">Total Customers</h5>
                             </a>
                         </div>
@@ -145,7 +145,7 @@
                         </div>
                         <div class="col-8">
                             <h2 class="m-0 text-white mb-2"><?= $countRow['inactive_customer']; ?></h2>
-                            <a href="<?php echo base_url('User/customer?status=2'); ?>" class="text-decoration-none text-white">
+                            <a href="<?php echo base_url('Account/customer?status=2'); ?>" class="text-decoration-none text-white">
                                 <h5 class="m-0">Inactive Customers</h5>
                             </a>
                         </div>

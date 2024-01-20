@@ -14,8 +14,8 @@ class Report extends CI_Controller
         $data['cat_id'] = $this->input->post('cat_id');
         $data['from_date'] = $this->input->post('from_date');
         $data['to_date'] = $this->input->post('to_date') ?: date('Y-m-d');
-        $data['all_items'] = $this->Main_model->all_product($data['cat_id']);
-        $data['all_cate'] = $this->Main_model->get_active_category();
+        $data['all_items'] = $this->Master_model->all_product($data['cat_id']);
+        $data['all_cate'] = $this->Master_model->get_active_category();
         $data['all_value'] = $this->Report_model->get_stock_list($data['from_date'],$data['to_date'], $data['item_id'],$data['cat_id']);
         // echo '<pre>'; print_r( $data['all_value'] ); die ;
         $this->load->view('stock_ledger', $data);

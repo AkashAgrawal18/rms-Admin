@@ -301,7 +301,7 @@
                 var itemid = $("#items_datalist option[value='" + $(this).val() + "']").attr('data-itemid')
 
                 $.ajax({
-                    url: "<?php echo site_url('User/get_product_dtl'); ?>",
+                    url: "<?php echo site_url('Mainget_product_dtl'); ?>",
                     type: "POST",
                     data: {
                         itemid

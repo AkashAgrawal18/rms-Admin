@@ -28,7 +28,7 @@
 
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Main/product_offers/'.$typeid); ?>" class="text-decoration-none fw-bold"><span class="text-warning">
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Master/product_offers/'.$typeid); ?>" class="text-decoration-none fw-bold"><span class="text-warning">
                             Product Offers</span></a>
                 </p>
             </div>
@@ -57,7 +57,7 @@
     <div class="container-fluid bg-light pt-4">
           
          <?php $form_attributes=array('method'=>'post'); ?>
-             <?php echo form_open_multipart('Main/offer_add',$form_attributes) ?>
+             <?php echo form_open_multipart('Master/offer_add',$form_attributes) ?>
 
 
              <input type="hidden" name="o_offer_type" value="<?php echo $typeid ?>">
@@ -83,7 +83,7 @@
                            
                             <td><?php echo $row->m_product_name ?></td>
                             <td>
-                                <a href="<?php echo base_url('Main/remove_offer/').$row->offer_id.'/'.$row->o_offer_type?>"  class="btn btn-primary btn-sm unit-delete" data-original-title='Remove Offer' onclick='return show_confirm()'><i class="fa-solid fa-trash"></i></a>
+                                <a href="<?php echo base_url('Master/remove_offer/').$row->offer_id.'/'.$row->o_offer_type?>"  class="btn btn-primary btn-sm unit-delete" data-original-title='Remove Offer' onclick='return show_confirm()'><i class="fa-solid fa-trash"></i></a>
                             </td>
                         </tr>
                          <?php } }?> 

@@ -80,7 +80,7 @@
             $('#productModalLabel').html(itemname + ' (' + itemfabric + ')')
             $.ajax({
 
-                url: "<?php echo site_url('User/get_avil_products') ?>",
+                url: "<?php echo site_url('Mainget_avil_products') ?>",
                 dataType: "JSON",
                 method: "POST",
                 data: {
@@ -178,7 +178,7 @@
 
 
             $.ajax({
-                url: "<?php echo site_url('User/insert_sales') ?>",
+                url: "<?php echo site_url('Maininsert_sales') ?>",
                 type: "POST",
                 data: formData,
                 // processData: false,
@@ -257,7 +257,7 @@
 
         $.ajax({
 
-            url: "<?php echo site_url('User/get_avil_products') ?>",
+            url: "<?php echo site_url('Mainget_avil_products') ?>",
             dataType: "JSON",
             method: "POST",
             data: {

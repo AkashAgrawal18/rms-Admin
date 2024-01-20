@@ -203,7 +203,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Main/pos'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> POS</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Master/pos'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> POS</span></a>
                 </p>
             </div>
             <div class="col-xl-1 col-lg-2 text-end">
@@ -239,7 +239,7 @@
                                         </select>
                                     </div>
                                     <div class="col-1">
-                                        <button type="button" class="btn btn-light" onclick="openmodalfun('#addcustomermodal','Add Customer','3','1')" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i></button>
+                                        <button type="button" class="btn btn-light" onclick="openmodalfun('#addcustomermodal','Add Customer','1','1')" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i></button>
 
                                     </div>
                                     <div class="col-5">
@@ -247,7 +247,7 @@
 
                                     </div>
                                     <div class="col-1">
-                                        <a href="<?php echo base_url('Main/pos');  ?>" class="input-group-text "><i class="fa-solid fa-rotate p-1"></i></a>
+                                        <a href="<?php echo base_url('Master/pos');  ?>" class="input-group-text "><i class="fa-solid fa-rotate p-1"></i></a>
                                     </div>
 
                                 </div>
@@ -417,7 +417,7 @@
                                         <!-- payment method Modal -->
                                     </div>
                                     <div class="col-xl-3 col-3">
-                                        <a href="<?= base_url('Main/pos') ?>" class="btn btn-danger w-100" style="font-size: 15px;">Reset</a>
+                                        <a href="<?= base_url('Master/pos') ?>" class="btn btn-danger w-100" style="font-size: 15px;">Reset</a>
                                     </div>
                                 </div>
 
@@ -444,7 +444,7 @@
                                 $cat_img = base_url('assets/imgs/no-data.png');
                             } ?>
                             <div class="card pcard2 catclick" data-cat_id="<?= $value->m_category_id ?>" id="catdiv<?= $value->m_category_id ?>">
-                                <!-- <a href="<?php echo base_url('Main/pos/' . $value->m_category_slug); ?>" class="text-decoration-none"> -->
+                                <!-- <a href="<?php echo base_url('Master/pos/' . $value->m_category_slug); ?>" class="text-decoration-none"> -->
                                 <img src="<?php echo $cat_img; ?>" alt="kurtis" class="w-100 ar">
                                 <p class="text-center m-0 small"><?php echo $value->m_category_name ?></p>
                                 <!-- </a> -->
@@ -487,7 +487,8 @@
 <?php include("footer.php"); ?>
 <?php $this->view('custom_page'); ?>
 <?php $this->view('js/main_js');
-$this->view('js/pos_js'); ?>
+$this->view('js/pos_js'); 
+$this->view('js/account_js'); ?>
 <script>
     const incrementButton = document.querySelector("#increment");
     const decrementButton = document.querySelector("#decrement");
