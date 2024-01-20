@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-8">
                             <h2 class="m-0 text-white mb-2"><?= $countRow['order']; ?></h2>
-                            <a href="<?php echo base_url('Mainsales'); ?>" class="text-decoration-none text-white">
+                            <a href="<?php echo base_url('Main/sales'); ?>" class="text-decoration-none text-white">
                                 <h5 class="m-0">Orders</h5>
                             </a>
                         </div>

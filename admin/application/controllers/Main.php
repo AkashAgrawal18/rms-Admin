@@ -262,7 +262,7 @@ class Main extends CI_Controller
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
     $data['all_value'] = $this->Main_model->get_all_purchase(null, $data['user'], $data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
-    $data['all_user'] = $this->Main_model->get_customer(4,1);
+    $data['all_user'] = $this->Main_model->get_customer(2,1);
     // echo "<pre>";print_r($data['all_value']); die();
     $this->load->view('purchase', $data);
   }
@@ -277,7 +277,7 @@ class Main extends CI_Controller
     $data['search'] = $this->input->get('search');
     $data['user'] = $this->input->get('user');
     $data['all_value'] = $this->Main_model->get_all_purchase(null, $data['user'], $data['search'], $data['from_date'], $data['to_date'], $data['purtype']);
-    $data['all_user'] = $this->Main_model->get_customer(4,1);
+    $data['all_user'] = $this->Main_model->get_customer(2,1);
     $this->load->view('purchase', $data);
   }
 
@@ -317,7 +317,7 @@ class Main extends CI_Controller
     }
     $data['product_list'] = $this->Master_model->get_active_products();
     $data['texgst'] = $this->Master_model->get_active_group(4);
-    $data['all_user'] = $this->Main_model->get_customer(4,1);
+    $data['all_user'] = $this->Main_model->get_customer(2,1);
 
     // echo "<pre>"; print_r($data['edit_value']); die();
     $this->load->view('purchase-edit', $data);

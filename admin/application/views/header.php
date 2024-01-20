@@ -59,10 +59,10 @@
                         Sales
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainsales'); ?>">Sales</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Mainsales_return'); ?>">Sales Return</a></li> -->
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpayment_in'); ?>">Payment In</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Mainquotation'); ?>">Quotation / Estimate</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/sales'); ?>">Sales</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Main/sales_return'); ?>">Sales Return</a></li> -->
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/payment_in'); ?>">Payment In</a></li>
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Main/quotation'); ?>">Quotation / Estimate</a></li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -70,9 +70,9 @@
                         Purchases
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpurchase'); ?>">Purchases</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpurchase_return'); ?>">Purchases Return</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainpayment_out'); ?>">Payment Out</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/purchase'); ?>">Purchases</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/purchase_return'); ?>">Purchases Return</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/payment_out'); ?>">Payment Out</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -81,7 +81,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?php echo base_url('Report/stock_ledger'); ?>">Stock Ledger</a></li>
-                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Mainstock_transfer'); ?>">Stocks Transfer</a></li> -->
+                        <!-- <li><a class="dropdown-item" href="<?php echo base_url('Main/stock_transfer'); ?>">Stocks Transfer</a></li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -89,8 +89,8 @@
                         Expenses
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainexpense_categories'); ?>">Expenses Categories</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('Mainexpenses'); ?>">Expenses</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/expense_categories'); ?>">Expenses Categories</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('Main/expenses'); ?>">Expenses</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">

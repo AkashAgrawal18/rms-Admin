@@ -27,7 +27,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Parties >> <a href="<?php echo base_url('Mainsupplier');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Suppliers</span></a>
+                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Parties >> <a href="<?php echo base_url('Main/supplier');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Suppliers</span></a>
                 </p>
             </div>
             <!-- <div class="col-lg-1 text-end">
@@ -136,7 +136,7 @@
         </div>
         <div class="col-md-5">
             <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('Mainsupplier');  ?>">
+                <form method="get" action="<?php echo base_url('Main/supplier');  ?>">
                     <div class="form-outline" data-mdb-input-init>
                     <input type="text" name="search" class="form-control" value="<?php echo $search; ?>" />
                     <!-- <label class="form-label" for="form1">Search</label> -->
@@ -144,11 +144,11 @@
                 <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
                     <i class="fas fa-search"></i>
                 </button>
-                <a type="submit" href="<?php echo base_url('Mainsupplier');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                <a type="submit" href="<?php echo base_url('Main/supplier');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
                    <i class="fa-solid fa-rotate"></i>
                 </a>
                 </form>
-                <form action="<?php echo base_url('Mainsupplier');?>"  method="get" >
+                <form action="<?php echo base_url('Main/supplier');?>"  method="get" >
                     <select class="form-select" name="status" onchange="this.form.submit();" aria-label="Default select example" >
                     <option selected >Select Status</option>
                     <option value="1" <?php if($status == 1) echo "selected"; ?>>Active</option>
@@ -387,7 +387,7 @@
     </ol>
 </p>
 <hr>
-<form method="POST" action="<?php echo site_url('Mainimport_supplier') ?>" enctype="multipart/form-data">
+<form method="POST" action="<?php echo site_url('Main/import_supplier') ?>" enctype="multipart/form-data">
   <input class="form-control" type="file" id="formFile" name="import_file" required>
   
       </div>

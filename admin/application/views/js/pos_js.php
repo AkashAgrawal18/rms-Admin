@@ -80,7 +80,7 @@
             $('#productModalLabel').html(itemname + ' (' + itemfabric + ')')
             $.ajax({
 
-                url: "<?php echo site_url('Mainget_avil_products') ?>",
+                url: "<?php echo site_url('Main/get_avil_products') ?>",
                 dataType: "JSON",
                 method: "POST",
                 data: {
@@ -149,7 +149,7 @@
 
         $("#paymodeModalbtn").on('click', function(e) {
             var amount = $("#m_total_tax").val();
-            var cust = $("#m_sale_customer").val();
+            var cust = $("#m_customer").val();
 
             if (cust == null || cust == '') {
                 swal("Please Select Customer First", {
@@ -178,7 +178,7 @@
 
 
             $.ajax({
-                url: "<?php echo site_url('Maininsert_sales') ?>",
+                url: "<?php echo site_url('Main/insert_sales') ?>",
                 type: "POST",
                 data: formData,
                 // processData: false,
@@ -257,7 +257,7 @@
 
         $.ajax({
 
-            url: "<?php echo site_url('Mainget_avil_products') ?>",
+            url: "<?php echo site_url('Main/get_avil_products') ?>",
             dataType: "JSON",
             method: "POST",
             data: {

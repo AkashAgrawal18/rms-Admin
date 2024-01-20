@@ -123,7 +123,7 @@
                    <i class="fa-solid fa-rotate"></i>
                 </a>
                 </form>
-               <form action="<?php echo base_url('Mainexpenses');?>"  method="get" >
+               <form action="<?php echo base_url('Main/expenses');?>"  method="get" >
                     
                 </form>
                 <!-- <input type="date" id="date" name="date" class="form-control"> -->

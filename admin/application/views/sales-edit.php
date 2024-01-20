@@ -278,7 +278,7 @@
         <?php } ?>
             <!-- <button type="submit" class="btn btn-primary w-100 btn-sm" id="btn-add-purchase"><i class="fa-solid fa-file"></i> Save</button> -->
              <!-- <button type="submit" id="btn-add-purchase" class="btn btn-primary w-100 btn-sm">Save</button> -->
-            <!-- <a href="<?php echo site_url('Mainpurchase') ?>" class="btn btn-primary w-100 btn-sm">Cancel </a> -->
+            <!-- <a href="<?php echo site_url('Main/purchase') ?>" class="btn btn-primary w-100 btn-sm">Cancel </a> -->
 
           
 

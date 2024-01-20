@@ -116,6 +116,9 @@ class Main_model extends CI_model
 
   public function get_all_sales($order_id = '', $user = '', $search = '', $from_date = '', $to_date = '')
   {
+
+    $result = array();
+
     if (!empty($order_id)) {
       $this->db->where('m_sale_spo', $order_id);
     }
@@ -319,6 +322,9 @@ class Main_model extends CI_model
 
   public function get_all_purchase($pur_id = '', $user = '', $search = '', $from_date = '', $to_date = '', $pur_type = '')
   {
+
+    $result = array();
+
     if (!empty($pur_id)) {
       $this->db->where('m_purchase_spo', $pur_id);
     }

@@ -351,7 +351,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Maininsert_payment_in'); ?>",
+        url: "<?php echo site_url('Main/insert_payment_in'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -394,7 +394,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Mainupdate_payment_in'); ?>",
+        url: "<?php echo site_url('Main/update_payment_in'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -445,7 +445,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_payment_in'); ?>",
+            url: "<?php echo site_url('Main/delete_payment_in'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -497,7 +497,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Maininsert_payment_out'); ?>",
+        url: "<?php echo site_url('Main/insert_payment_out'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -540,7 +540,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Mainupdate_payment_out'); ?>",
+        url: "<?php echo site_url('Main/update_payment_out'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -591,7 +591,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_payment_out'); ?>",
+            url: "<?php echo site_url('Main/delete_payment_out'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -790,7 +790,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Maininsert_expense_categories'); ?>",
+        url: "<?php echo site_url('Main/insert_expense_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -833,7 +833,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Mainupdate_expense_categories'); ?>",
+        url: "<?php echo site_url('Main/update_expense_categories'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -884,7 +884,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_expense_categories'); ?>",
+            url: "<?php echo site_url('Main/delete_expense_categories'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -937,7 +937,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Maininsert_expense'); ?>",
+        url: "<?php echo site_url('Main/insert_expense'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -980,7 +980,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Mainupdate_expense'); ?>",
+        url: "<?php echo site_url('Main/update_expense'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1031,7 +1031,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_expense'); ?>",
+            url: "<?php echo site_url('Main/delete_expense'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1702,7 +1702,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Maininsert_sales'); ?>",
+        url: "<?php echo site_url('Main/insert_sales'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1714,7 +1714,7 @@
               timer: 1000,
             });
             setTimeout(function() {
-              window.location = "<?php echo site_url('Mainsales'); ?>";
+              window.location = "<?php echo site_url('Main/sales'); ?>";
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -1746,7 +1746,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Mainupdate_sales'); ?>",
+        url: "<?php echo site_url('Main/update_sales'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1758,7 +1758,7 @@
               timer: 1000,
             });
             setTimeout(function() {
-              window.location = "<?php echo site_url('Mainsales'); ?>";
+              window.location = "<?php echo site_url('Main/sales'); ?>";
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -1795,7 +1795,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_sale_item'); ?>",
+            url: "<?php echo site_url('Main/delete_sale_item'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1855,7 +1855,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_sales'); ?>",
+            url: "<?php echo site_url('Main/delete_sales'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -1911,7 +1911,7 @@
 
       $.ajax({
         type: "POST",
-        url: "<?php echo site_url('Maininsert_purchase'); ?>",
+        url: "<?php echo site_url('Main/insert_purchase'); ?>",
         data: formData,
         processData: false,
         contentType: false,
@@ -1923,7 +1923,7 @@
               timer: 1000,
             });
             setTimeout(function() {
-              window.location = "<?php echo site_url('Mainpurchase'); ?>";
+              window.location = "<?php echo site_url('Main/purchase'); ?>";
             }, 1000);
           } else {
             clkbtn.prop('disabled', false);
@@ -1960,7 +1960,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_purchase_item'); ?>",
+            url: "<?php echo site_url('Main/delete_purchase_item'); ?>",
             data: {
               delete_id: dlt_id
             },
@@ -2020,7 +2020,7 @@
 
           $.ajax({
             type: "POST",
-            url: "<?php echo site_url('Maindelete_purchase'); ?>",
+            url: "<?php echo site_url('Main/delete_purchase'); ?>",
             data: {
               delete_id: dlt_id
             },

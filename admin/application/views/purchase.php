@@ -22,10 +22,10 @@
     <div class="container-fluid">
 
         <?php if ($purtype == 1) {
-            $redirlink = 'Mainpurchase';
+            $redirlink = 'Main/purchase';
             $hednam = 'Purchase';
         } else {
-            $redirlink = 'Mainpurchase_return';
+            $redirlink = 'Main/purchase_return';
             $hednam = 'Return';
         } ?>
 
@@ -48,7 +48,7 @@
 <div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-3">
-            <a type="button" href="<?php echo base_url('Mainedit_purchase/') . $purtype; ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New <?= $hednam ?> </a>
+            <a type="button" href="<?php echo base_url('Main/edit_purchase/') . $purtype; ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New <?= $hednam ?> </a>
         </div>
 
         <div class="col-md-9">
@@ -135,7 +135,7 @@
                         <td><?php echo $value->total_qty; ?></td>
                         <td>₹<?php echo $value->m_purchase_nettotal; ?></td>
 
-                        <!-- <td><a href="<?php // echo base_url('Mainedit_purchase?id=') . $value->m_purchase_spo . '&purtype=2';  
+                        <!-- <td><a href="<?php // echo base_url('Main/edit_purchase?id=') . $value->m_purchase_spo . '&purtype=2';  
                                             ?>"><button type="button" class="btn btn-primary btn-sm">Add Purchase Return</button></a></td> -->
                         <td>
 
@@ -244,7 +244,7 @@
                             </div>
 
                             <!-- view purchase detail -->
-                            <a href="<?php echo base_url('Mainedit_purchase/' . $purtype . '?id=') . $value->m_purchase_spo;  ?>"><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></button></a>
+                            <a href="<?php echo base_url('Main/edit_purchase/' . $purtype . '?id=') . $value->m_purchase_spo;  ?>"><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></button></a>
                             <button type="button" data-value="<?php echo $value->m_purchase_spo; ?>" class="btn btn-primary purchase-delete btn-sm"><i class="fa-solid fa-trash"></i></button>
                             <!-- <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></button> -->
 
