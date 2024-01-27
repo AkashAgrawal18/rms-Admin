@@ -181,7 +181,7 @@
 <!-- ========== Page Content ========== -->
 <?php include("footer.php"); ?>
 <?php $this->view('custom_page');  ?>
-<?php $this->view('js/main_js');  ?>
+<?php $this->view('js/master_js');  ?>
 <?php $this->view('js/custom_js'); ?>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <script>

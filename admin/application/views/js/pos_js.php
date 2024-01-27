@@ -75,9 +75,9 @@
             $('#productModal').modal('show');
             var item = $(this).data('itemid');
             var itemname = $(this).data('itemname');
-            var itemfabric = $(this).data('itemfabric');
+            var itembrand = $(this).data('itembrand');
 
-            $('#productModalLabel').html(itemname + ' (' + itemfabric + ')')
+            $('#productModalLabel').html(itemname + ' (' + itembrand + ')')
             $.ajax({
 
                 url: "<?php echo site_url('Main/get_avil_products') ?>",
@@ -282,9 +282,9 @@
 
                         $("#product_div").append(` 
                         <div class="col-xl-2 col-lg-4">
-                                    <div class="card h-100 p-2 groupproductclick" data-itemid="` + value.m_product_id + `" data-itemname="` + value.m_product_name + `" data-itemfabric="` + value.m_fabric_name + `">
+                                    <div class="card h-100 p-2 groupproductclick" data-itemid="` + value.m_product_id + `" data-itemname="` + value.m_product_name + `" data-itembrand="` + value.m_brand_name + `">
                                         <img src="` + imagepath + `" alt="kurtis" class="w-100 h-80" style="aspect-ratio: 1/1; object-fit: cover;">
-                                        <p class="mt-2 mb-0 fw-normal fn wraptext">` + value.m_product_name + `</p><span class="badge bg-success" style="position: absolute;top: 3px;right: 3px;padding: 0.2rem;">` + value.m_fabric_name + `</span>
+                                        <p class="mt-2 mb-0 fw-normal fn wraptext">` + value.m_product_name + `</p><span class="badge bg-success" style="position: absolute;top: 3px;right: 3px;padding: 0.2rem;">` + value.m_brand_name + `</span>
                                         <h6 class="mt-2">₹ ` + value.m_product_seles_price + ` <small> <del>₹  ` + value.m_product_mrp + `</del></small></h6>
                                     </div>
                                 </div>

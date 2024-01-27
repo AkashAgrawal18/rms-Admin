@@ -188,7 +188,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Product</th>
-                                                                <th>Fabric</th>
+                                                                <th>Brand</th>
                                                                 <th>Colour</th>
                                                                 <th>Size</th>
                                                                 <th>Quantity</th>
@@ -204,7 +204,7 @@
                                                                 foreach ($value->m_purchase_items as $val) { ?>
                                                                     <tr>
                                                                         <td><?= $val->m_product_name; ?></td>
-                                                                        <td><?= $val->m_fabric_name; ?></td>
+                                                                        <td><?= $val->m_brand_name; ?></td>
                                                                         <td><?= $val->m_color_name; ?></td>
                                                                         <td><?= $val->m_size_name; ?></td>
                                                                         <td><?= $val->m_purchase_qty; ?></td>

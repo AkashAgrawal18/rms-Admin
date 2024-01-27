@@ -155,9 +155,9 @@ class Master_model extends CI_model
 
   public function all_product($category = '')
   {
-    $this->db->select('master_product.*,m_category_name,fabric.m_group_name as m_fabric_name');
+    $this->db->select('master_product.*,m_category_name,brand.m_group_name as m_brand_name');
     $this->db->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left');
-    $this->db->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left');
+    $this->db->join('master_goups_tbl brand', 'brand.m_group_id = master_product.m_product_brand', 'left');
     if ($category != '') {
       $query = $this->db->where("m_product_cat_id", $category);
     }
@@ -166,7 +166,7 @@ class Master_model extends CI_model
   }
 
 
-  public function get_active_products($cat = '', $fabric = '', $search = '', $status = '', $item = '')
+  public function get_active_products($cat = '', $brand = '', $search = '', $status = '', $item = '')
   {
     $result = array();
 
@@ -179,8 +179,8 @@ class Master_model extends CI_model
     if (!empty($cat)) {
       $this->db->where('m_product_cat_id', $cat);
     }
-    if (!empty($fabric)) {
-      $this->db->where('m_product_fabric', $fabric);
+    if (!empty($brand)) {
+      $this->db->where('m_product_brand', $brand);
     }
     if (!empty($search)) {
 
@@ -188,11 +188,11 @@ class Master_model extends CI_model
       $this->db->or_like('m_product_slug', $search, 'both');
       $this->db->or_like('m_product_barscode', $search, 'both');
     }
-    $sql = $this->db->select('master_product.*,m_category_name,taxgst.m_group_name as m_tax_value,taxgst.m_group_name as m_tax_value,unit.m_group_name as m_unit_title,fabric.m_group_name as m_fabric_name')
+    $sql = $this->db->select('master_product.*,m_category_name,taxgst.m_group_name as m_tax_value,taxgst.m_group_name as m_tax_value,unit.m_group_name as m_unit_title,brand.m_group_name as m_brand_name')
       ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
       ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
       ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
-      ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+      ->join('master_goups_tbl brand', 'brand.m_group_id = master_product.m_product_brand', 'left')
       ->get('master_product')->result();
 
     if (!empty($sql)) {
@@ -221,8 +221,8 @@ class Master_model extends CI_model
           "m_product_information" => $value->m_product_information,
 
           "m_product_status" => $value->m_product_status,
-          'm_product_fabric' => $value->m_product_fabric,
-          'm_fabric_name' => $value->m_fabric_name ?: '',
+          'm_product_brand' => $value->m_product_brand,
+          'm_brand_name' => $value->m_brand_name ?: '',
           'product_color' => $value->m_product_color,
           'm_product_color' => $product_colors,
           'product_size' => $value->m_product_size,
@@ -240,7 +240,7 @@ class Master_model extends CI_model
 
   public function insert_product()
   {
-    // Extract the selected colors, sizes, and fabrics
+    // Extract the selected colors, sizes, and brands
 
     if (!empty($this->input->post('m_product_color'))) {
       $selectedColors = implode(',', $this->input->post('m_product_color'));
@@ -270,7 +270,7 @@ class Master_model extends CI_model
       "m_product_status" => 1,
       'm_product_color' => $selectedColors,
       'm_product_size' => $selectedSizes,
-      'm_product_fabric' => $this->input->post('m_product_fabric'),
+      'm_product_brand' => $this->input->post('m_product_brand'),
     );
 
     if (!empty($this->input->post('m_product_id'))) {

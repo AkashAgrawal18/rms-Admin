@@ -23,23 +23,12 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard');?>" class="text-white text-decoration-none ">Dashboard</a> >> Sales >> <a href="<?php echo base_url('Main/payment_in');?>" class="text-decoration-none fw-bold"><span class="text-warning"> Payment In</span></a>
+                    <a href="<?= base_url('Dashboard'); ?>" class="text-white text-decoration-none">Dashboard</a> >> Sales >><span class="text-warning"> <?= $pagename ?></span>
                 </p>
             </div>
-            <!-- <div class="col-lg-1 text-end">
-                <div class="dropdown">
-                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-plus"></i> Add
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                    </ul>
-                </div>
-            </div> -->
+
             <div class="col-xl-1 col-lg-2 text-end">
-              <button onclick="history.back()" class="btn btn-dark btn-sm rounded-pill w-100">
+                <button onclick="history.back()" class="btn btn-dark btn-sm rounded-pill w-100">
                     <i class="bi bi-arrow-bar-left me-1"></i><small>Back</small>
                 </button>
             </div>
@@ -50,203 +39,278 @@
 <div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-7">
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#staticBackdropadd" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i> Add New Payment</button>
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#myaddModal" aria-controls="staticBackdrop"><i class="fa-solid fa-plus"></i> Add New Payment</button>
         </div>
-         <div class="col-md-5">
+        <div class="col-md-5">
             <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('Main/payment_in');  ?>">
+                <form method="get" action="<?= base_url('Main/payment_in');  ?>">
                     <div class="form-outline" data-mdb-input-init>
-                    <input type="text" name="search" class="form-control" value="<?php echo $search; ?>" />
-                    <!-- <label class="form-label" for="form1">Search</label> -->
-                </div>
-                <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
-                    <i class="fas fa-search"></i>
-                </button>
-                <a type="submit" href="<?php echo base_url('Main/payment_in');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
-                   <i class="fa-solid fa-rotate"></i>
-                </a>
+                        <input type="text" name="search" class="form-control" value="<?= $search; ?>" />
+                        <!-- <label class="form-label" for="form1">Search</label> -->
+                    </div>
+                    <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a type="submit" href="<?= base_url('Main/payment_in');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                        <i class="fa-solid fa-rotate"></i>
+                    </a>
                 </form>
-                <form action="<?php echo base_url('Main/payment_in');?>"  method="get" >
-                    <select class="form-select" name="user" onchange="this.form.submit();" aria-label="Default select example" >
-                    <option selected >Select Status</option>
-                    <?php
-                                      
-                    foreach ($all_user as $value):
-                    ?>
-                        <option value="<?php echo $value->m_acc_id; ?>" <?php if($user ==$value->m_acc_id) echo 'selected'; ?>><?php echo $value->m_acc_name; ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <form action="<?= base_url('Main/payment_in'); ?>" method="get">
+                    <select class="form-select" name="user" onchange="this.form.submit();" aria-label="Default select example">
+                        <option selected>Select Status</option>
+                        <?php
+
+                        foreach ($all_user as $value) :
+                        ?>
+                            <option value="<?= $value->m_acc_id; ?>" <?php if ($user == $value->m_acc_id) echo 'selected'; ?>><?= $value->m_acc_name; ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </form>
 
-                
+
             </div>
         </div>
     </div>
     <br>
 
-    <table class="table my_custom_datatable table-bordered mt-3" id="paymentin_tbl">
+    <table class="table my_custom_datatable table-bordered mt-3" id="payment_tbl">
         <thead>
-        <tr>
-            <th>S.No</th>
-            <th>Payment Date</th>
-            <th>Txns No.</th>
-            <th>Customer</th>
-            <th>Amount</th>
-            <th>Action</th>
+            <tr>
+                <th>S.No</th>
+                <th>Date</th>
+                <th>Recipt</th>
+                <th>Act Type</th>
+                <th>Act Name</th>
+                <th>Mobile</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <!-- <th>Txns No.</th> -->
+                <th>Remark</th>
+                <th>Action</th>
 
-        </tr>
-       </thead>
-       <tbody>
-        <?php 
-        $i=1;  
+            </tr>
+        </thead>
+        <tbody>
+            <?php
+            $i = 1;
 
-        if(!empty($all_value)){
-               foreach($all_value as $value){ ?>
-        <tr>
-            <td><?php echo $i; ?></td>
-            <td><?php echo date('d-m-Y',strtotime($value->m_payment_date)); ?></td>
-            <td><?php echo $value->m_payment_transno; ?></td>
-            <td><?php echo $value->m_acc_name; ?></td>
-            <td>₹<?php echo $value->m_payment_amount; ?></td>
-            <td><button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop<?php echo $value->m_payment_id; ?>" aria-controls="staticBackdrop"><i class="fa-solid fa-pen-to-square"></i></button>
+            if (!empty($all_value)) {
+                foreach ($all_value as $value) { ?>
+                    <tr>
+                        <td><?= $i; ?></td>
+                        <td><?= date('d-m-Y', strtotime($value->m_pay_date)); ?></td>
+                        <td><?= $value->m_pay_uno; ?></td>
+                        <td><?= $value->account_type; ?></td>
+                        <td><?= $value->account_name; ?></td>
+                        <td><?= $value->account_mobile; ?></td>
+                        <td>₹<?= $value->m_pay_amount; ?></td>
+                        <td><?= $value->method_name; ?></td>
+                        <!-- <td><?= $value->m_pay_transno; ?></td> -->
+                        <td><?= $value->m_pay_remark; ?></td>
+                        <td>
+                            <button type="button" class="btn btn-primary btn-sm p-1 me-1 myeditpayModal" data-value="<?= $value->m_pay_id; ?>" data-bs-toggle="modal" data-bs-target="#myeditModal<?= $value->m_pay_id; ?>" title="Edit"><i class="bi bi-pencil-square"></i></button>
 
-                <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop<?php echo $value->m_payment_id; ?>" aria-labelledby="staticBackdropLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="staticBackdropLabel">SALE-155 (Invoice Number) <span class="badge bg-success">Paid</span></h5>
-                        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i> Invoice</button>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <hr>
-                    <div class="offcanvas-body">
-                        <div>
-                           <form class="row g-4" method="POST" id="form_paymentin_edit">
-                                <div class="col-md-12">
-                                    <label for="Name">Customer<span class="text-danger">*</span></label>
-                                    <input type="hidden" class="form-control" name="m_payment_id" placeholder="Please Enter Name" value="<?php echo $value->m_payment_id; ?>">
-                                    <select class="form-control" id="exampleFormControlSelect1" name="m_payment_user" required>
-                                        <option value="">Select Customer</option>
-                                        
-                                        <?php
-                                      
-                                        foreach ($all_user as $user):
-                                        ?>
-                                            <option value="<?php echo $user->m_acc_id; ?>" <?php if($value->m_payment_user ==$user->m_acc_id) echo 'selected'; ?>><?php echo $user->m_acc_name; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
+                            <button type="button" data-value="<?= $value->m_pay_id; ?>" class="btn btn-primary btn-sm pay-delete"><i class="fa-solid fa-trash"></i></button>
+
+                            <!-- Edit Modal start -->
+                            <div id="myeditModal<?= $value->m_pay_id; ?>" class="modal fade" role="dialog">
+                                <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content">
+                                        <div class="modal-header justify-content-between">
+                                            <h4 class="modal-title">Edit <?= $pagetype == 1 ? 'Payment Recieved' : 'Payment Paid' ?></h4>
+                                            <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+                                        </div>
+                                        <form method="POST" id="frm_pay_add<?= $value->m_pay_id; ?>" enctype="multipart/form-data">
+                                            <div class="modal-body">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Date</label>
+                                                            <input type="hidden" name="m_pay_id" value="<?= $value->m_pay_id ?>">
+                                                            <input type="hidden" name="m_pay_type" value="<?= $pagetype ?>">
+                                                            <input type="date" name="m_pay_date" class="form-control" value="<?= $value->m_pay_date ?>">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label><?= $value->account_type ?> Name </label>
+                                                            <input type="hidden" id="m_pay_acctype<?= $value->m_pay_id ?>"  name="m_pay_acctype" value="<?= $value->m_pay_acctype ?>">
+                                                            <input type="hidden" id="m_accname<?= $value->m_pay_id ?>" value="<?= $value->m_pay_account ?>">
+
+                                                            <select class="form-select select2" id="m_pay_account<?= $value->m_pay_id ?>" name="m_pay_account" aria-label="Default select example" required>
+                                                                <option value="">-- First Select Account Type--</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Amount <span class="text-danger">*</span></label>
+                                                            <input type="text" name="m_pay_amount" id="m_pay_amount<?= $value->m_pay_id ?>" class="form-control" required="" value="<?= $value->m_pay_amount ?>">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label>Method</label>
+                                                            <select name="m_pay_method" id="m_pay_method<?= $value->m_pay_id ?>" class="form-control">
+                                                                <option value="">Select Method</option>
+                                                                <?php
+                                                                if (!empty($all_pmode)) {
+                                                                    foreach ($all_pmode as $pmod) {
+                                                                        if ($value->m_pay_method == $pmod->m_acc_id) {
+                                                                            $op = 'selected';
+                                                                        } else {
+                                                                            $op = '';
+                                                                        }
+                                                                ?>
+                                                                        <option value="<?= $pmod->m_acc_id; ?>" <?= $op ?>><?= $pmod->m_acc_name; ?></option>
+                                                                <?php
+                                                                    }
+                                                                }
+                                                                ?>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label>Remark</label>
+                                                            <textarea name="m_pay_remark" id="m_pay_remark<?= $value->m_pay_id ?>" class="form-control"><?= $value->m_pay_remark ?></textarea>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <div>
+                                                    <input type="submit" class="btn btn-success btn-sm btn_pay_add" data-frmid="#frm_pay_add<?= $value->m_pay_id ?>" value="Submit">
+                                                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                                                </div>
+
+
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Payment Date<span class="text-danger">*</span></label>
-                                    <input type="date" id="date" name="m_payment_date" value="<?php echo $value->m_payment_date;  ?>" class="form-control">
-                                </div>
-                                 <div class="col-md-6">
-                                    <label for="Name">Amount<span class="text-danger">*</span></label>
-                                    <input type="text" name="m_payment_amount" value="<?php echo $value->m_payment_amount;  ?>" onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"  class="form-control">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Payment Mode<span class="text-danger">*</span></label>
-                                    <select class="form-control" name="m_payment_pmode" id="exampleFormControlSelect1" required>
-                                         <?php
-                                      
-                                        foreach ($all_pmode as $mode):
-                                        ?>
-                                            <option value="<?php echo $mode->m_pmode_id; ?>" <?php if($value->m_payment_pmode ==$mode->m_pmode_id) echo 'selected'; ?>><?php echo $mode->m_pmode_name; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Transaction Number<span class="text-danger">*</span></label>
-                                    <input type="text" name="m_payment_transno" value="<?php echo $value->m_payment_transno;  ?>" class="form-control" required>
-                                </div>
+                            </div>
+                            <!-- Edit modal end -->
+                        </td>
 
-                                <!-- <div class="col-md-12">
-                                <label for="Name">Notes</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                                </div> -->
-
-                                <div class="canvas-footer justify-content-end d-flex">
-                                    <button type="submit" class="btn btn-primary me-2" id="btn_paymentin_edit"><i class="fa-regular fa-pen-to-square"></i> Update</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-
-
-                <button type="button" data-value="<?php echo $value->m_payment_id; ?>" class="btn btn-primary btn-sm paymentin-delete"><i class="fa-solid fa-trash"></i></button>
-
-            </td>
-
-        </tr>
-        <?php $i++; }}?>
-      </tbody>
+                    </tr>
+            <?php $i++;
+                }
+            } ?>
+        </tbody>
     </table>
 
 
 </div>
 
-<div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="staticBackdropadd" aria-labelledby="staticBackdropLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="staticBackdropLabel">SALE-155 (Invoice Number) <span class="badge bg-success">Paid</span></h5>
-                        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i> Invoice</button>
-                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                    </div>
-                    <hr>
-                    <div class="offcanvas-body">
-                        <div>
-                            <form class="row g-4" method="POST" id="form_paymentin_add">
-                                <div class="col-md-12">
-                                    <label for="Name">Customer<span class="text-danger">*</span></label>
-                                    
-
-                                    <select class="form-control" id="exampleFormControlSelect1" name="m_payment_user" required>
-                                        <option value="">Select Customer</option>
-                                        
-                                        <?php
-                                      
-                                        foreach ($all_user as $user):
-                                        ?>
-                                            <option value="<?php echo $user->m_acc_id; ?>" ><?php echo $user->m_acc_name; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Payment Date<span class="text-danger">*</span></label>
-                                    <input type="date" id="date" name="m_payment_date" value="<?php echo date('Y-m-d');  ?>" class="form-control" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Amount<span class="text-danger">*</span></label>
-                                    <input type="text" name="m_payment_amount"  onkeypress="return (event.charCode >= 48 && event.charCode <= 57)"  class="form-control" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Payment Mode<span class="text-danger">*</span></label>
-                                    <select class="form-control" id="exampleFormControlSelect1" name="m_payment_pmode" required>
-                                         <?php
-                                      
-                                        foreach ($all_pmode as $mode):
-                                        ?>
-                                            <option value="<?php echo $mode->m_pmode_id; ?>" ><?php echo $mode->m_pmode_name; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="Name">Transaction Number<span class="text-danger">*</span></label>
-                                    <input type="text" name="m_payment_transno"  class="form-control" required>
-                                </div>
-                                <!-- <div class="col-md-12">
-                                <label for="Name">Notes</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="2"></textarea>
-                                </div> -->
-
-                                <div class="canvas-footer justify-content-end d-flex">
-                                    <button type="submit" class="btn btn-primary me-2" id="btn_paymentin_add"><i class="fa-regular fa-pen-to-square"></i> Add</button>
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="offcanvas" aria-label="Close" data-bs-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
+<!-- Add Modal start -->
+<div id="myaddModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-between">
+                <h4 class="modal-title">Add <?= $pagetype == 1 ? 'Payment Recieved' : 'Payment Paid' ?></h4>
+                <button type="button" class="close" data-bs-dismiss="modal">&times;</button>
+            </div>
+            <form method="POST" id="frm_pay_add" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Date</label>
+                                <input type="hidden" name="m_pay_id" value="">
+                                <input type="hidden" name="m_pay_type" value="<?= $pagetype ?>">
+                                <input type="date" name="m_pay_date" class="form-control" value="<?= date('Y-m-d') ?>">
+                            </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Account Type </label>
+                                <select class="form-select select2" id="m_pay_acctype" name="m_pay_acctype" aria-label="Default select example" required>
+                                    <option value="">-- Select Account Type--</option>
+                                    <?php if ($pagetype == 1) {
+                                        echo '<option value="1">Customer</option>
+                                        <option value="4">General</option>
+                                        <option value="6">Cash</option>';
+                                    } else if ($pagetype == 2) {
+                                        echo '<option value="2">Supplier</option>
+                                        <option value="3">Expense</option>
+                                        <option value="4">General</option>
+                                        <option value="5">Bank</option>';
+                                    } ?>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Account Name </label>
+                                <input type="hidden" id="m_accname" value="">
+
+                                <select class="form-select select2" id="m_pay_account" name="m_pay_account" aria-label="Default select example" required>
+                                    <option value="">-- First Select Account Type--</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Amount <span class="text-danger">*</span></label>
+                                <input type="text" name="m_pay_amount" id="m_pay_amount" class="form-control" required="" value="">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Method</label>
+                                <select class="form-select select2" id="m_pay_method" name="m_pay_method" aria-label="Default select example" required>
+                                    <option value="">Select Method</option>
+                                    <?php
+                                    if (!empty($all_pmode)) {
+                                        foreach ($all_pmode as $pmod) {
+                                    ?>
+                                            <option value="<?= $pmod->m_acc_id; ?>"><?= $pmod->m_acc_name; ?></option>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>Remark</label>
+                                <textarea name="m_pay_remark" id="m_pay_remark" class="form-control"></textarea>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+                <div class="modal-footer justify-content-between">
+                    <div>
+                        <input type="submit" class="btn btn-success btn-sm btn_pay_add" data-frmid="#frm_pay_add" value="Submit">
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                    </div>
 
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Add modal end -->
 
 
 <!-- ========== Page Content ========== -->

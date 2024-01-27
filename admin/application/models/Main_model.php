@@ -125,12 +125,11 @@ class Main_model extends CI_model
     if (!empty($user)) {
       $this->db->where('m_sale_customer', $user);
     }
-    if ($search != NULL) {
 
-      // $this->db->like('m_acc_name',$search,'both');
-      $this->db->or_like('m_sale_spo', $search, 'both');
-      // $this->db->or_like('m_sale_invoiceno', $search, 'both');
+    if (!empty($search)) {
+      $this->db->where("(m_sale_spo LIKE '%$search%' OR m_acc_mobile LIKE '%$search%' OR m_acc_name LIKE '%$search%')");
     }
+
     if (!empty($from_date)) {
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")>=', $from_date);
     }
@@ -186,13 +185,13 @@ class Main_model extends CI_model
 
   public function get_sale_items($order_id, $uid = '')
   {
-    $this->db->select('m_sale_spo,m_sale_qty,m_sale_price,m_sale_total,m_sale_date,m_sale_product,m_sale_size,m_sale_price,m_sale_gst,m_sale_color,m_product_name,color.m_group_name as m_color_name,size.m_group_name as m_size_name,unit.m_group_name as m_unit_title,m_category_name,fabric.m_group_name as m_fabric_name');
+    $this->db->select('m_sale_spo,m_sale_qty,m_sale_price,m_sale_total,m_sale_date,m_sale_product,m_sale_size,m_sale_price,m_sale_gst,m_sale_color,m_product_name,color.m_group_name as m_color_name,size.m_group_name as m_size_name,unit.m_group_name as m_unit_title,m_category_name,brand.m_group_name as m_brand_name');
     $this->db->join('master_product mit', 'mit.m_product_id = master_sales_tbl.m_sale_product', 'left')
       ->join('master_goups_tbl as color', 'color.m_group_id  = master_sales_tbl.m_sale_color', 'left')
       ->join('master_goups_tbl as size', 'size.m_group_id  = master_sales_tbl.m_sale_size', 'left')
       ->join('master_categories as cate', 'cate.m_category_id  = mit.m_product_cat_id', 'left')
       ->join('master_goups_tbl unit', 'unit.m_group_id = mit.m_product_unit', 'left')
-      ->join('master_goups_tbl fabric', 'fabric.m_group_id = mit.m_product_fabric', 'left');
+      ->join('master_goups_tbl brand', 'brand.m_group_id = mit.m_product_brand', 'left');
 
     if (!empty($uid)) {
       $this->db->where('m_sale_customer', $uid);
@@ -242,9 +241,9 @@ class Main_model extends CI_model
 
     if (!empty($res)) {
       $part = explode('/', $res->m_sale_spo);
-      $spo = 'ORD/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
+      $spo = 'ORD/' . sprintf('%04d', ($part[1] + 1));
     } else {
-      $spo = 'ORD/' . date('dmy') . '/0001';
+      $spo = 'ORD/0001';
     }
 
 
@@ -331,10 +330,9 @@ class Main_model extends CI_model
     if (!empty($user)) {
       $this->db->where('m_purchase_supplier', $user);
     }
-    if ($search != NULL) {
-      // $this->db->like('m_acc_name',$search,'both');
-      $this->db->like('m_purchase_spo', $search, 'both');
-      $this->db->or_like('m_purchase_invoiceno', $search, 'both');
+
+    if (!empty($search)) {
+      $this->db->where("(m_purchase_spo LIKE '%$search%' OR m_purchase_invoiceno LIKE '%$search%' OR mct.m_acc_mobile LIKE '%$search%' OR mct.m_acc_name LIKE '%$search%')");
     }
 
     if (!empty($from_date)) {
@@ -391,12 +389,12 @@ class Main_model extends CI_model
 
   public function get_purchase_item($pur_id, $supplier)
   {
-    $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,fabric.m_group_name as m_fabric_name,m_product_id,m_product_name,m_product_cat_id,m_category_name,m_product_unit,m_product_size,m_product_color,m_product_fabric,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt')
+    $this->db->select('m_purchase_id,m_purchase_qty,m_purchase_spo,m_purchase_product,m_purchase_price,m_purchase_date,m_purchase_total,m_purchase_type,colour.m_group_name as m_color_name,size.m_group_name as m_size_name,brand.m_group_name as m_brand_name,m_product_id,m_product_name,m_product_cat_id,m_category_name,m_product_unit,m_product_size,m_product_color,m_product_brand,m_purchase_color,m_purchase_size,unit.m_group_name as m_unit_title,taxgst.m_group_name as m_tax_value,m_purchase_dis,m_purchase_gst,m_purchase_disamt,m_purchase_gstamt,m_purchase_netamt')
       ->join('master_product', 'master_product.m_product_id = master_purchase_tbl.m_purchase_product', 'left')
       ->join('master_goups_tbl taxgst', 'taxgst.m_group_id = master_product.m_product_taxgst', 'left')
       ->join('master_categories', 'master_categories.m_category_id = master_product.m_product_cat_id', 'left')
       ->join('master_goups_tbl unit', 'unit.m_group_id = master_product.m_product_unit', 'left')
-      ->join('master_goups_tbl fabric', 'fabric.m_group_id = master_product.m_product_fabric', 'left')
+      ->join('master_goups_tbl brand', 'brand.m_group_id = master_product.m_product_brand', 'left')
       ->join('master_goups_tbl size', 'size.m_group_id = master_purchase_tbl.m_purchase_size', 'left')
       ->join('master_goups_tbl colour', 'colour.m_group_id = master_purchase_tbl.m_purchase_color', 'left');
 
@@ -415,14 +413,13 @@ class Main_model extends CI_model
   public function insert_purchase()
   {
 
-    $res = $this->db->select('m_purchase_spo')->order_by('m_purchase_id', 'desc')->where('m_purchase_type', 1)->get('master_purchase_tbl')->row();
-    // $res ='UTP/201223/0001';
+    $res = $this->db->select('m_purchase_spo')->order_by('m_purchase_id', 'desc')->where('m_purchase_type', $this->input->post('m_purchase_type'))->get('master_purchase_tbl')->row();
 
     if (!empty($res)) {
       $part = explode('/', $res->m_purchase_spo);
-      $spo = 'UTP/' . date('dmy') . '/' . sprintf('%04d', ($part[2] + 1));
+      $spo = 'PUR/' . sprintf('%04d', ($part[1] + 1));
     } else {
-      $spo = 'UTP/' . date('dmy') . '/0001';
+      $spo = 'PUR/0001';
     }
 
     // $spo  = str_pad(rand(0, 99999), 5, '0', STR_PAD_LEFT);
@@ -509,129 +506,136 @@ class Main_model extends CI_model
   //-----------------------------/purchese----------------------------//
 
   //------------------------------payment in---------------------------//
-  public function get_payment_in($search, $user)
+  public function get_payment_list($type, $search, $user)
   {
-    $this->db->select('*');
-    if ($search != NULL) {
-      $this->db->like('m_pmode_name', $search, 'both');
-      $this->db->like('m_acc_name', $search, 'both');
+    $this->db->select('master_payment_tbl.*,customer.m_acc_name as account_name,customer.m_acc_mobile as account_mobile,method.m_acc_name as method_name,(case when m_pay_acctype = 1 then "Customer" when m_pay_acctype = 2 then "Supplier" when m_pay_acctype = 3 then "Expense" when m_pay_acctype = 4 then "General" when m_pay_acctype = 5 then "Bank" Else "Cash" End) as account_type');
+
+    if (!empty($search)) {
+      $this->db->where("(customer.m_acc_name LIKE '%$search%' OR customer.m_acc_mobile LIKE '%$search%' OR method.m_acc_name LIKE '%$search%')");
     }
-    if (!empty($user)) {
-      $this->db->where('m_payment_user', $user);
+    // if (!empty($user)) {
+    //   $this->db->where('m_pay_user', $user);
+    // }
+    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_payment_tbl.m_pay_account', 'left');
+    $this->db->join('master_accounts_tbl method', 'method.m_acc_id = master_payment_tbl.m_pay_method', 'left');
+
+    $this->db->where('m_pay_type', $type);
+    $this->db->order_by('m_pay_date', 'desc');
+    return $this->db->get('master_payment_tbl')->result();
+  }
+
+  public function get_payment_dtl($id)
+  {
+    $this->db->select('master_payment_tbl.*,customer.m_acc_name as account_name,customer.m_acc_mobile as account_mobile,method.m_acc_name as method_name,(case when m_pay_acctype = 1 then "Customer" when m_pay_acctype = 2 then "Supplier" when m_pay_acctype = 3 then "Expense" when m_pay_acctype = 4 then "General" when m_pay_acctype = 5 then "Bank" Else "Cash" End) as account_type');
+
+    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_payment_tbl.m_pay_account', 'left');
+    $this->db->join('master_accounts_tbl method', 'method.m_acc_id = master_payment_tbl.m_pay_method', 'left');
+
+    $this->db->where('m_pay_id', $id);
+    return $this->db->get('master_payment_tbl')->row();
+  }
+
+
+  public function insert_payment()
+  {
+
+    $m_pay_id = $this->input->post('m_pay_id');
+    $m_pay_type = $this->input->post('m_pay_type');
+    $m_pay_account = $this->input->post('m_pay_account');
+    $m_pay_amount = $this->input->post('m_pay_amount');
+    $m_pay_remark = $this->input->post('m_pay_remark');
+    // $m_pay_transno = $this->input->post('m_pay_transno');
+
+    $res = $this->db->select('m_pay_uno')->where('m_pay_type', $m_pay_type)->order_by('m_pay_id', 'desc')->get('master_payment_tbl')->row();
+
+    if (!empty($res)) {
+      $part = explode('/', $res->m_pay_uno);
+      $pay_uno = $m_pay_type == 1 ? 'RVD/' . sprintf('%04d', ($part[1] + 1)) : 'PRD/' . sprintf('%04d', ($part[1] + 1));
+    } else {
+      $pay_uno = $m_pay_type == 1 ? 'RVD/0001' : 'PRD/0001';
     }
-    $this->db->join('master_paymode_tbl', 'master_paymode_tbl.m_pmode_id = master_payment_tbl.m_payment_pmode', 'left');
-    $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_payment_tbl.m_payment_user', 'left');
-    // $this->db->join('master_accounts_tbl supplier', 'supplier.m_acc_id = master_payment_tbl.m_payment_user', 'left');
 
-    $this->db->where('m_payment_type', 1);
-    $res = $this->db->get('master_payment_tbl')->result();
+    if ($m_pay_amount != 0) {
+      $insert_data = array(
+
+        "m_pay_account"    => $m_pay_account,
+        "m_pay_method"    => $this->input->post('m_pay_method'),
+        "m_pay_amount"    => $m_pay_amount,
+        "m_pay_acctype"    => $this->input->post('m_pay_acctype'),
+        "m_pay_remark"    => $m_pay_remark,
+        // "m_pay_transno"    => $m_pay_transno ?: '',
+        "m_pay_date"    => $this->input->post('m_pay_date'),
+        "m_pay_type"    => $m_pay_type,
+
+      );
+      if (!empty($m_pay_id)) {
+        $insert_data['m_pay_updatedby'] = $this->session->userdata('user_id');
+        $insert_data['m_pay_updated_on'] = date('Y-m-d H:i');
+        $this->db->where('m_pay_id', $m_pay_id)->update('master_payment_tbl', $insert_data);
+        $rees = 2;
+      } else {
+        $insert_data['m_pay_uno'] = $pay_uno;
+        $insert_data['m_pay_addedby'] = $this->session->userdata('user_id');
+        $insert_data['m_pay_added_on'] = date('Y-m-d H:i');
+        $rees = $this->db->insert('master_payment_tbl', $insert_data);
+
+      }
+    }
+
+    return $rees;
+  }
+
+  public function insert_multi_payment()
+  {
+
+    $m_pay_type = $this->input->post('m_pay_type');
+    $m_pay_account = $this->input->post('m_pay_account');
+    $m_pay_amount = $this->input->post('m_pay_amount');
+    $m_pay_remark = $this->input->post('m_pay_remark');
+    $m_pay_transno = $this->input->post('m_pay_transno');
+
+    foreach ($m_pay_account as $cou => $kky) {
+
+      $res = $this->db->select('m_pay_uno')->where('m_pay_type', $m_pay_type)->order_by('m_pay_id', 'desc')->get('master_payment_tbl')->row();
+
+      if (!empty($res)) {
+        $part = explode('/', $res->m_pay_uno);
+        $pay_uno = $m_pay_type == 1 ? 'RVD/' . sprintf('%04d', ($part[1] + 1)) : 'PRD/' . sprintf('%04d', ($part[1] + 1));
+      } else {
+        $pay_uno = $m_pay_type == 1 ? 'RVD/0001' : 'PRD/0001';
+      }
+
+      if ($m_pay_amount[$cou] != 0) {
+        $insert_data = array(
+
+          "m_pay_account"    => $kky,
+          "m_pay_method"    => $this->input->post('m_pay_method'),
+          "m_pay_amount"    => $m_pay_amount[$cou],
+          "m_pay_acctype"    => $this->input->post('m_pay_acctype'),
+          "m_pay_remark"    => $m_pay_remark[$cou],
+          "m_pay_transno"    => $m_pay_transno[$cou] ?: '',
+          "m_pay_date"    => $this->input->post('m_pay_date'),
+          "m_pay_type"    => $m_pay_type,
+
+        );
+
+        $insert_data['m_pay_uno'] = $pay_uno;
+        $insert_data['m_pay_addedby'] = $this->session->userdata('user_id');
+        $insert_data['m_pay_added_on'] = date('Y-m-d H:i');
+        $res = $this->db->insert('master_payment_tbl', $insert_data);
+      }
+    }
+
     return $res;
   }
 
 
-
-
-
-  public function insert_payment_in()
+  public function delete_payment()
   {
-    $data = array(
-      "m_payment_type" => 1,
-      "m_payment_user" => $this->input->post('m_payment_user'),
-      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
-      "m_payment_transno" => $this->input->post('m_payment_transno'),
-      "m_payment_amount" => $this->input->post('m_payment_amount'),
-      "m_payment_date" => $this->input->post('m_payment_date'),
-    );
-
-    $data['m_payment_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_payment_tbl', $data);
-    return $res;
-  }
-
-  public function update_payment_in()
-  {
-    $data = array(
-      "m_payment_type" => 1,
-      "m_payment_user" => $this->input->post('m_payment_user'),
-      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
-      "m_payment_transno" => $this->input->post('m_payment_transno'),
-      "m_payment_amount" => $this->input->post('m_payment_amount'),
-      "m_payment_date" => $this->input->post('m_payment_date'),
-    );
-
-    $data['m_payment_updated_on'] = date('Y-m-d H:i');
-    $res = $this->db->where('m_payment_id', $this->input->post('m_payment_id'))->update('master_payment_tbl', $data);
-    return $res;
-  }
-
-  public function delete_payment_in()
-  {
-    $this->db->where('m_payment_id', $this->input->post('delete_id'));
+    $this->db->where('m_pay_id', $this->input->post('delete_id'));
     return $this->db->delete('master_payment_tbl');
   }
-  //-----------------------------/payment in----------------------------//
 
-  //------------------------------payment out---------------------------//
-  public function get_payment_out($search, $user)
-  {
-    $this->db->select('*');
-    if ($search != NULL) {
-      $this->db->like('m_pmode_name', $search, 'both');
-      $this->db->like('m_acc_name', $search, 'both');
-    }
-    if (!empty($user)) {
-      $this->db->where('m_payment_user', $user);
-    }
-    $this->db->join('master_paymode_tbl', 'master_paymode_tbl.m_pmode_id = master_payment_tbl.m_payment_pmode', 'left');
-
-    $this->db->join('master_accounts_tbl supplier', 'supplier.m_acc_id = master_payment_tbl.m_payment_user', 'left');
-
-    $this->db->where('m_payment_type', 2);
-    $res = $this->db->get('master_payment_tbl')->result();
-    return $res;
-  }
-
-
-
-
-
-  public function insert_payment_out()
-  {
-    $data = array(
-      "m_payment_type" => 2,
-      "m_payment_user" => $this->input->post('m_payment_user'),
-      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
-      "m_payment_transno" => $this->input->post('m_payment_transno'),
-      "m_payment_amount" => $this->input->post('m_payment_amount'),
-      "m_payment_date" => $this->input->post('m_payment_date'),
-    );
-
-    $data['m_payment_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_payment_tbl', $data);
-    return $res;
-  }
-
-  public function update_payment_out()
-  {
-    $data = array(
-      "m_payment_type" => 2,
-      "m_payment_user" => $this->input->post('m_payment_user'),
-      "m_payment_pmode" => $this->input->post('m_payment_pmode'),
-      "m_payment_transno" => $this->input->post('m_payment_transno'),
-      "m_payment_amount" => $this->input->post('m_payment_amount'),
-      "m_payment_date" => $this->input->post('m_payment_date'),
-    );
-
-    $data['m_payment_updated_on'] = date('Y-m-d H:i');
-    $res = $this->db->where('m_payment_id', $this->input->post('m_payment_id'))->update('master_payment_tbl', $data);
-    return $res;
-  }
-
-  public function delete_payment_out()
-  {
-    $this->db->where('m_payment_id', $this->input->post('delete_id'));
-    return $this->db->delete('master_payment_tbl');
-  }
   //-----------------------------/payment in----------------------------//
 
 

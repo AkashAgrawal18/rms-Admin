@@ -95,7 +95,7 @@
                         foreach ($product_list as $pvalue) {
 
                     ?>
-                            <option value="<?php echo $pvalue->m_product_name . '-' . $pvalue->m_fabric_name; ?>" data-itemid="<?= $pvalue->m_product_id ?>"><?php echo $pvalue->m_product_name . '-' . $pvalue->m_fabric_name; ?></option>
+                            <option value="<?php echo $pvalue->m_product_name . '-' . $pvalue->m_brand_name; ?>" data-itemid="<?= $pvalue->m_product_id ?>"><?php echo $pvalue->m_product_name . '-' . $pvalue->m_brand_name; ?></option>
 
                     <?php
                         }

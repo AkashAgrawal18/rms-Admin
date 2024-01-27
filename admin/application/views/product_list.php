@@ -147,7 +147,7 @@
                                                             <b> Product Code :</b> <?= $value->m_product_barscode ?>
                                                         </div>
                                                         <div class="col-3">
-                                                            <b> Fabric Name : </b> <?= $value->m_fabric_name ?>
+                                                            <b> Brand Name : </b> <?= $value->m_brand_name ?>
                                                         </div>
                                                         <div class="col-3">
                                                             <b> Product Unit :</b> <?= $value->m_unit_title ?>
@@ -273,18 +273,18 @@
                                                 </div>
 
                                                 <div class="col-md-4">
-                                                    <label>Fabric <span class="text-danger">*</span></label>
-                                                    <select name="m_product_fabric" class="form-control" required>
-                                                        <option value="">Select Fabric</option>
+                                                    <label>Brand <span class="text-danger">*</span></label>
+                                                    <select name="m_product_brand" class="form-control" required>
+                                                        <option value="">Select Brand</option>
                                                         <?php
-                                                        if (!empty($fabric_list)) {
-                                                            foreach ($fabric_list as $fabric) {
-                                                                if ($value->m_product_fabric == $fabric->m_group_id) {
+                                                        if (!empty($brand_list)) {
+                                                            foreach ($brand_list as $brand) {
+                                                                if ($value->m_product_brand == $brand->m_group_id) {
                                                                     $op = 'selected';
                                                                 } else {
                                                                     $op = '';
                                                                 }
-                                                                echo '<option value="' . $fabric->m_group_id . '" ' . $op . '>' . $fabric->m_group_name . '</option>';
+                                                                echo '<option value="' . $brand->m_group_id . '" ' . $op . '>' . $brand->m_group_name . '</option>';
                                                             }
                                                         }
                                                         ?>
@@ -459,22 +459,22 @@
 
 
                     <div class="col-md-4">
-                        <label>Fabric <span class="text-danger">*</span></label>
+                        <label>Brand <span class="text-danger">*</span></label>
 
                         <div class="input-group">
-                            <select class="form-select" id="m_fabric" name="m_product_fabric" required aria-label="Example select with button addon">
-                                <option value="">Select Fabric</option>
+                            <select class="form-select" id="m_brand" name="m_product_brand" required aria-label="Example select with button addon">
+                                <option value="">Select Brand</option>
 
                                 <?php
-                                if (!empty($fabric_list)) {
-                                    foreach ($fabric_list as $fabric) {
+                                if (!empty($brand_list)) {
+                                    foreach ($brand_list as $brand) {
 
-                                        echo '<option value="' . $fabric->m_group_id . '" >' . $fabric->m_group_name . '</option>';
+                                        echo '<option value="' . $brand->m_group_id . '" >' . $brand->m_group_name . '</option>';
                                     }
                                 }
                                 ?>
                             </select>
-                            <button class="btn btn-outline-secondary" onclick="openmodalfun('#groupadd','Add New Fabric','5','1')" type="button"><i class="fa-solid fa-plus"></i></button>
+                            <button class="btn btn-outline-secondary" onclick="openmodalfun('#groupadd','Add New Brand','5','1')" type="button"><i class="fa-solid fa-plus"></i></button>
                         </div>
 
                     </div>
@@ -580,7 +580,7 @@
 <!-- ========== Page Content ========== -->
 <?php include("footer.php"); ?>
 <?php $this->view('custom_page'); ?>
-<?php $this->view('js/main_js');  ?>
+<?php $this->view('js/master_js');  ?>
 <?php $this->view('js/custom_js'); ?>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 

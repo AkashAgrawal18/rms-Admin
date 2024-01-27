@@ -203,7 +203,7 @@
         <div class="row align-items-center">
             <div class="col-xl-11 col-lg-10">
                 <p class="m-0 text-white small fw-light">
-                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Master/pos'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> POS</span></a>
+                    <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Main/pos'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> POS</span></a>
                 </p>
             </div>
             <div class="col-xl-1 col-lg-2 text-end">
@@ -225,7 +225,7 @@
                             <div class="card pcard p-2">
                                 <div class="row g-2">
                                     <div class="col-5">
-                                        <select class="form-select" id="m_customer" name="m_sale_customer" aria-label="Default select example" required>
+                                        <select class="form-select select2" id="m_customer" name="m_sale_customer" aria-label="Default select example" required>
                                             <option value="" selected>Select Customer</option>
                                             <?php
                                             if (!empty($customer)) {
@@ -247,7 +247,7 @@
 
                                     </div>
                                     <div class="col-1">
-                                        <a href="<?php echo base_url('Master/pos');  ?>" class="input-group-text "><i class="fa-solid fa-rotate p-1"></i></a>
+                                        <a href="<?php echo base_url('Main/pos');  ?>" class="input-group-text "><i class="fa-solid fa-rotate p-1"></i></a>
                                     </div>
 
                                 </div>
@@ -368,7 +368,7 @@
                                                                     <select name="m_sale_pmode" id="m_sales_paytype" class="form-control select2">
                                                                         <?php if (!empty($paymode_list)) {
                                                                             foreach ($paymode_list as $pkey) {
-                                                                                echo '<option value="' . $pkey->m_group_id . '">' . $pkey->m_group_name . '</option>';
+                                                                                echo '<option value="' . $pkey->m_acc_id . '">' . $pkey->m_acc_name . '</option>';
                                                                             }
                                                                         }
                                                                         ?>
@@ -389,7 +389,7 @@
                                                                     <select name="m_sale_pmode2" id="m_sales_paytype2" class="form-control select2" style="width:100%">
                                                                         <?php if (!empty($paymode_list)) {
                                                                             foreach ($paymode_list as $pkey) {
-                                                                                echo '<option value="' . $pkey->m_group_id . '">' . $pkey->m_group_name . '</option>';
+                                                                                echo '<option value="' . $pkey->m_acc_id . '">' . $pkey->m_acc_name . '</option>';
                                                                             }
                                                                         }
                                                                         ?>
@@ -417,7 +417,7 @@
                                         <!-- payment method Modal -->
                                     </div>
                                     <div class="col-xl-3 col-3">
-                                        <a href="<?= base_url('Master/pos') ?>" class="btn btn-danger w-100" style="font-size: 15px;">Reset</a>
+                                        <a href="<?= base_url('Main/pos') ?>" class="btn btn-danger w-100" style="font-size: 15px;">Reset</a>
                                     </div>
                                 </div>
 
@@ -444,7 +444,7 @@
                                 $cat_img = base_url('assets/imgs/no-data.png');
                             } ?>
                             <div class="card pcard2 catclick" data-cat_id="<?= $value->m_category_id ?>" id="catdiv<?= $value->m_category_id ?>">
-                                <!-- <a href="<?php echo base_url('Master/pos/' . $value->m_category_slug); ?>" class="text-decoration-none"> -->
+                                <!-- <a href="<?php echo base_url('Main/pos/' . $value->m_category_slug); ?>" class="text-decoration-none"> -->
                                 <img src="<?php echo $cat_img; ?>" alt="kurtis" class="w-100 ar">
                                 <p class="text-center m-0 small"><?php echo $value->m_category_name ?></p>
                                 <!-- </a> -->

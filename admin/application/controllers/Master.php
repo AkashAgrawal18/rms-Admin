@@ -355,14 +355,14 @@ class Master extends CI_Controller
 
     $data['search'] =  $this->input->get('search');
     $data['cat'] =  $this->input->get('category');
-    $data['fabric'] =  $this->input->get('fabric');
+    $data['brand'] =  $this->input->get('brand');
     $data['categories'] = $this->Master_model->get_active_category();
-    $data['fabric_list'] = $this->Master_model->get_active_group(5);
+    $data['brand_list'] = $this->Master_model->get_active_group(5);
     $data['color_list'] = $this->Master_model->get_active_group(2);
     $data['size_list'] = $this->Master_model->get_active_group(3);
     $data['unit'] = $this->Master_model->get_active_group(1);
     $data['taxgst'] = $this->Master_model->get_active_group(4);
-    $data['all_value'] = $this->Master_model->get_active_products($data['cat'], $data['fabric'], $data['search']);
+    $data['all_value'] = $this->Master_model->get_active_products($data['cat'], $data['brand'], $data['search']);
     // echo "<pre>";print_r($data['all_value']);die();
     $this->load->view('product_list', $data);
   }
@@ -411,25 +411,7 @@ class Master extends CI_Controller
   }
 
   //-------------------------------------/products--------------------------------//
-  //-------------------pos ----------------------------------------------//
-
-  public function pos()
-  {
-    $data = $this->login_details();
-    $data['pagename'] = 'POS';
-    $data['slug'] = '';
-    $data['search'] = '';
-    $data['slug'] = $this->uri->segment(3);
-    $data['search'] =  $this->input->get('search');
-    $data['paymode_list'] = $this->Master_model->get_active_group(6);
-    $data['category'] = $this->Master_model->get_active_category();
-    $data['customer'] = $this->Main_model->get_customer(1, 1);
-
-    $this->load->view('pos', $data);
-  }
-
-  //-------------------/pos ----------------------------------------------//
-
+ 
   //------------------------------------- master Group --------------------------------//
 
   public function group_list($type = 1)
@@ -454,7 +436,7 @@ class Master extends CI_Controller
         }
         break;
       case 5: {
-          $data['pagetitle'] = 'Fabric';
+          $data['pagetitle'] = 'Brand';
         }
         break;
       case 6: {

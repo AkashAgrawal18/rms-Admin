@@ -58,7 +58,7 @@
     <div class="row pt-3">
         <div class="col-md-2">
 
-            <a href="<?php echo base_url('Master/pos');  ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New Sales</a>
+            <a href="<?php echo base_url('Main/pos');  ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New Sales</a>
         </div>
         <div class="col-md-10">
             <div class="input-group form-group">
@@ -184,9 +184,7 @@
                                                     <div class="col-4">
                                                         Address :<br> <?php echo $value->m_acc_address; ?>
                                                     </div>
-                                                    <div class="col-4">
-                                                        Shipping Address :<br> <?php echo $value->m_acc_saddress; ?>
-                                                    </div>
+                                                    
 
                                                     <!-- <div class="col-4">
                                                         Order Status :<br> <? //= $order_status 
@@ -235,7 +233,7 @@
                                                         <thead>
                                                             <tr>
                                                                 <th>Product</th>
-                                                                <th>Fabric</th>
+                                                                <th>Brand</th>
                                                                 <th>Colour</th>
                                                                 <th>Size</th>
                                                                 <th>Quantity</th>
@@ -248,7 +246,7 @@
                                                                 foreach ($value->m_sale_items as $val) { ?>
                                                                     <tr>
                                                                         <td><?= $val->m_product_name; ?></td>
-                                                                        <td><?= $val->m_fabric_name; ?></td>
+                                                                        <td><?= $val->m_brand_name; ?></td>
                                                                         <td><?= $val->m_color_name; ?></td>
                                                                         <td><?= $val->m_size_name; ?></td>
                                                                         <td><?= $val->m_sale_qty; ?></td>

@@ -229,5 +229,5 @@
 
 <!-- ========== Page Content ========== -->
 <?php include("footer.php"); ?>
-<?php $this->view('js/main_js'); ?>
+<?php $this->view('js/master_js'); ?>
 <?php $this->view('js/custom_js'); ?>
