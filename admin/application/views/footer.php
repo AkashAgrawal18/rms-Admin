@@ -1,4 +1,4 @@
-<footer class="mt-2">
+<footer class="mt-0">
     <!-- <div class="text-end w-100 px-3 pb-2">
 
         <?php

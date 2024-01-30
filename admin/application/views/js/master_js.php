@@ -1,7 +1,7 @@
 <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 <script type="text/javascript">
-    $(document).ready(function(e) {
+  $(document).ready(function(e) {
 
 
     //===========================category ===========================//
@@ -341,62 +341,19 @@
 
     //=========================== Group Master ===========================//
 
-  //===========================coupon ===========================//
-  $("form#form_coupon_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_coupon_add");
+    //===========================coupon ===========================//
+
+    $(".btn_coupon_add").click(function(e) {
+      var frmid = $(this).data('frmid');
+      var clkbtn = $(this);
       clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
+      var formData = $(frmid).serialize();
+
 
       $.ajax({
         type: "POST",
         url: "<?php echo site_url('Master/insert_coupons'); ?>",
         data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
-
-    $("form#form_coupon_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_coupon_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Master/update_coupons'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
         dataType: "JSON",
         success: function(data) {
           if (data.status == 'success') {
@@ -431,7 +388,6 @@
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
-
 
       swal({
         title: "Are you sure?",
@@ -488,8 +444,8 @@
 
     //===========================/coupon ===========================//
 
-      //===========================product ===========================//
-      $(".btn_add_product").click(function(e) {
+    //===========================product ===========================//
+    $(".btn_add_product").click(function(e) {
       var frmid = $(this).data('frmid');
       var prodid = $(this).data('prodid');
 
@@ -542,7 +498,7 @@
 
 
 
-    $("#product_tbl").on("click", ".delete_product", function() {
+    $(".delete_product").on("click",function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
@@ -753,19 +709,17 @@
 
     ///====================== offer ============================================////
 
-    $("form#frm-add-offer").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-add-offer");
+    $(".btn-add-offer").click(function(e) {
+      var frmid = $(this).data('frmid');
+      var clkbtn = $(this);
       clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
+      var formData = $(frmid).serialize();
 
       $.ajax({
         type: "POST",
         url: "<?php echo site_url('Master/insert_offer'); ?>",
         data: formData,
-        processData: false,
-        contentType: false,
+
         dataType: "JSON",
         success: function(data) {
           if (data.status == 'success') {
@@ -794,50 +748,6 @@
       });
 
     });
-
-
-    $("form#frm-edit-offer").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn-edit-offer");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Master/update_offer'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
 
     $("#offer_tbl").on("click", ".delete-offer", function() {
       var clkbtn = $(this);
@@ -900,19 +810,17 @@
 
     ///====================== banners ============================================////
 
-    $("form#form_slider_add").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#form_slider_add");
+    $(".btn_slider_add").click(function(e) {
+      var frmid = $(this).data('frmid');
+      var clkbtn = $(this);
       clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
+      var formData = $(frmid).serialize();
+   
 
       $.ajax({
         type: "POST",
         url: "<?php echo site_url('Master/insert_banner'); ?>",
         data: formData,
-        processData: false,
-        contentType: false,
         dataType: "JSON",
         success: function(data) {
           if (data.status == 'success') {
@@ -941,50 +849,6 @@
       });
 
     });
-
-
-    $("form#form_slider_edit").submit(function(e) {
-      e.preventDefault();
-      var clkbtn = $("#btn_slider_edit");
-      clkbtn.prop('disabled', true);
-      var formData = new FormData(this);
-
-
-      $.ajax({
-        type: "POST",
-        url: "<?php echo site_url('Master/update_banner'); ?>",
-        data: formData,
-        processData: false,
-        contentType: false,
-        dataType: "JSON",
-        success: function(data) {
-          if (data.status == 'success') {
-            swal(data.message, {
-              icon: "success",
-              timer: 1000,
-            });
-            setTimeout(function() {
-              location.reload();
-            }, 1000);
-          } else {
-            clkbtn.prop('disabled', false);
-            swal(data.message, {
-              icon: "error",
-              timer: 5000,
-            });
-          }
-        },
-        error: function(jqXHR, status, err) {
-          clkbtn.prop('disabled', false);
-          swal("Some Problem Occurred!! please try again", {
-            icon: "error",
-            timer: 2000,
-          });
-        }
-      });
-
-    });
-
 
     $("#banner_tbl").on("click", ".delete-banner", function() {
       var clkbtn = $(this);
@@ -1102,7 +966,7 @@
     });
 
     ///====================== offer ============================================////
-  
+
 
 
     tinymce.init({
@@ -1198,5 +1062,5 @@
 
     //===========================/product tany editor ===========================//
 
-    });
+  });
 </script>

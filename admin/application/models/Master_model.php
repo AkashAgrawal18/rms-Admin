@@ -56,20 +56,20 @@ class Master_model extends CI_model
     if (!empty($m_category_id)) {
       $data['m_category_status'] = $this->input->post('m_category_status');
       $data['m_category_updated_on'] = date('Y-m-d H:i');
-       $this->db->where('m_category_id', $m_category_id)->update('master_categories', $data);
-       $res = 2;
+      $this->db->where('m_category_id', $m_category_id)->update('master_categories', $data);
+      $res = 2;
     } else {
       $data['m_category_status'] = 1;
       $data['m_category_added_on'] = date('Y-m-d H:i');
-     $this->db->insert('master_categories', $data);
-     $cat_id = $this->db->insert_id();
-     $res = 1 ;
+      $this->db->insert('master_categories', $data);
+      $cat_id = $this->db->insert_id();
+      $res = 1;
     }
-    if($this->input->post('m_addon') == 1){
+    if ($this->input->post('m_addon') == 1) {
       return $cat_id;
-     }else {
+    } else {
       return $res;
-     }
+    }
   }
 
   public function delete_categories()
@@ -82,21 +82,16 @@ class Master_model extends CI_model
 
   public function get_coupons($search)
   {
-    $this->db->select('*');
-    if ($search != NULL) {
 
+    if ($search != NULL) {
       $this->db->like('m_coupon_title', $search, 'both');
     }
-
-
     $res = $this->db->get('master_coupon_tbl')->result();
     return $res;
   }
 
   public function insert_coupons()
   {
-
-
 
     $data = array(
 
@@ -112,34 +107,13 @@ class Master_model extends CI_model
 
     );
 
-    $data['m_coupon_added_on'] = date('Y-m-d h:i:s');
-    $res = $this->db->insert('master_coupon_tbl', $data);
-    return $res;
-  }
-
-  public function update_coupons()
-  {
-
-
-    $coupon_id = $this->input->post('coupon_id');
-
-    $data = array(
-
-      "m_coupon_title" => $this->input->post('coupon_title'),
-      "m_coupon_code" => $this->input->post('coupon_code'),
-      "m_coupon_discount_type" => $this->input->post('dis_type'),
-      "m_coupon_discount" => $this->input->post('dis_percentage'),
-      "m_coupon_min_amount" => $this->input->post('min_amount'),
-      "m_coupon_detail" => $this->input->post('coupon_details'),
-      "m_coupon_start" => $this->input->post('start_date'),
-      "m_coupon_end" => $this->input->post('end_date'),
-      "m_coupon_status" => $this->input->post('coupon_status'),
-
-    );
-
-
-
-    $res = $this->db->where('m_coupon_id', $coupon_id)->update('master_coupon_tbl', $data);
+    if (!empty($this->input->post('coupon_id'))) {
+      $this->db->where('m_coupon_id', $this->input->post('coupon_id'))->update('master_coupon_tbl', $data);
+      $res = 2;
+    } else {
+      $data['m_coupon_added_on'] = date('Y-m-d h:i:s');
+      $res = $this->db->insert('master_coupon_tbl', $data);
+    }
     return $res;
   }
 
@@ -219,7 +193,8 @@ class Master_model extends CI_model
           "m_product_mrp" => $value->m_product_mrp,
           "m_product_details" => $value->m_product_details,
           "m_product_information" => $value->m_product_information,
-
+          "m_product_updated_on" => $value->m_product_updated_on,
+         
           "m_product_status" => $value->m_product_status,
           'm_product_brand' => $value->m_product_brand,
           'm_brand_name' => $value->m_brand_name ?: '',
@@ -275,13 +250,13 @@ class Master_model extends CI_model
 
     if (!empty($this->input->post('m_product_id'))) {
       $data['m_product_updated_on'] = date('Y-m-d H:i');
-       $this->db->where('m_product_id', $this->input->post('m_product_id'))->update('master_product', $data);
-       $res = 2;
+      $this->db->where('m_product_id', $this->input->post('m_product_id'))->update('master_product', $data);
+      $res = 2;
     } else {
       // Add the timestamp
       $data['m_product_added_on'] = date('Y-m-d H:i');
       // Insert data into the 'master_product' table
-     $this->db->insert('master_product', $data);
+      $this->db->insert('master_product', $data);
       $res = 1;
     }
     return $res;
@@ -355,11 +330,11 @@ class Master_model extends CI_model
       $res = $this->db->insert('master_goups_tbl', $data);
       $group_id = $this->db->insert_id();
     }
-    if($this->input->post('m_addon') == 1){
+    if ($this->input->post('m_addon') == 1) {
       return $group_id;
-     }else {
+    } else {
       return $res;
-     }
+    }
   }
 
   public function delete_group()
@@ -467,15 +442,9 @@ class Master_model extends CI_model
 
   //************************** offers **************************//
 
-
-
-
   public function offer_list()
   {
-    $this->db->select('*');
- 
-    $sql = $this->db->get('master_offers')->result();
-    return $sql;
+    return $this->db->get('master_offers')->result();
   }
 
   public function insert_offer()
@@ -508,7 +477,6 @@ class Master_model extends CI_model
     }
 
     $data = array(
-
       'm_offer_maintitle' => $this->input->post('m_offer_maintitle'),
       'm_offer_title' => $this->input->post('m_offer_title'),
       'm_offer_status' => $this->input->post('m_offer_status'),
@@ -517,75 +485,17 @@ class Master_model extends CI_model
       'm_offer_image' => $m_offer_image,
       'm_offer_vendor' => $this->session->userdata('user_id'),
       'm_offer_slug' => $titleURL
-
     );
-
-
-
-    $data['m_offer_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_offers',  $data);
-
-
-
-    return $res;
-  }
-
-
-  public function update_offer()
-  {
-    if (!empty($_FILES['m_offer_image']['name'])) {
-      $name1 = $_FILES['m_offer_image']['name'];
-      $fileNameParts = explode(".", $name1); // explode file name to two part
-      $fileExtension = end($fileNameParts); // give extension
-      $fileExtension = strtolower($fileExtension);
-      $encripted_pic_name = md5(microtime() . $name1) . '.' . $fileExtension;
-      $config['file_name'] = $encripted_pic_name;
-      $config['upload_path'] = 'uploads/offer';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = false;
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_offer_image')) {
-        $m_offer_image = $config['file_name'];
-      } else {
-        $m_offer_image = $this->input->post('m_offer_images');
-      }
+    if (!empty($this->input->post('m_offer_id'))) {
+      $this->db->where('m_offer_id', $this->input->post('m_offer_id'))->update('master_offers', $data);
+      $res = 2;
     } else {
-      $m_offer_image = $this->input->post('m_offer_images');
+      $data['m_offer_added_on'] = date('Y-m-d H:i');
+      $this->db->insert('master_offers',  $data);
+      $res = 1;
     }
-
-    $titleURL = strtolower(url_title(strip_tags($this->input->post('m_offer_title'))));
-    if (isUrlExists('master_offers', 'm_offer_slug', $titleURL)) {
-      $titleURL = $titleURL . '-' . time();
-    }
-
-    $data = array(
-
-      'm_offer_maintitle' => $this->input->post('m_offer_maintitle'),
-      'm_offer_title' => $this->input->post('m_offer_title'),
-      'm_offer_status' => $this->input->post('m_offer_status'),
-      'm_offer_priority' => $this->input->post('m_offer_priority'),
-      'm_offer_type' => $this->input->post('m_offer_type'),
-      'm_offer_image' => $m_offer_image,
-      'm_offer_vendor' => $this->session->userdata('user_id'),
-      'm_offer_slug' => $titleURL
-
-    );
-
-
-
-    $res = $this->db->where('m_offer_id', $this->input->post('m_offer_id'))->update('master_offers', $data);
-
-
-
     return $res;
   }
-
-
-
-
-
 
   public function delete_offer()
   {
@@ -603,15 +513,8 @@ class Master_model extends CI_model
 
   public function all_product_offer($typeid)
   {
-
-    $this->db->select('*');
-    $this->db->from('product_offers');
-    $this->db->join('master_product', 'master_product.m_product_id   = product_offers.o_product_id');
-    $query = $this->db->where("o_offer_type", $typeid);
-
-    $query = $this->db->get();
-    $result = $query->result();
-    return $result;
+    $this->db->join('master_product', 'master_product.m_product_id = product_offers.o_product_id');
+    return $this->db->where("o_offer_type", $typeid)->get('product_offers')->result();
   }
 
   function make_offer($type)
@@ -623,19 +526,15 @@ class Master_model extends CI_model
     for ($i = 0; $i < sizeof($offer); $i++) {
       $data[$i] = array('o_product_id' => $offer[$i], 'o_offer_type' => $type, 'o_offer_slug' => $o_offer_slug);
     }
-
-
     $insert = $this->db->insert_batch('product_offers', $data);
 
-    $this->db->set('m_offer_hasproduct', 1);
-    $this->db->where('m_offer_id', $type);
-    $this->db->update('master_offers');
+    $this->db->set('m_offer_hasproduct', 1)->where('m_offer_id', $type)->update('master_offers');
     return $insert;
   }
 
   public function delete_product_offers($remove)
   {
-    $sql = $this->db->where('offer_id', $remove)->delete('product_offers');
+    return $this->db->where('offer_id', $remove)->delete('product_offers');
   }
 
 
@@ -645,13 +544,9 @@ class Master_model extends CI_model
 
   public function get_banners()
   {
-    $this->db->select('*');
     $res = $this->db->get('master_slider')->result();
     return $res;
   }
-
-
-
 
   public function insert_banner()
   {
@@ -678,79 +573,23 @@ class Master_model extends CI_model
       $slider_img = '';
     }
 
-
-    if ($this->input->post('m_slider_type') == 1) {
-
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    } else {
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_des" => $this->input->post('m_slider_des'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    }
-
+    $data = array(
+      "m_slider_type" => $this->input->post('m_slider_type'),
+      "m_slider_title" => $this->input->post('m_slider_title'),
+      "m_slider_des" => $this->input->post('m_slider_des') ?: '',
+      "m_slider_status" => $this->input->post('m_slider_status'),
+      "m_slider_image" => $slider_img,
+    );
 
     // print_r($data);
-
-    $data['m_slider_added_on'] = date('Y-m-d H:i');
-    $res = $this->db->insert('master_slider', $data);
-    return $res;
-  }
-
-  public function update_banner()
-  {
-    if (!empty($_FILES['m_slider_image']['name'])) {
-      $config['file_name'] = $_FILES['m_slider_image']['name'];
-      $config['upload_path'] = 'uploads/slider';
-      $config['allowed_types'] = 'jpg|jpeg|png';
-      $config['remove_spaces'] = TRUE;
-      $config['file_name'] = $_FILES['m_slider_image']['name'];
-      //Load upload library and initialize configuration
-      $this->load->library('upload', $config);
-      $this->upload->initialize($config);
-      if ($this->upload->do_upload('m_slider_image')) {
-        $uploadData = $this->upload->data();
-        if (!empty($update_data['m_slider_image'])) {
-          if (file_exists($config['m_slider_image'] . $update_data['m_slider_image'])) {
-            unlink($config['upload_path'] . $update_data['m_slider_image']); /* deleting Image */
-          }
-        }
-        $slider_img = $uploadData['file_name'];
-      }
+    if (!empty($this->input->post('m_slider_id'))) {
+      $this->db->where('m_slider_id', $this->input->post('m_slider_id'))->update('master_slider', $data);
+      $res = 2;
     } else {
-      $slider_img = $this->input->post('m_slider_image1');
+
+      $data['m_slider_added_on'] = date('Y-m-d H:i');
+      $res = $this->db->insert('master_slider', $data);
     }
-
-
-    if ($this->input->post('m_slider_type') == 1) {
-
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    } else {
-      $data = array(
-        "m_slider_type" => $this->input->post('m_slider_type'),
-        "m_slider_title" => $this->input->post('m_slider_title'),
-        "m_slider_des" => $this->input->post('m_slider_des'),
-        "m_slider_status" => $this->input->post('m_slider_status'),
-        "m_slider_image" => $slider_img,
-      );
-    }
-
-    // print_r($data);
-
-    $res = $this->db->where('m_slider_id', $this->input->post('m_slider_id'))->update('master_slider', $data);
     return $res;
   }
 
@@ -759,8 +598,6 @@ class Master_model extends CI_model
     $this->db->where('m_slider_id', $this->input->post('delete_id'));
     return $this->db->delete('master_slider');
   }
-
-
 
   //===================/banners ==============================//
   //===================queries ==============================//

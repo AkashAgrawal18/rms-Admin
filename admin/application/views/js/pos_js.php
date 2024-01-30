@@ -2,12 +2,22 @@
     $(document).ready(function(e) {
 
 
+        $('#m_sale_iscredit').click(function() {
+            if ($(this).prop('checked') == true) {
+                $('#creditdiv').removeClass('d-none');
+                $('.sales_paidAmt').val(0);
+            } else {
+                $('#creditdiv').addClass('d-none');
+                calculate_total();
+            }
+        });
+
         $('#m_sales_ispartial').click(function() {
             if ($(this).prop('checked') == false) {
                 $('.paypartial').css('display', 'none');
                 $('#m_sales_paytype').append(`<option value="partial" id="partial_op">Partial Payment</option>`);
                 $('#m_sales_ispartial').prop('checked', false);
-                $('#m_sales_paytype').val(1);
+                calculate_total();
             }
         });
 
@@ -17,19 +27,38 @@
                 $('.paypartial').css('display', 'block');
                 $('#partial_op').remove();
                 $('#m_sales_ispartial').prop('checked', true);
-                $('#m_sales_paytype').val(1);
+                // $('#m_sales_paytype').val(1);
             }
 
         });
 
-        $('#m_sales_paidAmt').change(function() {
-            if ($('#m_sales_ispartial').prop('checked') == true) {
-                var netamout = parseFloat($('#m_sale_nettotal').val());
-                var paidt1 = parseFloat($(this).val());
-                var paidt2 = (netamout - paidt1);
-                $('#m_sales_paidAmt2').val(paidt2);
-            }
+        $('.sales_paidAmt').change(function() {
+            var netamout = parseFloat($('#m_sale_nettotal').val());
 
+            if ($('#m_sale_iscredit').prop('checked') == true) {
+                if ($(this).attr('id') == 'm_sales_paidAmt') {
+                    var paidt1 = parseFloat($('#m_sales_paidAmt').val());
+                    var paidt2 = parseFloat($('#m_sales_paidAmt2').val());
+                } else {
+                    var paidt1 = parseFloat($('#m_sales_paidAmt2').val());
+                    var paidt2 = parseFloat($('#m_sales_paidAmt').val());
+                }
+
+            } else {
+                var paidt1 = parseFloat($(this).val());
+                var paidt2 = (netamout - paidt1) < 0 ?0 : (netamout - paidt1);
+            }
+            if ($('#m_sales_ispartial').prop('checked') == true) {
+                if ($(this).attr('id') == 'm_sales_paidAmt') {
+                    $('#m_sales_paidAmt2').val(paidt2);
+                } else {
+                    $('#m_sales_paidAmt').val(paidt2);
+                }
+            }
+            var balance = (netamout - paidt1 - paidt2);
+            $("#m_sale_balamt").val(balance.toFixed(2));
+
+            $("#sale_balamt").text('₹' + balance.toFixed(2));
         });
 
         $(document).on('click', '.qtybtn', function() {
@@ -430,7 +459,11 @@
         $("#m_subtotal").val(subtotal.toFixed(2));
         $("#m_total_tax").val(sumtaxgst.toFixed(2));
         $("#m_sale_nettotal").val(natamout.toFixed(2));
+        $("#m_sale_balamt").val(natamout.toFixed(2));
+        $("#m_sales_paidAmt").val(natamout.toFixed(2));
+        $("#m_sales_paidAmt2").val(0);
 
+        $("#sale_balamt").text('₹' + natamout.toFixed(2));
         $(".grandtotal").html('₹' + natamout.toFixed(2));
         $("#subtotal").html('₹' + subtotal.toFixed(2));
         $("#taxtotal").html('₹' + sumtaxgst.toFixed(2));

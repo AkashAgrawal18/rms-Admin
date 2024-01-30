@@ -32,18 +32,7 @@
                     <a href="<?php echo base_url('Dashboard'); ?>" class="text-white text-decoration-none ">Dashboard</a> >> <a href="<?php echo base_url('Account/profile'); ?>" class="text-decoration-none fw-bold"><span class="text-warning"> Profile</span></a>
                 </p>
             </div>
-            <!-- <div class="col-lg-1 text-end">
-                <div class="dropdown">
-                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fa-solid fa-plus"></i> Add
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                    </ul>
-                </div>
-            </div> -->
+          
             <div class="col-xl-1 col-lg-2 text-end">
                 <button onclick="history.back()" class="btn btn-dark btn-sm rounded-pill w-100">
                     <i class="bi bi-arrow-bar-left me-1"></i><small>Back</small>
@@ -63,7 +52,7 @@
          }
          ?>
 
-<div class="container-fluid bg-light" id="main-body" style="min-height:75vh" style="padding-top: 40px;">
+<div class="container-fluid bg-light" id="main-body" style="min-height:75vh ; padding-top: 40px;">
     <div class="card profile-card">
         <div class="container">
             <form class="row py-5" method="post" id="frm-update-profile">

@@ -25,7 +25,7 @@
 
     .nav-pills .nav-link {
         border-radius: none !important;
-        background-color: #d4d4d4 !important;
+        background-color: #f3f3f3 !important;
     }
 
     .nav-pills .nav-link.active {
@@ -75,7 +75,7 @@
     </div>
 </section>
 
-<div class="container-fluid bg-white">
+<div class="container-fluid bg-light" style="min-height: 75vh;">
     <div class="d-flex align-items-start pt-4">
         <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <!-- <button class="nav-link pro-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="true"><i class="fa-solid fa-layer-group"></i> Featured Categories</button>

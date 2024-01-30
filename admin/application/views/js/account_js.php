@@ -67,7 +67,7 @@
         });
 
 
-        $("#customer_tbl").on("click", ".delete_customer", function() {
+        $(document).on("click", ".delete_customer", function() {
             var clkbtn = $(this);
             clkbtn.prop('disabled', true);
             var dlt_id = $(this).data('value');

@@ -3,8 +3,16 @@
     table.table td,
     table.table th {
         border: 0.3px solid #80808040 !important;
-
     }
+
+    .modal-content{
+        background-color: #c5c5c5 !important;
+    }
+
+    .bg-light {
+        background-color: #afafafa8 !important;
+    }
+
 </style>
 <!-- top navigation -->
 <nav class="navbar navbar-expand-lg border-bottom sticky-top py-0" data-bs-theme="dark" style="background: #797979 !important;">
@@ -27,7 +35,7 @@
                         <li><a class="dropdown-item" href="<?php echo base_url('Account/supplier'); ?>">Suppliers</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('Account/expense_acc'); ?>">Expense</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('Account/cash_bank_acc'); ?>">Cash Bank</a></li>
-                       
+
                     </ul>
                 </li>
                 <li class="nav-item dropdown me-xl-3 me-1">
@@ -104,7 +112,7 @@
                 </li>
                 <li class="nav-item dropdown me-3">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                       Master
+                        Master
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/1'); ?>">Units</a></li>
@@ -115,19 +123,7 @@
                         <!-- <li><a class="dropdown-item" href="<?php echo base_url('Master/group_list/6'); ?>">Pay Mode</a></li> -->
                     </ul>
                 </li>
-                <!-- <li class="nav-item dropdown me-xl-3 me-1">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Utilities
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                    </ul>
-                </li> -->
+
             </ul>
 
             <?php
@@ -180,12 +176,12 @@
                     POS
                 </p>
             </a>
-            <a href="<?php echo base_url('Master/cash_bank');  ?>" class="d-block text-dark py-1 main-link">
+            <!-- <a href="<?php echo base_url('Master/cash_bank');  ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/product.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
                     Cash & Bank
                 </p>
-            </a>
+            </a> -->
             <a href="<?php echo base_url('Master/offer'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/gift.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
@@ -204,7 +200,7 @@
         <div style="border: 1px dashed gray; width: 1px; height:70px;" class="mx-2"></div>
         <!--line -->
 
-        <div class="d-inline-flex justify-content-start px-2 gap-1">
+        <!-- <div class="d-inline-flex justify-content-start px-2 gap-1">
             <a href="<?php echo base_url('Master/banner'); ?>" class="d-block text-dark py-1 main-link">
                 <img src="<?php echo base_url(); ?>assets/icons/banner.png" style="width:40%;" class="mx-auto" />
                 <p class="m-0">
@@ -223,48 +219,9 @@
                     Reviews
                 </p>
             </a>
-            <!-- <a href="#" class="d-block text-dark py-1 main-link">
-                <img src="<?php echo base_url(); ?>assets/icons/purchase.png" style="width:40%;" class="mx-auto" />
-                <p class="m-0">
-                    Purchase
-                </p>
-            </a> -->
-        </div>
+          
+        </div> -->
 
-        <!--line -->
-        <!-- <div style="border: 1px dashed gray; width: 1px; height:70px;" class="mx-2"></div> -->
-        <!--line -->
-
-        <div class="d-inline-flex justify-content-start px-2 gap-1">
-            <!-- <a href="#" class="d-block text-dark py-1 main-link">
-                <img src="<?php echo base_url(); ?>assets/icons/bann.png" style="width:40%;" class="mx-auto" />
-                <p class="m-0">
-                    Banners
-                </p>
-            </a> -->
-            <!-- <a href="#" class="d-block text-dark py-1 main-link">
-                <img src="<?php echo base_url(); ?>assets/icons/master.png" style="width:40%;" class="mx-auto" />
-                <p class="m-0">
-                    Masters
-                </p>
-            </a>
-            <a href="#" class="d-block text-dark py-1 main-link">
-                <img src="<?php echo base_url(); ?>assets/icons/delivery.png" style="width:40%;" class="mx-auto" />
-                <p class="m-0">
-                    Delivery Management
-                </p>
-            </a> -->
-            <!-- <a href="#" class="d-block text-dark py-1 main-link">
-                <img src="<?php echo base_url(); ?>assets/icons/accounting.png" style="width:40%;" class="mx-auto" />
-                <p class="m-0">
-                    Balance
-                </p>
-            </a> -->
-        </div>
-
-        <!--line -->
-        <div style="border: 1px dashed gray; width: 1px; height:70px;" class="mx-2"></div>
-        <!--line -->
 
         <div class="d-inline-flex justify-content-start px-2 gap-1">
             <a href="<?php echo base_url('Account/profile'); ?>" class="d-block text-dark py-1 main-link">
@@ -279,12 +236,7 @@
                     Logout
                 </p>
             </a>
-            <!--   <a href="#" class="d-block text-dark py-1 main-link">
-                <img src="<?php echo base_url(); ?>assets/icons/cross.png" style="width:40%;" class="mx-auto" />
-                <p class="m-0">
-                    Exit
-                </p>
-            </a> -->
+
         </div>
         <div class="ms-auto">
 

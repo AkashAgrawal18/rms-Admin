@@ -11,7 +11,6 @@ class Query extends CI_Controller {
 		$this->load->view('queries',$data);
 	}
 
- 
      public function update_query_status()
     {
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -31,7 +30,6 @@ class Query extends CI_Controller {
       }
     }
 
-  
          public function delete_query()
         {
           if ($_SERVER["REQUEST_METHOD"] == "POST") {

@@ -60,7 +60,7 @@
 
     });
 
-    $("#payment_tbl").on("click", ".pay-delete", function() {
+    $(document).on("click", ".pay-delete", function() {
       var clkbtn = $(this);
       clkbtn.prop('disabled', true);
       var dlt_id = $(this).data('value');
@@ -179,7 +179,7 @@
 
 
 
-    $('#sales_tbl').on("click", ".sales-delete", function() {
+    $(".sales-delete").on("click", function() {
 
       // alert('hello');
       var clkbtn = $(this);
@@ -344,7 +344,7 @@
 
 
 
-    $('#purchase_tbl').on("click", ".purchase-delete", function() {
+    $(document).on("click", ".purchase-delete", function() {
 
       // alert('hello');
       var clkbtn = $(this);

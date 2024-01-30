@@ -11,7 +11,6 @@ class Master extends CI_Controller
   {
     $data = $this->login_details();
     $data['pagename'] = 'Coupons';
-    $data['search'] = '';
     $data['search'] =  $this->input->get('search');
     $data['all_value'] = $this->Master_model->get_coupons($data['search']);
     $this->load->view('coupons', $data);
@@ -21,26 +20,14 @@ class Master extends CI_Controller
   public function insert_coupons()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Master_model->insert_coupons()) {
+      $data = $this->Master_model->insert_coupons();
+      if ($data == 1) {
 
         $info = array(
           'status' => 'success',
           'message' => 'Coupons has been Added successfully!'
         );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_coupons()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Master_model->update_coupons()) {
+      } else if ($data == 2) {
 
         $info = array(
           'status' => 'success',
@@ -55,7 +42,6 @@ class Master extends CI_Controller
       echo json_encode($info);
     }
   }
-
 
   public function delete_coupons()
   {
@@ -76,7 +62,7 @@ class Master extends CI_Controller
     }
   }
 
-  
+
   //-------------------banner ----------------------------------------------//
 
   public function banner()
@@ -90,26 +76,14 @@ class Master extends CI_Controller
   public function insert_banner()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Master_model->insert_banner()) {
+      $data = $this->Master_model->insert_banner();
+      if ($data == 1) {
 
         $info = array(
           'status' => 'success',
           'message' => 'Banner has been Added successfully!'
         );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_banner()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Master_model->update_banner()) {
+      } else if ($data == 2) {
 
         $info = array(
           'status' => 'success',
@@ -124,7 +98,6 @@ class Master extends CI_Controller
       echo json_encode($info);
     }
   }
-
 
   public function delete_banner()
   {
@@ -161,27 +134,14 @@ class Master extends CI_Controller
   public function insert_offer()
   {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Master_model->insert_offer()) {
 
+      $data = $this->Master_model->insert_offer();
+      if ($data == 1) {
         $info = array(
           'status' => 'success',
           'message' => 'Offer has been Added successfully!'
         );
-      } else {
-        $info = array(
-          'status' => 'error',
-          'message' => 'Some problem Occurred!! please try again'
-        );
-      }
-      echo json_encode($info);
-    }
-  }
-
-  public function update_offer()
-  {
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-      if ($data = $this->Master_model->update_offer()) {
-
+      } else if ($data == 2) {
         $info = array(
           'status' => 'success',
           'message' => 'Offer has been Updated successfully!'
@@ -195,7 +155,6 @@ class Master extends CI_Controller
       echo json_encode($info);
     }
   }
-
 
   public function delete_offer()
   {
@@ -411,7 +370,7 @@ class Master extends CI_Controller
   }
 
   //-------------------------------------/products--------------------------------//
- 
+
   //------------------------------------- master Group --------------------------------//
 
   public function group_list($type = 1)

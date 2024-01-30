@@ -32,19 +32,6 @@
                 </p>
             </div>
 
-
-            <!--  <div class="col-lg-1 text-end">
-                <div class="dropdown">
-                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fa-solid fa-plus"></i> Add
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                        <li><a class="dropdown-item" href="#">Add xyz</a></li>
-                    </ul>
-                </div>
-            </div> -->
             <div class="col-xl-1 col-lg-2 text-end">
                 <button onclick="history.back()" class="btn btn-dark btn-sm rounded-pill w-100">
                     <i class="bi bi-arrow-bar-left me-1"></i><small>Back</small>
@@ -54,60 +41,191 @@
     </div>
 </section>
 
-<div class="container-fluid bg-light" id="main-body" style="min-height:75vh">
+<div class="container-fluid bg-light" style="min-height:75vh">
     <div class="row pt-3">
         <div class="col-md-2">
-
             <a href="<?php echo base_url('Main/pos');  ?>" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus"></i> Add New Sales</a>
         </div>
+
         <div class="col-md-10">
-            <div class="input-group form-group">
-                <form method="get" action="<?php echo base_url('Main/sales');  ?>">
-
-                    <div class="form-outline me-1" data-mdb-input-init>
-                        <label class="form-label p-1" for="form1"> From Date </label>
+            <form method="get" action="<?php echo base_url('Main/sales');  ?>">
+                <div class="row d-flex justify-content-end">
+                    <div class="col-3 d-flex justify-content-between">
+                        <label>From Date </label>
+                        <input type="date" name="from_date" onchange="this.form.submit();" class="form-control" value="<?php echo $from_date; ?>" />
                     </div>
-                    &nbsp;
-                    <div class="form-outline me-1" data-mdb-input-init>
-                        <input type="date" name="from_date" class="form-control" value="<?php echo $from_date; ?>" />
+                    <div class="col-3 d-flex justify-content-between">
+                        <label>To Date </label>
+                        <input type="date" name="to_date" onchange="this.form.submit();" class="form-control" value="<?php echo $to_date; ?>" />
                     </div>
-                    &nbsp;
-                    <div class="form-outline me-1 " data-mdb-input-init>
-                        <label class="form-label p-1" for="form1"> To Date </label>
+                    <div class="col-3">
+                        <input type="text" name="search" onchange="this.form.submit();" placeholder="Search Name|Mobile..." class="form-control" value="<?php echo $search; ?>" />
                     </div>
-                    &nbsp;
-                    <div class="form-outline me-1" data-mdb-input-init>
-                        <input type="date" name="to_date" class="form-control" value="<?php echo $to_date; ?>" />
+
+                    <div class="col-1">
+                        <a type="submit" href="<?php echo base_url('Main/sales');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
+                            <i class="fa-solid fa-rotate"></i>
+                        </a>
                     </div>
-                    <!-- </div> -->&nbsp;
+                </div>
+            </form>
 
-                    <div class="form-outline" data-mdb-input-init>
-                        <input type="text" name="search" class="form-control" value="<?php echo $search; ?>" />
-                        <!-- <label class="form-label" for="form1">Search</label> -->
-                    </div>
-                    <button type="submit" class="btn btn-primary me-2" data-mdb-ripple-init>
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <a type="submit" href="<?php echo base_url('Main/sales');  ?>" class="btn btn-primary me-2" data-mdb-ripple-init>
-                        <i class="fa-solid fa-rotate"></i>
-                    </a>
-                </form>
-                <form action="<?php echo base_url('Main/sales'); ?>" method="get">
-                    <select class="form-select" name="user" onchange="this.form.submit();" aria-label="Default select example">
-                        <option selected>Select customer</option>
-                        <?php foreach ($all_user as $value) { ?>
-                            <option value="<?php echo $value->m_acc_id; ?>" <?php if ($user == $value->m_acc_id) echo "selected"; ?>><?php echo $value->m_acc_name; ?></option>
-                        <?php } ?>
-
-                    </select>
-                </form>
-
-
-            </div>
         </div>
     </div>
     <br>
-    <table class="table my_custom_datatable table-bordered mt-3" id="sales_tbl">
+
+    <div class="row g-2">
+        <?php
+        if (!empty($all_value)) {
+            foreach ($all_value as $value) {
+                if ($value->m_sale_status == 1) {
+                    $order_status = '<span class="badge bg-info">New</span>';
+                } else if ($value->m_sale_status == 2) {
+                    $order_status = '<span class="badge bg-primary">Running</span>';
+                } else if ($value->m_sale_status == 3) {
+                    $order_status = '<span class="badge bg-success">Deliverd</span>';
+                }
+
+                if ($value->m_sale_pstatus == 1) {
+                    $paid_status = '<span class="badge bg-success">Paid</span>';
+                } else {
+                    $paid_status = '<span class="badge bg-danger">Un-Paid</span>';
+                }
+        ?>
+                <div class="col-3" >
+                    <div class="card profile-header">
+                        <div class="body p-2 fs-6">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="mt-4 mb-0"><i class="fa-solid fa-user"></i> <strong><?= $value->m_acc_name; ?></strong></h5>
+                                    <div style="position: absolute; top:0.4rem; right:0.4rem;">
+                                        <?= $order_status ?>
+                                        <?= $paid_status ?>
+                                    </div>
+                                    <span style="position: absolute;top: 0.4rem;left: 0.4rem;"><i class="fa-solid fa-calendar-days"></i> <?= date('d-m-Y', strtotime($value->m_sale_date));  ?></span>
+                                    <div> <i class="fa-solid fa-tag"></i> <?= $value->m_sale_spo; ?></div>
+
+                                    <div class="py-1 d-flex justify-content-between fw-bold">
+                                        <span>Net Total : ₹<?= $value->m_sale_nettotal; ?></span>
+                                        <span>Paid Amt : ₹<?= ($value->m_sale_payamt + $value->m_sale_payamt2); ?></span>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="button" title="Click to View The Details" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop1<?php echo $value->m_sale_spo; ?>" aria-controls="staticBackdrop"><i class="fas fa-eye"></i></button>
+
+                                        <!-- <a href="<?php // echo base_url('Main/edit_sales?id=') . $value->m_sale_spo; 
+                                                        ?>"><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></button></a> -->
+                                        <button type="button" title="Delete Sale" data-value="<?php echo $value->m_sale_spo; ?>" class="btn btn-danger btn-sm sales-delete"><i class="fa-solid fa-trash"></i></button>
+                                        <button type="button" title="Download Invoice" class="btn btn-success btn-sm"><i class="fa-solid fa-download"></i></button>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- order detail modal -->
+                <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop1<?php echo $value->m_sale_spo; ?>" aria-labelledby="staticBackdropLabel">
+
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="staticBackdropLabel">Order No :- <?php echo $value->m_sale_spo; ?> <?= $order_status . ' ' . $paid_status ?></h5>
+                        <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i> Invoice</button>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <hr>
+                    <div class="offcanvas-body">
+                        <div>
+                            <div class="row g-4">
+                                <div class="col-md-12">
+                                    <div class="row g-4">
+                                        <div class="col-4">
+                                            Order Date : <br> <?php echo date('d-m-Y,H:i A', strtotime($value->m_sale_added_on)); ?>
+                                        </div>
+                                        <div class="col-4">
+                                            Order Number :<br> <?php echo $value->m_sale_spo; ?>
+                                        </div>
+                                        <div class="col-4">
+                                            Customer :<br> <?php echo $value->m_acc_name; ?>
+                                        </div>
+                                        <div class="col-4">
+                                            Mobile :<br> <?php echo $value->m_acc_mobile; ?>
+                                        </div>
+                                        <div class="col-4">
+                                            Email :<br> <?php echo $value->m_acc_email; ?>
+                                        </div>
+                                        <div class="col-4">
+                                            Address :<br> <?php echo $value->m_acc_address; ?>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-12 mt-4">
+                                    <h5>Order Items</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Brand</th>
+                                                    <th>Colour</th>
+                                                    <th>Size</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if (!empty($value->m_sale_items)) {
+                                                    foreach ($value->m_sale_items as $val) { ?>
+                                                        <tr>
+                                                            <td><?= $val->m_product_name; ?></td>
+                                                            <td><?= $val->m_brand_name; ?></td>
+                                                            <td><?= $val->m_color_name; ?></td>
+                                                            <td><?= $val->m_size_name; ?></td>
+                                                            <td><?= $val->m_sale_qty; ?></td>
+                                                            <td>₹<?= $val->m_sale_price ?></td>
+                                                            <td>₹<?= $val->m_sale_total ?></td>
+                                                        </tr>
+                                                <?php }
+                                                } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="border-bottom border-1 border-secondary pb-2">Sub Total: ₹<?= $value->sub_total; ?></h6>
+                                    <h6 class="border-bottom border-1 border-secondary pb-2"> Total Tax : ₹<?= $value->total_tax ?></h6>
+                                    <h6 class="border-bottom border-1 border-secondary pb-2"> Discount : ₹<?= $value->m_sale_discount; ?></h6>
+                                    <h6 class="border-bottom border-1 border-secondary pb-2"> Shipping : ₹<?= $value->m_sale_shipping; ?></h6>
+                                    <h5> Grand Total : ₹<?= $value->m_sale_nettotal; ?></h5ss=>
+                                </div>
+                                <div class="col-md-6 text-end">
+                                    <h6 class="border-bottom border-1 border-secondary pb-2"> Paid Amount (<?= $value->pmodename1; ?>) : ₹<?= $value->m_sale_payamt; ?></h6>
+
+                                    <?php if ($value->m_sale_ispartial == 1) { ?>
+                                        <h6 class="border-bottom border-1 border-secondary pb-2"> Paid Amount (<?= $value->pmodename2; ?>) : ₹<?= $value->m_sale_payamt2; ?></h6>
+                                    <?php } ?>
+                                    <h6 class="border-bottom border-1 border-secondary pb-2"> Balance Amount : ₹<?= $value->m_sale_balamt; ?></h6>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- order detail modal -->
+
+        <?php
+            }
+        } ?>
+
+    </div>
+
+    <!-- <table class="table my_custom_datatable table-bordered mt-3" id="sales_tbl">
         <thead>
             <tr>
                 <th>S.No</th>
@@ -152,187 +270,8 @@
                         <td><?= $paid_status ?></td>
                         <td>
                             <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#staticBackdrop1<?php echo $value->m_sale_spo; ?>" aria-controls="staticBackdrop"><i class="fas fa-eye"></i></button>
-                            <!-- order detail modal -->
-                            <div class="offcanvas offcanvas-end" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop1<?php echo $value->m_sale_spo; ?>" aria-labelledby="staticBackdropLabel">
 
-                                <div class="offcanvas-header">
-                                    <h5 class="offcanvas-title" id="staticBackdropLabel">Order No :- <?php echo $value->m_sale_spo; ?> <?= $order_status . ' ' . $paid_status ?></h5>
-                                    <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i> Invoice</button>
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                                </div>
-                                <hr>
-                                <div class="offcanvas-body">
-                                    <div>
-                                        <div class="row g-4">
-                                            <div class="col-md-12">
-                                                <div class="row g-4">
-                                                    <div class="col-4">
-                                                        Order Date : <br> <?php echo date('d-m-Y,H:i A', strtotime($value->m_sale_added_on)); ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Order Number :<br> <?php echo $value->m_sale_spo; ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Customer :<br> <?php echo $value->m_acc_name; ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Mobile :<br> <?php echo $value->m_acc_mobile; ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Email :<br> <?php echo $value->m_acc_email; ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Address :<br> <?php echo $value->m_acc_address; ?>
-                                                    </div>
-                                                    
-
-                                                    <!-- <div class="col-4">
-                                                        Order Status :<br> <? //= $order_status 
-                                                                            ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Payment Status :<br> <? //= $paid_status 
-                                                                                ?>
-                                                    </div> -->
-                                                    <!-- <div class="col-4">
-                                                        Order Taken By:<br> <?php //echo $value->added_by_name; 
-                                                                            ?>
-                                                    </div> -->
-
-                                                    <!-- <div class="col-4">
-                                                        Total Amount:<br> ₹<?php //echo $value->total_net_amount + $value->total_gst; 
-                                                                            ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Paid Amount :<br>
-                                                        ₹<?php //echo round($value->paid_amount, 3); 
-                                                            ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Due Amount :<br> ₹00.00
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Discount :<br> ₹<?php //echo number_format($value->total_discount_amount, 2, '.', ','); 
-                                                                        ?>
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Shipping :<br> ₹00.00
-                                                    </div>
-                                                    <div class="col-4">
-                                                        Order Tax :<br><?php //echo number_format($value->total_gst, 2, '.', ','); 
-                                                                        ?>
-                                                    </div> -->
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-md-12 mt-4">
-                                                <h5>Order Items</h5>
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Product</th>
-                                                                <th>Brand</th>
-                                                                <th>Colour</th>
-                                                                <th>Size</th>
-                                                                <th>Quantity</th>
-                                                                <th>Price</th>
-                                                                <th>Total</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php if (!empty($value->m_sale_items)) {
-                                                                foreach ($value->m_sale_items as $val) { ?>
-                                                                    <tr>
-                                                                        <td><?= $val->m_product_name; ?></td>
-                                                                        <td><?= $val->m_brand_name; ?></td>
-                                                                        <td><?= $val->m_color_name; ?></td>
-                                                                        <td><?= $val->m_size_name; ?></td>
-                                                                        <td><?= $val->m_sale_qty; ?></td>
-                                                                        <td>₹<?= $val->m_sale_price ?></td>
-                                                                        <td>₹<?= $val->m_sale_total ?></td>
-                                                                    </tr>
-                                                            <?php }
-                                                            } ?>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <!-- <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                                    <li class="nav-item" role="presentation">
-                                                        <button class="nav-link pro-link active" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment-tab-pane<?php //echo $value->m_sale_spo; 
-                                                                                                                                                                        ?>" type="button" role="tab" aria-controls="payment-tab-pane" aria-selected="true">Payments</button>
-                                                    </li>
-                                                    <li class="nav-item" role="presentation">
-                                                        <button class="nav-link pro-link" id="order-tab" data-bs-toggle="tab" data-bs-target="#order-tab-pane<?php //echo $value->m_sale_spo; 
-                                                                                                                                                                ?>" type="button" role="tab" aria-controls="order-tab-pane" aria-selected="false">Order Items</button>
-                                                    </li>
-                                                </ul> -->
-                                                <!-- <div class="tab-content" id="myTabContent">
-                                                    <div class="tab-pane fade show active" id="payment-tab-pane<?php // echo $value->m_sale_spo; 
-                                                                                                                ?>" role="tabpanel" aria-labelledby="payment-tab" tabindex="0">
-                                                        <table class="table table-bordered">
-                                                            <tr>
-                                                                <th>Payment Date</th>
-                                                                <th>Amount</th>
-                                                                <th>Payment Mode</th>
-
-                                                            </tr>
-                                                            <?php //foreach ($seles['product_payment'] as $val) { 
-                                                            ?>
-                                                                <tr>
-                                                                    <td><?php //echo date('d-n-Y', strtotime($val->pay_date)); 
-                                                                        ?></td>
-                                                                    <td>₹<?php //echo round($val->paid_amount, 3); 
-                                                                            ?></td>
-                                                                    <td><?php //if ($val->paymode == 1) {
-                                                                        // echo 'Upi';
-                                                                        //  } else {
-                                                                        //     echo 'Cash';
-                                                                        //  } 
-                                                                        ?></td>
-                                                                </tr>
-                                                            <?php //} 
-                                                            ?>
-                                                        </table>
-                                                    </div>
-
-
-                                                    <div class="tab-pane fade" id="order-tab-pane<?php // echo $value->m_sale_spo; 
-                                                                                                    ?>" role="tabpanel" aria-labelledby="order-tab" tabindex="0">
-                                                       
-                                                    </div>
-                                                </div> -->
-                                            </div>
-                                            <div class="col-md-6">
-                                                <h6 class="border-bottom border-1 border-secondary pb-2">Sub Total: ₹<?= $value->sub_total; ?></h6>
-                                                <h6 class="border-bottom border-1 border-secondary pb-2"> Total Tax : ₹<?= $value->total_tax ?></h6>
-                                                <h6 class="border-bottom border-1 border-secondary pb-2"> Discount : ₹<?= $value->m_sale_discount; ?></h6>
-                                                <h6 class="border-bottom border-1 border-secondary pb-2"> Shipping : ₹<?= $value->m_sale_shipping; ?></h6>
-                                                <h5> Grand Total : ₹<?= $value->m_sale_nettotal; ?></h5ss=>
-                                            </div>
-                                            <div class="col-md-6 text-end">
-                                                <h6 class="border-bottom border-1 border-secondary pb-2">  Payment Method : <?= $value->pmodename1; ?></h6>
-                                                <h6 class="border-bottom border-1 border-secondary pb-2"> Paid Amount : ₹<?= $value->m_sale_payamt; ?></h6>
-                                            </div>
-                                            <?php if ($value->m_sale_ispartial == 1) { ?>
-                                                <div class="col-4">
-                                                    Payment Method : <?= $value->pmodename2; ?>
-                                                </div>
-                                                <div class="col-4">
-                                                    Paid Amount : ₹<?= $value->m_sale_payamt2; ?>
-                                                </div>
-                                            <?php } ?>
-
-
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- order detail modal -->
-                            <!-- <a href="<?php // echo base_url('Main/edit_sales?id=') . $value->m_sale_spo;  
-                                            ?>"><button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></button></a> -->
+                            
                             <button type="button" data-value="<?php echo $value->m_sale_spo; ?>" class="btn btn-primary btn-sm sales-delete"><i class="fa-solid fa-trash"></i></button>
                             <button type="button" class="btn btn-primary btn-sm"><i class="fa-solid fa-download"></i></button>
 
@@ -342,8 +281,7 @@
                 }
             } ?>
         </tbody>
-    </table>
-
+    </table> -->
 
 </div>
 

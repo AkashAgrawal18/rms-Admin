@@ -354,13 +354,27 @@
                                                                 <h5 class="m-0">Grand Total : <span class="grandtotal">₹0.00</span></h5>
                                                             </div>
 
-                                                            <div class="col-md-12 cashdiv paypartial" style="display: none; margin-top:30px">
-                                                                <div class="form-check">
+                                                            <div class="col-6 d-flex justify-content-between">
+                                                                <div class="form-check form-switch">
+                                                                    <input class="form-check-input" type="checkbox" role="switch" name="m_sale_iscredit" id="m_sale_iscredit" value="1">
+                                                                    <label class="form-check-label small" for="m_sale_iscredit">Is Credit</label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 d-flex justify-content-between d-none" id="creditdiv">
+                                                                <label>Balance</label>
+                                                                <div id="sale_balamt">0</div>
+                                                                <input type="hidden" name="m_sale_balamt" id="m_sale_balamt" class="form-control" readonly value="0">
+                                                            </div>
+
+                                                            <div class="col-md-6 cashdiv paypartial" style="display: none; margin-top:30px">
+
+                                                                <div class="form-check form-switch">
                                                                     <input type="checkbox" class="form-check-input" id="m_sales_ispartial" name="m_sale_ispartial" value="1">
                                                                     <label class="form-check-label" for="m_sales_ispartial"> Partial Payment</label>
                                                                 </div>
                                                             </div>
-
+                                                        </div>
+                                                        <div class="row g-3">
 
                                                             <div class="col-6 cashdiv" style="display: block;" id="Ampayty_in">
                                                                 <div class="form-group">
@@ -380,7 +394,7 @@
                                                             <div class="col-lg-6">
                                                                 <div class="form-group">
                                                                     <label>Amount Paid</label>
-                                                                    <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46)" name="m_sale_payamt" id="m_sales_paidAmt" class="form-control" required value="0">
+                                                                    <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46)" name="m_sale_payamt" id="m_sales_paidAmt" class="form-control sales_paidAmt" required value="0">
                                                                 </div>
                                                             </div>
                                                             <div class="col-6 cashdiv paypartial" style="display: none;">
@@ -401,7 +415,7 @@
                                                             <div class="col-6 cashdiv paypartial" style="display: none;">
                                                                 <div class="form-group">
                                                                     <label>Amount Paid2</label>
-                                                                    <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46)" name="m_sale_payamt2" id="m_sales_paidAmt2" class="form-control" value="0">
+                                                                    <input type="text" onkeypress="return (event.charCode >= 48 && event.charCode <= 57 || event.charCode == 46)" name="m_sale_payamt2" id="m_sales_paidAmt2" class="form-control sales_paidAmt" value="0">
                                                                 </div>
                                                             </div>
 
@@ -487,7 +501,7 @@
 <?php include("footer.php"); ?>
 <?php $this->view('custom_page'); ?>
 <?php $this->view('js/main_js');
-$this->view('js/pos_js'); 
+$this->view('js/pos_js');
 $this->view('js/account_js'); ?>
 <script>
     const incrementButton = document.querySelector("#increment");

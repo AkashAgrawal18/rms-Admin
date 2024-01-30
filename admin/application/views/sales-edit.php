@@ -39,25 +39,11 @@
     <form class="row pt-3" method="post" <?php if(!empty($id)){ ?>id="form-edit-sale"<?php  }else{?>id="form-add-sale"<?php } ?> >
 
        <?php 
-             $res = $this->db->select('m_sale_invoiceno')->order_by('m_sale_id', 'desc')->get('master_sales_tbl')->row();
-
-                if (!empty($res)) {
-                    // Extract the numerical part from the existing invoice number
-                    $part = intval(substr($res->m_sale_invoiceno, 2));
-                    $newInvoiceNumber = 'UT' . sprintf('%04d', ($part + 1));
-                } else {
-                    $newInvoiceNumber = 'UT0001';
-                }
-
-                // echo $newInvoiceNumber;
-
-
-
+           
        if (!empty($edit_value)) {
                 $spo = $edit_value->m_sale_spo;
                 $pdate = $edit_value->m_sale_date;
-                $invoiceno = $edit_value->m_sale_invoiceno;
-                $customer = $edit_value->m_sale_customer;
+               $customer = $edit_value->m_sale_customer;
                 // $purtype = $edit_value->m_purchase_type;
                 // $subtotal = $edit_value->m_purchase_subtotal;
                 // $totalcgst = $edit_value->m_purchase_totalcgst;

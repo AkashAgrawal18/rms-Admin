@@ -340,9 +340,9 @@ class Main extends CI_Controller
     $data['pagename'] = 'Payment Recieved';
 
     $data['search'] =  $this->input->get('search');
-    $data['user'] =  $this->input->get('user');
+    $data['acctype'] =  $this->input->get('acctype');
     $data['pagetype'] = 1;
-    $data['all_value'] = $this->Main_model->get_payment_list($data['pagetype'], $data['search'], $data['user']);
+    $data['all_value'] = $this->Main_model->get_payment_list($data['pagetype'], $data['search'], $data['acctype']);
     $data['all_user'] = $this->Main_model->get_customer(1, 1);
     $data['all_pmode'] = $this->Main_model->get_customer(5, 1);
     // print_r($data['all_pmode']);die();
@@ -355,9 +355,9 @@ class Main extends CI_Controller
     $data['pagename'] = 'Payment Paid';
 
     $data['search'] =  $this->input->get('search');
-    $data['user'] =  $this->input->get('user');
+    $data['acctype'] =  $this->input->get('acctype');
     $data['pagetype'] = 2;
-    $data['all_value'] = $this->Main_model->get_payment_list($data['pagetype'], $data['search'], $data['user']);
+    $data['all_value'] = $this->Main_model->get_payment_list($data['pagetype'], $data['search'], $data['acctype']);
     $data['all_user'] = $this->Main_model->get_customer(2, 1);
     $data['all_pmode'] = $this->Main_model->get_customer(5, 1);
     // print_r($data['all_pmode']);die();

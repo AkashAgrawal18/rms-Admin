@@ -34,7 +34,7 @@ class Main_model extends CI_model
     if (!empty($search)) {
       $this->db->where("(m_acc_name LIKE '%$search%' OR m_acc_mobile LIKE '%$search%' OR m_acc_email LIKE '%$search%')");
     }
-    $this->db->order_by('m_acc_id', 'desc');
+    $this->db->order_by('m_acc_name');
     $res = $this->db->get('master_accounts_tbl')->result();
     return $res;
   }
@@ -127,7 +127,7 @@ class Main_model extends CI_model
     }
 
     if (!empty($search)) {
-      $this->db->where("(m_sale_spo LIKE '%$search%' OR m_acc_mobile LIKE '%$search%' OR m_acc_name LIKE '%$search%')");
+      $this->db->where("(m_sale_spo LIKE '%$search%' OR mct.m_acc_mobile LIKE '%$search%' OR mct.m_acc_name LIKE '%$search%')");
     }
 
     if (!empty($from_date)) {
@@ -137,11 +137,12 @@ class Main_model extends CI_model
       $this->db->where('DATE_FORMAT(m_sale_added_on,"%Y-%m-%d")<=', $to_date);
     }
 
-    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,m_acc_name,m_acc_mobile,m_acc_address,m_acc_email,pmode1.m_group_name as pmodename1,pmode2.m_group_name as pmodename2');
-    $this->db->join(' master_accounts_tbl mct', 'mct.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
-    $this->db->join('master_goups_tbl pmode1', 'pmode1.m_group_id = master_sales_tbl.m_sale_pmode', 'left');
-    $this->db->join('master_goups_tbl pmode2', 'pmode2.m_group_id = master_sales_tbl.m_sale_pmode2', 'left');
+    $this->db->select('m_sale_spo,sum(m_sale_qty) as total_qty,sum(m_sale_total) as sub_total,m_sale_date,sum(m_sale_gst) as total_tax,m_sale_discount,m_sale_shipping,m_sale_coupon,m_sale_iscredit,m_sale_balamt,m_sale_ispartial,m_sale_pstatus,m_sale_pmode,m_sale_payamt,m_sale_pmode2,m_sale_payamt2,m_sale_status,m_sale_added_on,m_sale_user,m_sale_customer,mct.m_acc_name,mct.m_acc_mobile,mct.m_acc_address,mct.m_acc_email,pmode1.m_acc_name as pmodename1,pmode2.m_acc_name as pmodename2');
+    $this->db->join('master_accounts_tbl mct', 'mct.m_acc_id = master_sales_tbl.m_sale_customer', 'left');
+    $this->db->join('master_accounts_tbl pmode1', 'pmode1.m_acc_id = master_sales_tbl.m_sale_pmode', 'left');
+    $this->db->join('master_accounts_tbl pmode2', 'pmode2.m_acc_id = master_sales_tbl.m_sale_pmode2', 'left');
     $this->db->group_by('m_sale_spo');
+    $this->db->order_by('m_sale_spo','desc');
     $sale_list = $this->db->get('master_sales_tbl')->result();
 
     if (!empty($sale_list)) {
@@ -157,6 +158,8 @@ class Main_model extends CI_model
           "m_sale_shipping" => $skey->m_sale_shipping,
           "m_sale_nettotal" => ($skey->sub_total + $skey->total_tax + $skey->m_sale_shipping -  $skey->m_sale_discount),
           "m_sale_coupon" => $skey->m_sale_coupon,
+          "m_sale_iscredit" => $skey->m_sale_iscredit,
+          "m_sale_balamt" => $skey->m_sale_balamt,
           "m_sale_ispartial" => $skey->m_sale_ispartial,
           "m_sale_pstatus" => $skey->m_sale_pstatus,
           "m_sale_pmode" => $skey->m_sale_pmode,
@@ -212,7 +215,7 @@ class Main_model extends CI_model
 
   public function get_edit_sales($salesid)
   {
-    $this->db->select('m_sale_spo,m_sale_invoiceno,m_sale_date,m_sale_customer');
+    $this->db->select('m_sale_spo,m_sale_date,m_sale_customer');
 
     $this->db->join('master_accounts_tbl added_by', 'added_by.m_acc_id = master_sales_tbl.m_sale_added_by', 'left');
     $this->db->join('master_accounts_tbl updated_by', 'updated_by.m_acc_id = master_sales_tbl.m_sale_updaded_by', 'left');
@@ -263,21 +266,43 @@ class Main_model extends CI_model
     $m_sale_nettotal = $this->input->post('m_sale_nettotal');
     $m_sale_payamt = $this->input->post('m_sale_payamt');
     $m_sale_payamt2 = $this->input->post('m_sale_payamt2');
+    $m_sale_ispartial = $this->input->post('m_sale_ispartial');
+    $m_sale_iscredit = $this->input->post('m_sale_iscredit');
 
-    $baldif = ($m_sale_nettotal - $m_sale_payamt - $m_sale_payamt2);
-    //  echo $m_sale_nettotal .'-' ;
-    //  echo $m_sale_payamt .'-' ;
-    //  echo $m_sale_payamt .'-' ;
-    //  echo $baldif ; die ;
-    if ($baldif >= 1) {
-      return 2;
+    if ($m_sale_iscredit == 1) {
+      if ($m_sale_ispartial == 1) {
+        $pmode = $this->input->post('m_sale_pmode');
+        $pmode2 = $this->input->post('m_sale_pmode2');
+        $m_sale_balamt = ($m_sale_nettotal - $m_sale_payamt - $m_sale_payamt2);
+      } else {
+        $pmode = $this->input->post('m_sale_pmode');
+        $pmode2 = 0;
+        $m_sale_payamt2 = 0;
+        $m_sale_balamt = ($m_sale_nettotal - $m_sale_payamt);
+      }
+    } else {
+      $m_sale_balamt = 0;
+
+      if ($m_sale_ispartial == 1) {
+        $pmode = $this->input->post('m_sale_pmode');
+        $pmode2 = $this->input->post('m_sale_pmode2');
+        $baldif = ($m_sale_nettotal - $m_sale_payamt - $m_sale_payamt2);
+      } else {
+        $pmode = $this->input->post('m_sale_pmode');
+        $pmode2 = 0;
+        $m_sale_payamt2 = 0;
+        $baldif = ($m_sale_nettotal - $m_sale_payamt);
+      }
+
+      if ($baldif >= 1 || $baldif < 0) {
+        return 2;
+      }
     }
 
     foreach ($m_sale_product as $cua => $key) {
       if (!empty($key)) {
         $insert_data = array(
           "m_sale_date"    => date('Y-m-d'),
-          // "m_sale_invoiceno" => $this->input->post('m_sale_invoice'),
           "m_sale_customer" => $this->input->post('m_sale_customer'),
           "m_sale_spo" => $spo,
           "m_sale_product" => $key,
@@ -289,12 +314,14 @@ class Main_model extends CI_model
           "m_sale_size" => $m_sale_size[$cua],
           "m_sale_discount" => $this->input->post('m_sale_discount'),
           "m_sale_shipping" => $this->input->post('m_sale_shipping'),
-          "m_sale_ispartial" => $this->input->post('m_sale_ispartial') ?: 0,
-          "m_sale_pmode" => $this->input->post('m_sale_pmode'),
+          "m_sale_ispartial" => $m_sale_ispartial ?: 0,
+          "m_sale_balamt" => $m_sale_balamt ?: 0,
+          "m_sale_iscredit" => $m_sale_iscredit ?: 0,
+          "m_sale_pmode" => $pmode,
           "m_sale_payamt" => $m_sale_payamt,
-          "m_sale_pmode2" => $this->input->post('m_sale_pmode2') ?: 0,
+          "m_sale_pmode2" => $pmode2,
           "m_sale_payamt2" => $m_sale_payamt2 ?: 0,
-          "m_sale_pstatus" => 1,
+          "m_sale_pstatus" => $m_sale_balamt > 0 ? 0 : 1,
 
         );
 
@@ -506,16 +533,16 @@ class Main_model extends CI_model
   //-----------------------------/purchese----------------------------//
 
   //------------------------------payment in---------------------------//
-  public function get_payment_list($type, $search, $user)
+  public function get_payment_list($type, $search, $acctype)
   {
     $this->db->select('master_payment_tbl.*,customer.m_acc_name as account_name,customer.m_acc_mobile as account_mobile,method.m_acc_name as method_name,(case when m_pay_acctype = 1 then "Customer" when m_pay_acctype = 2 then "Supplier" when m_pay_acctype = 3 then "Expense" when m_pay_acctype = 4 then "General" when m_pay_acctype = 5 then "Bank" Else "Cash" End) as account_type');
 
     if (!empty($search)) {
       $this->db->where("(customer.m_acc_name LIKE '%$search%' OR customer.m_acc_mobile LIKE '%$search%' OR method.m_acc_name LIKE '%$search%')");
     }
-    // if (!empty($user)) {
-    //   $this->db->where('m_pay_user', $user);
-    // }
+    if (!empty($acctype)) {
+      $this->db->where('m_pay_acctype', $acctype);
+    }
     $this->db->join('master_accounts_tbl customer', 'customer.m_acc_id = master_payment_tbl.m_pay_account', 'left');
     $this->db->join('master_accounts_tbl method', 'method.m_acc_id = master_payment_tbl.m_pay_method', 'left');
 
@@ -578,7 +605,6 @@ class Main_model extends CI_model
         $insert_data['m_pay_addedby'] = $this->session->userdata('user_id');
         $insert_data['m_pay_added_on'] = date('Y-m-d H:i');
         $rees = $this->db->insert('master_payment_tbl', $insert_data);
-
       }
     }
 
